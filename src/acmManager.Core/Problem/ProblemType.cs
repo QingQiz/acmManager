@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 
 namespace acmManager.Problem
 {
+    [Table("acmMgr.ProblemType")]
     public class ProblemType: FullAuditedEntity<long>
     {
         // 类型名称，如: DP

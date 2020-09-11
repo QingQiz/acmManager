@@ -3,10 +3,11 @@ using Abp.Domain.Entities.Auditing;
 
 namespace acmManager.Problem
 {
+    [Table("acmMgr.RecommendVote")]
     public class RecommendVote: FullAuditedEntity<long>
     {
-        [ForeignKey("Recommend")]
-        public long RecommendId { get; set; }
+        // [ForeignKey("Recommend")]
+        // public long RecommendId { get; set; }
         public ProblemRecommend Recommend { get; set; }
         
         public RecommendVote Type { get; set; }

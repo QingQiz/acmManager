@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
+using JetBrains.Annotations;
 
 namespace acmManager.Article
 {
+    [Table("acmMgr.Comment")]
     public class Comment: FullAuditedEntity<long>
     {
         [ForeignKey("Article")]
@@ -13,8 +15,8 @@ namespace acmManager.Article
         [Required]
         public string Content { get; set; }
         
-        [ForeignKey("ReplyToComment")]
-        public long ReplyToCommentId { get; set; }
+        // [ForeignKey("ReplyToComment")]
+        // public long ReplyToCommentId { get; set; }
         public Comment ReplyToComment { get; set; }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 
 namespace acmManager.File
 {
+    [Table("acmMgr.File")]
     public class File: FullAuditedEntity<long>
     {
         [Required]
