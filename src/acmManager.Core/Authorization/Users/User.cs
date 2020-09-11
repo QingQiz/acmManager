@@ -11,14 +11,12 @@ namespace acmManager.Authorization.Users
         public const string DefaultPassword = "123qwe";
         
         // 学号
-        [Required]
-        public string UserId { get; set; }
+        public string StudentNumber { get; set; }
         // 学院
         public string Org { get; set; }
         // 电话
         public string Mobile { get; set; }
         // 性别
-        [Required]
         public UserGender Gender { get; set; }
         // 专业
         public string Major { get; set; }
@@ -45,7 +43,7 @@ namespace acmManager.Authorization.Users
                 Name = AdminUserName,
                 Surname = AdminUserName,
                 EmailAddress = emailAddress,
-                Roles = new List<UserRole>()
+                Roles = new List<UserRole>(),
             };
 
             user.SetNormalizedNames();

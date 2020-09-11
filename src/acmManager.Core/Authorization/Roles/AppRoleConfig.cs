@@ -24,6 +24,18 @@ namespace acmManager.Authorization.Roles
                     MultiTenancySides.Tenant
                 )
             );
+            roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    StaticRoleNames.Tenants.Default,
+                    MultiTenancySides.Tenant
+                )
+            );
+            roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    StaticRoleNames.Tenants.Member,
+                    MultiTenancySides.Tenant
+                )
+            );
         }
     }
 }

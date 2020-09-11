@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -28,10 +29,48 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             CreateRolesAndUsers();
         }
 
+        private void CreateExtraRoles(string roleName, bool isDefault, ICollection<string> permissions) 
+        {
+            var role = _context.Roles.IgnoreQueryFilters()
+                .FirstOrDefault(r => r.TenantId == _tenantId && r.Name == roleName);
+
+            if (role == null)
+            {
+                role = _context.Roles.Add(new Role(_tenantId, roleName, roleName)
+                    {IsStatic = true, IsDefault = isDefault}).Entity;
+                _context.SaveChanges();
+            }
+            if (!permissions.Any()) return;
+            
+            var grantedPermissions = _context.Permissions.IgnoreQueryFilters()
+                .OfType<RolePermissionSetting>()
+                .Where(p => p.TenantId == _tenantId && p.RoleId == role.Id)
+                .Select(p => p.Name)
+                .ToList();
+
+            var toGrant = PermissionFinder.GetAllPermissions(new acmManagerAuthorizationProvider())
+                .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant)
+                                   && permissions.Contains(p.Name)
+                                   && !grantedPermissions.Contains(p.Name))
+                .ToList();
+
+            if (!toGrant.Any()) return;
+            
+            _context.Permissions.AddRange(
+                toGrant.Select(p => new RolePermissionSetting()
+                {
+                    TenantId = _tenantId,
+                    Name = p.Name,
+                    IsGranted = true,
+                    RoleId = role.Id
+                })
+            );
+            _context.SaveChanges();
+        }
+
         private void CreateRolesAndUsers()
         {
             // Admin role
-
             var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
             if (adminRole == null)
             {
@@ -72,7 +111,7 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
             if (adminUser == null)
             {
-                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
+                adminUser = User.CreateTenantAdminUser(_tenantId, "sofeeys@outlook.com");
                 adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
                 adminUser.IsEmailConfirmed = true;
                 adminUser.IsActive = true;
@@ -84,6 +123,10 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
                 _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
                 _context.SaveChanges();
             }
+            
+            // Extra Roles
+            CreateExtraRoles(StaticRoleNames.Tenants.Default, isDefault: true, new List<string>());
+            CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>());
         }
     }
 }
