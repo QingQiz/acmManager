@@ -13,6 +13,9 @@ namespace acmManager.EntityFrameworkCore
     {
         /* Define a DbSet for each entity of the application */
         
+        // User
+        public DbSet<UserInfo> UserInfos { get; set; }
+        
         // Article
         public DbSet<Article.Article> Articles { get; set; }
         public DbSet<Comment> Comments { get; set; }
