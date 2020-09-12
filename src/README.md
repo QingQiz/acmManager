@@ -30,3 +30,4 @@
     - 修改 `Application/Users/Dto/UserInfoDto`
     - 修改 `crawler.py`
     - 修改 `Application/Users/UserAppService.cs` 中的 `CreateAsync`
+    - 修改 `Application/Authorization/Accounts/AccountAppService.cs` 中的 `Register`

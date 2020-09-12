@@ -30,5 +30,7 @@ namespace acmManager.Users.Dto
         public string Email { get; set; }
         // 姓名
         public string Name { get; set; }
+        // 类型
+        public UserType Type { get; set; }
     }
 }

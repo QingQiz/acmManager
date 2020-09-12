@@ -28,5 +28,12 @@ namespace acmManager.Authorization.Users
         public string Email { get; set; }
         // 姓名
         public string Name { get; set; }
+        // 队员类型
+        public UserType Type { get; set; }
+
+        public UserInfo(UserType type=UserType.TempMember)
+        {
+            Type = type;
+        }
     }
 }
