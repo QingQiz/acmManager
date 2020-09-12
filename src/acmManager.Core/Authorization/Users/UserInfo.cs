@@ -26,5 +26,7 @@ namespace acmManager.Authorization.Users
         public File.File Photo { get; set; }
         // 邮箱
         public string Email { get; set; }
+        // 姓名
+        public string Name { get; set; }
     }
 }

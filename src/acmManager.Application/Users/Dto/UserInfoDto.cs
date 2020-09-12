@@ -1,4 +1,5 @@
-﻿using Abp.AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using Abp.AutoMapper;
 using acmManager.Authorization.Users;
 
 namespace acmManager.Users.Dto
@@ -7,6 +8,7 @@ namespace acmManager.Users.Dto
     public class UserInfoDto
     {
         // 学号
+        [Required]
         public string StudentNumber { get; set; }
         // 学院
         public string Org { get; set; }
@@ -23,8 +25,10 @@ namespace acmManager.Users.Dto
         // 学生类型: 本科生? 研究生?
         public string StudentType { get; set; }
         // 照片 (二次元头像)
-        public File.File Photo { get; set; }
+        // public File.File Photo { get; set; }
         // 邮箱
         public string Email { get; set; }
+        // 姓名
+        public string Name { get; set; }
     }
 }

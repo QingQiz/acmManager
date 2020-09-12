@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Abp.Authorization.Users;
+using Abp.AutoMapper;
+using acmManager.Authorization.Users;
 
 namespace acmManager.Users.Dto
 {
-    public class CreateUserInput
+    [AutoMapTo(typeof(UserInfo))]
+    public class CreateUserInput: UserInfoDto
     {
         [Required]
-        [StringLength(10)]
-        public string Username { get; set; }
-        
-        [Required]
+        [MaxLength(AbpUserBase.MaxPasswordLength)]
         public string Password { get; set; }
     }
 }

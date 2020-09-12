@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Services;
 using acmManager.Authorization.Accounts.Dto;
+using acmManager.Users.Dto;
 
 namespace acmManager.Authorization.Accounts
 {
@@ -8,6 +9,6 @@ namespace acmManager.Authorization.Accounts
     {
         Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input);
 
-        Task<RegisterOutput> Register(RegisterInput input);
+        Task<UserInfoDto> Register(RegisterInput input);
     }
 }
