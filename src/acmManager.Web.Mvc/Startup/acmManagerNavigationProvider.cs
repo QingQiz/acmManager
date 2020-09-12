@@ -27,7 +27,7 @@ namespace acmManager.Web.Startup
                         L("Tenants"),
                         url: "Tenants",
                         icon: "fas fa-building",
-                        permissionDependency: new SimplePermissionDependency(PermissionNames.Pages_Tenants)
+                        permissionDependency: new SimplePermissionDependency(PermissionNames.PagesTenants)
                     )
                 ).AddItem(
                     new MenuItemDefinition(
@@ -35,7 +35,7 @@ namespace acmManager.Web.Startup
                         L("Users"),
                         url: "Users",
                         icon: "fas fa-users",
-                        permissionDependency: new SimplePermissionDependency(PermissionNames.Pages_Users)
+                        permissionDependency: new SimplePermissionDependency(PermissionNames.PagesUsers)
                     )
                 ).AddItem(
                     new MenuItemDefinition(
@@ -43,7 +43,7 @@ namespace acmManager.Web.Startup
                         L("Roles"),
                         url: "Roles",
                         icon: "fas fa-theater-masks",
-                        permissionDependency: new SimplePermissionDependency(PermissionNames.Pages_Roles)
+                        permissionDependency: new SimplePermissionDependency(PermissionNames.PagesRoles)
                             )
                 )
                 .AddItem(

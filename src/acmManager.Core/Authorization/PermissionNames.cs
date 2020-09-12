@@ -4,14 +4,14 @@
     {
         public const string Pages = "Pages";
         
-        public const string Pages_Tenants = "Pages.Tenants";
+        public const string PagesTenants = "Pages.Tenants";
 
-        public const string Pages_Users = "Pages.Users";
+        public const string PagesUsers = "Pages.Users";
 
-        public const string Pages_Roles = "Pages.Roles";
+        public const string PagesRoles = "Pages.Roles";
 
-
-        // put permission name here, for example: A_B_C = "A.B.C"
+        // put permission name here
+        public const string PagesUsers_Create = "Pages.Users.Create";
 
     }
 }

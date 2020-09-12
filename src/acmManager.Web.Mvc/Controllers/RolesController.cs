@@ -9,7 +9,7 @@ using acmManager.Web.Models.Roles;
 
 namespace acmManager.Web.Controllers
 {
-    [AbpMvcAuthorize(PermissionNames.Pages_Roles)]
+    [AbpMvcAuthorize(PermissionNames.PagesRoles)]
     public class RolesController : acmManagerControllerBase
     {
         private readonly IRoleAppService _roleAppService;

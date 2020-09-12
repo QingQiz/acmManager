@@ -8,16 +8,15 @@ namespace acmManager.Authorization
     {
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
-            context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
-            context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
-            context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+            var pageUser =  context.CreatePermission(PermissionNames.PagesUsers, L("Users"));
+            context.CreatePermission(PermissionNames.PagesRoles, L("Roles"));
+            context.CreatePermission(PermissionNames.PagesTenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
             var pages = context.GetPermissionOrNull(PermissionNames.Pages) ??
                         context.CreatePermission(PermissionNames.Pages);
             
-            // register permission here, for example:
-            // var userGroup = pages.CreateChildPermission(AppPermissions.Pages_UserGroup, L("PagesUserGroup"));
-            // userGroup.CreateChildPermission(AppPermissions.Pages_UserGroup_AddUser, L("PagesUserGroupAddUser"));
+            // register permission here
+            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Create, L("Users.Create"));
         }
 
         private static ILocalizableString L(string name)

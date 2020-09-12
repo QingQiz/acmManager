@@ -17,7 +17,9 @@
     - 数据库 `AbpSettings` 中的值会覆盖默认值
 - 数据库默认值
     - `EF/Seed/**/*.cs` 中
-    
+- 添加 Role
+    - 在 `Core/Authorization/Roles/StaticRoleNames.cs` 中添加 RoleName
+    - 在 `EF/Seed/Tenants/TenantRoleAndUserBuilder` 中为 Role 添加权限
 - 添加权限
     - 在 `Core/Authorization/PermissionNames.cs` 中添加权限名
     - 在 `Core/Authorization/acmManagerAuthorizationProvider` 中注册权限

@@ -9,7 +9,7 @@ using acmManager.Web.Models.Users;
 
 namespace acmManager.Web.Controllers
 {
-    [AbpMvcAuthorize(PermissionNames.Pages_Users)]
+    [AbpMvcAuthorize(PermissionNames.PagesUsers)]
     public class UsersController : acmManagerControllerBase
     {
         private readonly IUserAppService _userAppService;

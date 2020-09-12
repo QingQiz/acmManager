@@ -8,7 +8,7 @@ using acmManager.MultiTenancy;
 
 namespace acmManager.Web.Controllers
 {
-    [AbpMvcAuthorize(PermissionNames.Pages_Tenants)]
+    [AbpMvcAuthorize(PermissionNames.PagesTenants)]
     public class TenantsController : acmManagerControllerBase
     {
         private readonly ITenantAppService _tenantAppService;
