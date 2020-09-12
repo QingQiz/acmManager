@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities;
+﻿using Abp.AutoMapper;
+using acmManager.Authorization.Users;
 
-namespace acmManager.Authorization.Users
+namespace acmManager.Users.Dto
 {
-    [Table("acmMgr.UserInfo")]
-    public class UserInfo: Entity<long>
+    [AutoMap(typeof(UserInfo))]
+    public class UserInfoDto
     {
         // 学号
         public string StudentNumber { get; set; }

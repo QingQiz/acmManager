@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Abp.Configuration;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Net.Mail;
+using acmManager.Configuration;
 
 namespace acmManager.EntityFrameworkCore.Seed.Host
 {
@@ -31,6 +33,10 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
 
             // Languages
             AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "en", tenantId);
+            
+            // Crawler
+            var crawlerPath = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\crawler.py";
+            AddSettingIfNotExists(AppSettingNames.CrawlerPath, crawlerPath, tenantId);
         }
 
         private void AddSettingIfNotExists(string name, string value, int? tenantId = null)
