@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
-using Abp.Configuration;
 using Abp.UI;
-using Abp.Zero.Configuration;
 using acmManager.Authorization.Accounts.Dto;
 using acmManager.Authorization.Users;
-using acmManager.Configuration;
+using acmManager.Users;
 using acmManager.Users.Dto;
 
 namespace acmManager.Authorization.Accounts
@@ -16,16 +14,16 @@ namespace acmManager.Authorization.Accounts
 
         private readonly UserRegistrationManager _userRegistrationManager;
         private readonly UserManager _userManager;
-        private readonly SettingManager _settingManager;
         private readonly UserInfoManager _userInfoManager;
+        private readonly UserAppService _userAppService;
 
         public AccountAppService(
-            UserRegistrationManager userRegistrationManager, SettingManager settingManager, UserManager userManager, UserInfoManager userInfoManager)
+            UserRegistrationManager userRegistrationManager, UserManager userManager, UserInfoManager userInfoManager, UserAppService userAppService)
         {
             _userRegistrationManager = userRegistrationManager;
-            _settingManager = settingManager;
             _userManager = userManager;
             _userInfoManager = userInfoManager;
+            _userAppService = userAppService;
         }
 
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
@@ -44,6 +42,7 @@ namespace acmManager.Authorization.Accounts
             return new IsTenantAvailableOutput(TenantAvailabilityState.Available, tenant.Id);
         }
 
+
         /// <summary>
         /// 用户注册，使用翱翔门户的账户名和密码创建一个账户
         /// </summary>
@@ -52,50 +51,14 @@ namespace acmManager.Authorization.Accounts
         /// <exception cref="UserFriendlyException"></exception>
         public async Task<UserInfoDto> Register(RegisterInput input)
         {
-            // use crawler to get user information
-            var crawlerPath = await _settingManager.GetSettingValueAsync(AppSettingNames.CrawlerPath);
-
-            var process = new System.Diagnostics.Process
-            {
-                StartInfo =
-                {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c python {crawlerPath} -u {input.Username} -p {input.Password}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true
-                }
-            };
-            process.Start();
-
-            // 0    1      2      3       4      5     6       7        8        9
-            // id, org, mobile, gender, email, name, class, location, major, studentType
-            var result = (await process.StandardOutput.ReadToEndAsync()).Split("\r\n");
+            var userInfoDto = await _userAppService.GetUserInfoFromAoxiangAsync(input.Username, input.Password);
             
-            // 爬虫执行失败
-            if (process.ExitCode != 0)
-            {
-                throw new UserFriendlyException("Login to uis.nwpu.edu.cn failed, wrong username or password or internal server error");
-            }
-
             // true means: Assumed email address is always confirmed.
-            var user = await _userRegistrationManager.RegisterAsync(result[5], "", result[4], result[0],
+            var user = await _userRegistrationManager.RegisterAsync(userInfoDto.Name, "", userInfoDto.Email, userInfoDto.StudentNumber,
                 input.Password, true);
             
             // Create UserInfo
-            var userInfo = new UserInfo()
-            {
-                StudentNumber = result[0],
-                Org = result[1],
-                Mobile = result[2],
-                Gender = result[3] == "男" ? UserGender.Male : UserGender.Female,
-                Major = result[8],
-                ClassId = result[6],
-                Location = result[7],
-                StudentType = result[9],
-                Photo = null,
-                Email = result[4],
-                Name = result[5]
-            };
+            var userInfo = ObjectMapper.Map<UserInfo>(userInfoDto);
             await _userInfoManager.Create(userInfo);
             
             // update userinfo
@@ -105,7 +68,7 @@ namespace acmManager.Authorization.Accounts
             await CurrentUnitOfWork.SaveChangesAsync();
 
             // return DTO
-            return ObjectMapper.Map<UserInfoDto>(userInfo);
+            return userInfoDto;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,6 +13,7 @@ using Abp.Domain.Uow;
 using Abp.Organizations;
 using Abp.Runtime.Caching;
 using acmManager.Authorization.Roles;
+using Microsoft.EntityFrameworkCore;
 
 namespace acmManager.Authorization.Users
 {
@@ -53,6 +56,11 @@ namespace acmManager.Authorization.Users
                 organizationUnitSettings, 
                 settingManager)
         {
+        }
+
+        public override Task<User> GetUserByIdAsync(long userId)
+        {
+            return Users.Where(u => u.Id == userId).Include(u => u.UserInfo).FirstAsync();
         }
     }
 }

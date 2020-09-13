@@ -1,30 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Application.Services;
-using Abp.Application.Services.Dto;
 using Abp.Authorization;
-using Abp.Domain.Entities;
+using Abp.Configuration;
 using Abp.Domain.Repositories;
-using Abp.Extensions;
-using Abp.IdentityFramework;
-using Abp.Linq.Extensions;
-using Abp.Localization;
 using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Authorization;
-using acmManager.Authorization.Accounts;
 using acmManager.Authorization.Roles;
 using acmManager.Authorization.Users;
-using acmManager.Roles.Dto;
+using acmManager.Configuration;
 using acmManager.Users.Dto;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace acmManager.Users
 {
-    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
+    public class UserAppService : acmManagerAppServiceBase
     {
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
@@ -34,6 +24,7 @@ namespace acmManager.Users
         private readonly LogInManager _logInManager;
         private readonly UserRegistrationManager _userRegistrationManager;
         private readonly UserInfoManager _userInfoManager;
+        private readonly SettingManager _settingManager;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -42,8 +33,7 @@ namespace acmManager.Users
             IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
-            LogInManager logInManager, UserRegistrationManager userRegistrationManager, UserInfoManager userInfoManager)
-            : base(repository)
+            LogInManager logInManager, UserRegistrationManager userRegistrationManager, UserInfoManager userInfoManager, SettingManager settingManager) 
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -53,17 +43,71 @@ namespace acmManager.Users
             _logInManager = logInManager;
             _userRegistrationManager = userRegistrationManager;
             _userInfoManager = userInfoManager;
+            _settingManager = settingManager;
         }
 
-        // 禁用自带的用户创建接口
+        #region NotRemoveToService
+
+        /// <summary>
+        /// 执行爬虫，从翱翔门户获取信息
+        /// </summary>
+        /// <param name="username">账户名</param>
+        /// <param name="password">密码</param>
+        /// <returns>see `UserInfoDto</returns>
+        /// <exception cref="UserFriendlyException"></exception>
         [RemoteService(false)]
-        public override Task<UserDto> CreateAsync(CreateUserDto input)
+        public async Task<UserInfoDto> GetUserInfoFromAoxiangAsync(string username, string password)
         {
-            return base.CreateAsync(input);
+            // use crawler to get user information
+            var crawlerPath = await _settingManager.GetSettingValueAsync(AppSettingNames.CrawlerPath);
+
+            var process = new System.Diagnostics.Process
+            {
+                StartInfo =
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/c python {crawlerPath} -u {username} -p {password}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            };
+            process.Start();
+
+            // 0    1      2      3       4      5     6       7        8        9
+            // id, org, mobile, gender, email, name, class, location, major, studentType
+            var result = (await process.StandardOutput.ReadToEndAsync()).Split("\r\n");
+            
+            // 爬虫执行失败
+            if (process.ExitCode != 0)
+            {
+                throw new UserFriendlyException("Login to uis.nwpu.edu.cn failed, wrong username or password or internal server error");
+            }
+
+            return new UserInfoDto()
+            {
+                StudentNumber = result[0],
+                Org = result[1],
+                Mobile = result[2],
+                Gender = result[3] == "男" ? UserGender.Male : UserGender.Female,
+                Major = result[8],
+                ClassId = result[6],
+                Location = result[7],
+                StudentType = result[9],
+                Email = result[4],
+                Name = result[5]
+            };
         }
 
-        // 创建用户
-        [AbpAuthorize(PermissionNames.Pages_Users)]
+        #endregion
+
+        #region privilegeApi
+        
+        /// <summary>
+        /// 创建一个用户 （特权操作）
+        /// </summary>
+        /// <param name="input">see `CreateUserInput`</param>
+        /// <returns>see `UserInfoDto` </returns>
+        [AbpAuthorize(PermissionNames.PagesUsers_Create)]
         public async Task<UserInfoDto> CreateAsync(CreateUserInput input)
         {
             var user = await _userRegistrationManager.RegisterAsync(input.Name, input.Name, input.Email,
@@ -79,26 +123,40 @@ namespace acmManager.Users
 
             return ObjectMapper.Map<UserInfoDto>(userInfo);
         }
+        
+        #endregion
 
+        /// <summary>
+        /// 重新从翱翔门户获取信息
+        /// </summary>
+        /// <param name="input">see `UpdateUserInfoInput`</param>
+        /// <returns>see `UserInfoDto`</returns>
+        /// <exception cref="UserFriendlyException"></exception>
         [AbpAuthorize]
-        public override async Task<UserDto> UpdateAsync(UserDto input)
+        public async Task<UserInfoDto> UpdateInfoAsync(UpdateUserInfoInput input)
         {
-            CheckUpdatePermission();
+            // current user
+            var user = await GetCurrentUserAsync();
 
-            var user = await _userManager.GetUserByIdAsync(input.Id);
-
-            MapToEntity(input, user);
-
-            CheckErrors(await _userManager.UpdateAsync(user));
-
-            if (input.RoleNames != null)
+            if (user.UserName.Length != 10)
             {
-                CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
+                // only student can update info
+                throw new UserFriendlyException("Current user can not update info");
             }
 
-            return await GetAsync(input);
+            // get user info from aoxiang
+            var userInfoDto = await GetUserInfoFromAoxiangAsync(user.UserName, input.Password);
+
+            // map new info to old info
+            ObjectMapper.Map(userInfoDto, user.UserInfo);
+
+            // update
+            await _userInfoManager.Update(user.UserInfo);
+
+            return userInfoDto;
         }
 
+        /*
         [AbpAuthorize]
         public override async Task DeleteAsync(EntityDto<long> input)
         {
@@ -233,6 +291,7 @@ namespace acmManager.Users
 
             return true;
         }
+        */
     }
 }
 

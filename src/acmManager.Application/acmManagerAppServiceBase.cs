@@ -25,13 +25,7 @@ namespace acmManager
 
         protected virtual async Task<User> GetCurrentUserAsync()
         {
-            var user = await UserManager.FindByIdAsync(AbpSession.GetUserId().ToString());
-            if (user == null)
-            {
-                throw new Exception("There is no current user!");
-            }
-
-            return user;
+            return await UserManager.GetUserByIdAsync(AbpSession.GetUserId());
         }
 
         protected virtual Task<Tenant> GetCurrentTenantAsync()
