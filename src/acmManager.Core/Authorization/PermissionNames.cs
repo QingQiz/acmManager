@@ -12,6 +12,8 @@
 
         // put permission name here
         public const string PagesUsers_Create = "Pages.Users.Create";
-
+        public const string PagesUsers_Update = "Pages.Users.Update";
+        public const string PagesUsers_Delete = "Pages.Users.Delete";
+        public const string PagesUsers_GetAll = "Pages.Users.GetAll";
     }
 }

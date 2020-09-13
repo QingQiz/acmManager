@@ -46,7 +46,7 @@ namespace acmManager.Users
             _settingManager = settingManager;
         }
 
-        #region NotRemoveToService
+        #region NotRemoteToService
 
         /// <summary>
         /// 执行爬虫，从翱翔门户获取信息
@@ -98,17 +98,30 @@ namespace acmManager.Users
             };
         }
 
+        /// <summary>
+        /// 将 User 转化为 UserDto
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [RemoteService(false)]
+        public UserDto UserToDto(User user)
+        {
+            var ret = ObjectMapper.Map<UserDto>(user.UserInfo);
+            ret.UserId = user.Id;
+            return ret;
+        }
+
         #endregion
 
         #region privilegeApi
-        
+
         /// <summary>
         /// 创建一个用户 （特权操作）
         /// </summary>
         /// <param name="input">see `CreateUserInput`</param>
-        /// <returns>see `UserInfoDto` </returns>
+        /// <returns>see `UserDto` </returns>
         [AbpAuthorize(PermissionNames.PagesUsers_Create)]
-        public async Task<UserInfoDto> CreateAsync(CreateUserInput input)
+        public async Task<UserDto> CreateAsync(CreateUserInput input)
         {
             var user = await _userRegistrationManager.RegisterAsync(input.Name, input.Name, input.Email,
                 input.StudentNumber, input.Password, true);
@@ -121,19 +134,37 @@ namespace acmManager.Users
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
-            return ObjectMapper.Map<UserInfoDto>(userInfo);
+            return UserToDto(user);
+        }
+
+        /// <summary>
+        /// 更新用户信息，特权接口
+        /// </summary>
+        /// <param name="input">see `UserDto`</param>
+        /// <returns>see `UserDto`</returns>
+        [AbpAuthorize(PermissionNames.PagesUsers_Update)]
+        public async Task<UserDto> UpdateAsync(UserDto input)
+        {
+            var user = await UserManager.GetUserByIdAsync(input.UserId);
+            ObjectMapper.Map(input, user.UserInfo);
+
+            await _userInfoManager.Update(user.UserInfo);
+
+            return UserToDto(user);
         }
         
         #endregion
 
+        #region NormalApi
+
         /// <summary>
-        /// 重新从翱翔门户获取信息
+        /// 从翱翔门户更新用户资料
         /// </summary>
         /// <param name="input">see `UpdateUserInfoInput`</param>
         /// <returns>see `UserInfoDto`</returns>
         /// <exception cref="UserFriendlyException"></exception>
         [AbpAuthorize]
-        public async Task<UserInfoDto> UpdateInfoAsync(UpdateUserInfoInput input)
+        public async Task<UserInfoDto> UpdateInfoFromAoxiangAsync(UpdateUserInfoFromAoxiangInput input)
         {
             // current user
             var user = await GetCurrentUserAsync();
@@ -155,6 +186,39 @@ namespace acmManager.Users
 
             return userInfoDto;
         }
+
+        /// <summary>
+        /// 用户更改自己的资料
+        /// </summary>
+        /// <param name="input">see `UpdateUserInfoInput`</param>
+        /// <returns>see `UserInfoDto`</returns>
+        [AbpAuthorize]
+        public async Task<UserInfoDto> UpdateInfoAsync(UpdateUserInfoInput input)
+        {
+            var user = await GetCurrentUserAsync();
+            var isInfoChanged = false;
+
+            if (user.UserInfo.Email != input.Email)
+            {
+                user.UserInfo.Email = input.Email;
+                isInfoChanged = true;
+            }
+
+            if (user.UserInfo.Mobile != input.Mobile)
+            {
+                user.UserInfo.Mobile = input.Mobile;
+                isInfoChanged = true;
+            }
+
+            if (isInfoChanged)
+            {
+                await _userInfoManager.Update(user.UserInfo);
+            } 
+            
+            return ObjectMapper.Map<UserInfoDto>(user.UserInfo);
+        }
+
+        #endregion
 
         /*
         [AbpAuthorize]

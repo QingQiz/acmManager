@@ -16,7 +16,12 @@ namespace acmManager.Authorization
                         context.CreatePermission(PermissionNames.Pages);
             
             // register permission here
+            
+            // Permissions for Pages_Users
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Create, L("Users.Create"));
+            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Update, L("Users.Update"));
+            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Delete, L("Users.Delete"));
+            pageUser.CreateChildPermission(PermissionNames.PagesUsers_GetAll, L("Users.GetAll"));
         }
 
         private static ILocalizableString L(string name)

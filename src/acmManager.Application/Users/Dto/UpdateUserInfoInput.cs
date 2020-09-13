@@ -1,12 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp.Authorization.Users;
-
-namespace acmManager.Users.Dto
+﻿namespace acmManager.Users.Dto
 {
+    // 这是非特权用户更改自己资料的输入
     public class UpdateUserInfoInput
     {
-        [Required]
-        [MaxLength(AbpUserBase.MaxPasswordLength)]
-        public string Password { get; set; }
+        public string Email { get; set; }
+        public string Mobile { get; set; }
     }
 }
