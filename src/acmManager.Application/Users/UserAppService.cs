@@ -8,6 +8,7 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Authorization;
 using acmManager.Authorization.Accounts;
+using acmManager.Authorization.Accounts.Dto;
 using acmManager.Authorization.Roles;
 using acmManager.Authorization.Users;
 using acmManager.Configuration;
@@ -137,14 +138,9 @@ namespace acmManager.Users
         {
             var user = await _userRegistrationManager.RegisterAsync(input.Name, input.Name, input.Email,
                 input.StudentNumber, input.Password, true);
-            var userInfo = ObjectMapper.Map<UserInfo>(input);
             
-            await _userInfoManager.Create(userInfo);
-
+            var userInfo = ObjectMapper.Map<UserInfo>(input);
             user.UserInfo = userInfo;
-            await _userManager.UpdateAsync(user);
-
-            await CurrentUnitOfWork.SaveChangesAsync();
 
             return UserToDto(user);
         }
@@ -159,9 +155,7 @@ namespace acmManager.Users
         {
             var user = await UserManager.GetUserByIdAsync(input.UserId);
             ObjectMapper.Map(input, user.UserInfo);
-
-            await _userInfoManager.Update(user.UserInfo);
-
+            
             return UserToDto(user);
         }
 
@@ -177,6 +171,20 @@ namespace acmManager.Users
             var userInfo = user.UserInfo;
             await _userManager.DeleteAsync(user);
             await _userInfoManager.Delete(userInfo.Id);
+        }
+        
+        /// <summary>
+        /// 重置用户密码
+        /// </summary>
+        /// <param name="input"><see cref="ResetPasswordDto"/></param>
+        [AbpAuthorize(PermissionNames.PagesUsers_Update)]
+        public async Task ResetPasswordAsync(ResetPasswordDto input)
+        {
+            var user = await _userManager.GetUserByIdAsync(input.UserId);
+            
+            user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
+            
+            await CurrentUnitOfWork.SaveChangesAsync();
         }
         
         #endregion
@@ -206,10 +214,7 @@ namespace acmManager.Users
 
             // map new info to old info
             ObjectMapper.Map(userInfoDto, user.UserInfo);
-
-            // update
-            await _userInfoManager.Update(user.UserInfo);
-
+            
             return userInfoDto;
         }
 
@@ -222,25 +227,10 @@ namespace acmManager.Users
         public async Task<UserInfoDto> UpdateInfoAsync(UpdateUserInfoInput input)
         {
             var user = await GetCurrentUserAsync();
-            var isInfoChanged = false;
 
-            if (user.UserInfo.Email != input.Email)
-            {
-                user.UserInfo.Email = input.Email;
-                isInfoChanged = true;
-            }
+            user.UserInfo.Email = input.Email;
+            user.UserInfo.Mobile = input.Mobile;
 
-            if (user.UserInfo.Mobile != input.Mobile)
-            {
-                user.UserInfo.Mobile = input.Mobile;
-                isInfoChanged = true;
-            }
-
-            if (isInfoChanged)
-            {
-                await _userInfoManager.Update(user.UserInfo);
-            } 
-            
             return ObjectMapper.Map<UserInfoDto>(user.UserInfo);
         }
 
@@ -252,7 +242,8 @@ namespace acmManager.Users
         public async Task<UserDto> GetMeAsync()
         {
             var user = await GetCurrentUserAsync();
-            return UserToDto(user);
+
+            return user.UserInfo == null ? null : UserToDto(user);
         }
 
         /// <summary>
@@ -361,39 +352,6 @@ namespace acmManager.Users
         }
 
 
-        [AbpAuthorize]
-        public async Task<bool> ResetPassword(ResetPasswordDto input)
-        {
-            if (_abpSession.UserId == null)
-            {
-                throw new UserFriendlyException("Please log in before attemping to reset password.");
-            }
-            long currentUserId = _abpSession.UserId.Value;
-            var currentUser = await _userManager.GetUserByIdAsync(currentUserId);
-            var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
-            if (loginAsync.Result != AbpLoginResultType.Success)
-            {
-                throw new UserFriendlyException("Your 'Admin Password' did not match the one on record.  Please try again.");
-            }
-            if (currentUser.IsDeleted || !currentUser.IsActive)
-            {
-                return false;
-            }
-            var roles = await _userManager.GetRolesAsync(currentUser);
-            if (!roles.Contains(StaticRoleNames.Tenants.Admin))
-            {
-                throw new UserFriendlyException("Only administrators may reset passwords.");
-            }
-
-            var user = await _userManager.GetUserByIdAsync(input.UserId);
-            if (user != null)
-            {
-                user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
-                CurrentUnitOfWork.SaveChanges();
-            }
-
-            return true;
-        }
         */
     }
 }
