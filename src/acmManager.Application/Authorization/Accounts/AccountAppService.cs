@@ -10,7 +10,8 @@ namespace acmManager.Authorization.Accounts
     public class AccountAppService : acmManagerAppServiceBase, IAccountAppService
     {
         // from: http://regexlib.com/REDetails.aspx?regexp_id=1923
-        public const string PasswordRegex = "(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)[0-9a-zA-Z!@#$%^&*()]*$";
+        //public const string PasswordRegex = "(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)[0-9a-zA-Z!@#$%^&*()]*$";
+        public const string PasswordRegex = "^.{4,28}$";
 
         private readonly UserRegistrationManager _userRegistrationManager;
         private readonly UserManager _userManager;

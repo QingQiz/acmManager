@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Configuration;
@@ -6,6 +7,7 @@ using Abp.Domain.Repositories;
 using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Authorization;
+using acmManager.Authorization.Accounts;
 using acmManager.Authorization.Roles;
 using acmManager.Authorization.Users;
 using acmManager.Configuration;
@@ -247,11 +249,35 @@ namespace acmManager.Users
         /// </summary>
         /// <returns><see cref="UserInfoDto"/></returns>
         [AbpAuthorize]
-        public async Task<UserInfoDto> GetMeAsync()
+        public async Task<UserDto> GetMeAsync()
         {
             var user = await GetCurrentUserAsync();
-            return UserToInfoDto(user);
+            return UserToDto(user);
         }
+
+        /// <summary>
+        /// 重设密码
+        /// </summary>
+        /// <param name="input"><see cref="ChangePasswordDto"/></param>
+        /// <exception cref="UserFriendlyException"></exception>
+        [AbpAuthorize]
+        public async Task ChangePasswordAsync(ChangePasswordDto input)
+        {
+            var user = await GetCurrentUserAsync();
+            var loginAsync = await _logInManager.LoginAsync(user.UserName, input.CurrentPassword, shouldLockout: false);
+            
+            if (loginAsync.Result != AbpLoginResultType.Success)
+            {
+                throw new UserFriendlyException("Your 'Existing Password' did not match the one on record. Please try again or contact an administrator for assistance in resetting your password.");
+            }
+            if (!new Regex(AccountAppService.PasswordRegex).IsMatch(input.NewPassword))
+            {
+                throw new UserFriendlyException("Passwords must between 4 and 28 characters.");
+            }
+            user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
+            await CurrentUnitOfWork.SaveChangesAsync();
+        }
+        
 
         #endregion
 
@@ -334,28 +360,6 @@ namespace acmManager.Users
             identityResult.CheckErrors(LocalizationManager);
         }
 
-        [AbpAuthorize]
-        public async Task<bool> ChangePassword(ChangePasswordDto input)
-        {
-            if (_abpSession.UserId == null)
-            {
-                throw new UserFriendlyException("Please log in before attemping to change password.");
-            }
-            long userId = _abpSession.UserId.Value;
-            var user = await _userManager.GetUserByIdAsync(userId);
-            var loginAsync = await _logInManager.LoginAsync(user.UserName, input.CurrentPassword, shouldLockout: false);
-            if (loginAsync.Result != AbpLoginResultType.Success)
-            {
-                throw new UserFriendlyException("Your 'Existing Password' did not match the one on record.  Please try again or contact an administrator for assistance in resetting your password.");
-            }
-            if (!new Regex(AccountAppService.PasswordRegex).IsMatch(input.NewPassword))
-            {
-                throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, and number.");
-            }
-            user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
-            CurrentUnitOfWork.SaveChanges();
-            return true;
-        }
 
         [AbpAuthorize]
         public async Task<bool> ResetPassword(ResetPasswordDto input)
