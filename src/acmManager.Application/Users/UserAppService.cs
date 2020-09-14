@@ -26,14 +26,12 @@ namespace acmManager.Users
         private readonly UserInfoManager _userInfoManager;
         private readonly SettingManager _settingManager;
 
-        public UserAppService(
-            IRepository<User, long> repository,
-            UserManager userManager,
+        public UserAppService(UserManager userManager,
             RoleManager roleManager,
             IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
-            LogInManager logInManager, UserRegistrationManager userRegistrationManager, UserInfoManager userInfoManager, SettingManager settingManager) 
+            LogInManager logInManager, UserRegistrationManager userRegistrationManager, UserInfoManager userInfoManager, SettingManager settingManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -151,6 +149,20 @@ namespace acmManager.Users
             await _userInfoManager.Update(user.UserInfo);
 
             return UserToDto(user);
+        }
+
+        /// <summary>
+        /// 删除一个用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [AbpAuthorize(PermissionNames.PagesUsers_Delete)]
+        public async Task DeleteAsync(long id)
+        {
+            var user = await _userManager.GetUserByIdAsync(id);
+            var userInfo = user.UserInfo;
+            await _userManager.DeleteAsync(user);
+            await _userInfoManager.Delete(userInfo.Id);
         }
         
         #endregion

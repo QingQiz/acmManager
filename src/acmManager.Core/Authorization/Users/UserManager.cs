@@ -12,6 +12,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Organizations;
 using Abp.Runtime.Caching;
+using Abp.UI;
 using acmManager.Authorization.Roles;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,9 +59,16 @@ namespace acmManager.Authorization.Users
         {
         }
 
-        public override Task<User> GetUserByIdAsync(long userId)
+        public override async Task<User> GetUserByIdAsync(long userId)
         {
-            return Users.Where(u => u.Id == userId).Include(u => u.UserInfo).FirstAsync();
+            var res = Users.Where(u => u.Id == userId);
+
+            if (await res.CountAsync() == 0)
+            {
+                throw new UserFriendlyException("User not found");
+            }
+
+            return await res.Include(u => u.UserInfo).FirstAsync();
         }
     }
 }
