@@ -99,8 +99,8 @@ namespace acmManager.Users
         /// <summary>
         /// 将 User 转化为 UserDto
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="user"><see cref="User"/></param>
+        /// <returns><see cref="UserDto"/></returns>
         [RemoteService(false)]
         public UserDto UserToDto(User user)
         {
@@ -108,6 +108,18 @@ namespace acmManager.Users
             ret.UserId = user.Id;
             return ret;
         }
+
+        /// <summary>
+        /// 将 User 转化为 UserInfoDto
+        /// </summary>
+        /// <param name="user"><see cref="User"/></param>
+        /// <returns><see cref="UserInfoDto"/></returns>
+        [RemoteService(false)]
+        public UserInfoDto UserToInfoDto(User user)
+        {
+            return ObjectMapper.Map<UserInfoDto>(user.UserInfo);
+        }
+        
 
         #endregion
 
@@ -228,6 +240,17 @@ namespace acmManager.Users
             } 
             
             return ObjectMapper.Map<UserInfoDto>(user.UserInfo);
+        }
+
+        /// <summary>
+        /// 获取当前用户的信息
+        /// </summary>
+        /// <returns><see cref="UserInfoDto"/></returns>
+        [AbpAuthorize]
+        public async Task<UserInfoDto> GetMeAsync()
+        {
+            var user = await GetCurrentUserAsync();
+            return UserToInfoDto(user);
         }
 
         #endregion
