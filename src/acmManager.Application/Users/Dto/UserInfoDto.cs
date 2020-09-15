@@ -17,6 +17,8 @@ namespace acmManager.Users.Dto
         // 电话
         public string Mobile { get; set; }
         // 性别
+        [EnumDataType(typeof(UserGender))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserGender Gender { get; set; }
         // 专业
         public string Major { get; set; }

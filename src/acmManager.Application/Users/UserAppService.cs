@@ -228,6 +228,19 @@ namespace acmManager.Users
         {
             var user = await GetCurrentUserAsync();
 
+            if (!(new Regex(
+                    // From https://regexlib.com/RETester.aspx?regexp_id=26
+                    @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
+                .IsMatch(input.Email)))
+            {
+                throw new UserFriendlyException("Invalid email address: " + input.Email);
+            }
+
+            if (!(new Regex(@"^\+?[0-9]{0,15}$")).IsMatch(input.Mobile))
+            {
+                throw new UserFriendlyException("Invalid mobile: " + input.Mobile);
+            }
+  
             user.UserInfo.Email = input.Email;
             user.UserInfo.Mobile = input.Mobile;
 
@@ -268,10 +281,21 @@ namespace acmManager.Users
             user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
             await CurrentUnitOfWork.SaveChangesAsync();
         }
-        
 
         #endregion
 
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns><see cref="GetUserInfoDto"/></returns>
+        [AbpAuthorize]
+        public async Task<GetUserInfoDto> GetUserInfoAsync(long userId)
+        {
+            var user = await UserManager.GetUserByIdAsync(userId);
+
+            return ObjectMapper.Map<GetUserInfoDto>(user.UserInfo);
+        }
         /*
         [AbpAuthorize]
         public override async Task DeleteAsync(EntityDto<long> input)
