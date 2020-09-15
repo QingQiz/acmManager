@@ -1,7 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
 using Abp.Runtime.Session;
@@ -107,7 +110,7 @@ namespace acmManager.Users
         [RemoteService(false)]
         public UserDto UserToDto(User user)
         {
-            var ret = ObjectMapper.Map<UserDto>(user.UserInfo);
+            var ret = user.UserInfo == null ? new UserDto() : ObjectMapper.Map<UserDto>(user.UserInfo);
             ret.UserId = user.Id;
             return ret;
         }
@@ -120,10 +123,9 @@ namespace acmManager.Users
         [RemoteService(false)]
         public UserInfoDto UserToInfoDto(User user)
         {
-            return ObjectMapper.Map<UserInfoDto>(user.UserInfo);
+            return ObjectMapper.Map<UserInfoDto>(user.UserInfo) ?? new UserInfoDto();
         }
         
-
         #endregion
 
         #region privilegeApi
@@ -186,10 +188,41 @@ namespace acmManager.Users
             
             await CurrentUnitOfWork.SaveChangesAsync();
         }
+
+        [AbpAuthorize(PermissionNames.PagesUsers_GetAll)]
+        public async Task<IEnumerable<UserDto>> GetAllUserAsync(GetAllUserInput input)
+        {
+            if (input.Filter == null)
+            {
+                return await Task.Run(() =>
+                    _userManager.Query().Skip(input.SkipCount).Take(input.MaxResultCount).ToList().Select(UserToDto));
+            }
+
+            return await Task.Run(() => _userManager
+                .Query()
+                .Where(u => u.UserInfo != null)
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.StudentNumber),
+                    u => u.UserInfo.StudentNumber.Contains(input.Filter.StudentNumber))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.Org), u => u.UserInfo.Org.Contains(input.Filter.Org))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.Mobile),
+                    u => u.UserInfo.Mobile.Contains(input.Filter.Mobile))
+                .WhereIf(input.Filter.Gender != null, u => u.UserInfo.Gender == input.Filter.Gender)
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.Major), u => u.UserInfo.Major.Contains(input.Filter.Major))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.ClassId),
+                    u => u.UserInfo.ClassId.Contains(input.Filter.ClassId))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.Location),
+                    u => u.UserInfo.Location.Contains(input.Filter.Location))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.StudentType),
+                    u => u.UserInfo.StudentType.Contains(input.Filter.StudentType))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.Email), u => u.UserInfo.Email.Contains(input.Filter.Email))
+                .WhereIf(!string.IsNullOrEmpty(input.Filter.Name), u => u.UserInfo.Name.Contains(input.Filter.Name))
+                .WhereIf(input.Filter.Type != null, u => u.UserInfo.Type == input.Filter.Type)
+                .Skip(input.SkipCount).Take(input.MaxResultCount).ToList().Select(UserToDto));
+        }
         
         #endregion
 
-        #region UpdateInformation
+        #region UserInfo
 
         /// <summary>
         /// 从翱翔门户更新用户资料
@@ -282,8 +315,6 @@ namespace acmManager.Users
             await CurrentUnitOfWork.SaveChangesAsync();
         }
 
-        #endregion
-
         /// <summary>
         /// 获取用户信息
         /// </summary>
@@ -296,87 +327,8 @@ namespace acmManager.Users
 
             return ObjectMapper.Map<GetUserInfoDto>(user.UserInfo);
         }
-        /*
-        [AbpAuthorize]
-        public override async Task DeleteAsync(EntityDto<long> input)
-        {
-            var user = await _userManager.GetUserByIdAsync(input.Id);
-            await _userManager.DeleteAsync(user);
-        }
 
-        [AbpAuthorize]
-        public async Task<ListResultDto<RoleDto>> GetRoles()
-        {
-            var roles = await _roleRepository.GetAllListAsync();
-            return new ListResultDto<RoleDto>(ObjectMapper.Map<List<RoleDto>>(roles));
-        }
-
-        [AbpAuthorize]
-        public async Task ChangeLanguage(ChangeUserLanguageDto input)
-        {
-            await SettingManager.ChangeSettingForUserAsync(
-                AbpSession.ToUserIdentifier(),
-                LocalizationSettingNames.DefaultLanguage,
-                input.LanguageName
-            );
-        }
-
-        protected override User MapToEntity(CreateUserDto createInput)
-        {
-            var user = ObjectMapper.Map<User>(createInput);
-            user.SetNormalizedNames();
-            return user;
-        }
-
-        protected override void MapToEntity(UserDto input, User user)
-        {
-            ObjectMapper.Map(input, user);
-            user.SetNormalizedNames();
-        }
-
-        protected override UserDto MapToEntityDto(User user)
-        {
-            var roleIds = user.Roles.Select(x => x.RoleId).ToArray();
-
-            var roles = _roleManager.Roles.Where(r => roleIds.Contains(r.Id)).Select(r => r.NormalizedName);
-
-            var userDto = base.MapToEntityDto(user);
-            userDto.RoleNames = roles.ToArray();
-
-            return userDto;
-        }
-
-        protected override IQueryable<User> CreateFilteredQuery(PagedUserResultRequestDto input)
-        {
-            return Repository.GetAllIncluding(x => x.Roles)
-                .WhereIf(!input.Keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.Keyword) || x.Name.Contains(input.Keyword) || x.EmailAddress.Contains(input.Keyword))
-                .WhereIf(input.IsActive.HasValue, x => x.IsActive == input.IsActive);
-        }
-
-        protected override async Task<User> GetEntityByIdAsync(long id)
-        {
-            var user = await Repository.GetAllIncluding(x => x.Roles).FirstOrDefaultAsync(x => x.Id == id);
-
-            if (user == null)
-            {
-                throw new EntityNotFoundException(typeof(User), id);
-            }
-
-            return user;
-        }
-
-        protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedUserResultRequestDto input)
-        {
-            return query.OrderBy(r => r.UserName);
-        }
-
-        protected virtual void CheckErrors(IdentityResult identityResult)
-        {
-            identityResult.CheckErrors(LocalizationManager);
-        }
-
-
-        */
+        #endregion
     }
 }
 

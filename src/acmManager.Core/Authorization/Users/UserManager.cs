@@ -60,6 +60,11 @@ namespace acmManager.Authorization.Users
         {
         }
 
+        public IEnumerable<User> Query()
+        {
+            return Users.Include(u => u.UserInfo);
+        }
+
         public IIncludableQueryable<User, UserInfo> MakeQueryById(long userId)
         {
             var res = Users.Where(u => u.Id == userId);

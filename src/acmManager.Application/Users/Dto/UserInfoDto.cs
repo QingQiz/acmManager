@@ -10,7 +10,6 @@ namespace acmManager.Users.Dto
     public class UserInfoDto
     {
         // 学号
-        [Required]
         public string StudentNumber { get; set; }
         // 学院
         public string Org { get; set; }
@@ -19,7 +18,7 @@ namespace acmManager.Users.Dto
         // 性别
         [EnumDataType(typeof(UserGender))]
         [JsonConverter(typeof(StringEnumConverter))]
-        public UserGender Gender { get; set; }
+        public UserGender? Gender { get; set; }
         // 专业
         public string Major { get; set; }
         // 班号
@@ -37,6 +36,6 @@ namespace acmManager.Users.Dto
         // 类型
         [EnumDataType(typeof(UserType))]
         [JsonConverter(typeof(StringEnumConverter))]
-        public UserType Type { get; set; }
+        public UserType? Type { get; set; }
     }
 }
