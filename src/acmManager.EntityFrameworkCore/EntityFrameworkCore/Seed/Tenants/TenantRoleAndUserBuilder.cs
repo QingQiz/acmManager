@@ -125,8 +125,16 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             }
             
             // Extra Roles
+            CreateExtraRoles(StaticRoleNames.Tenants.TeamLeader, false, new List<string>()
+            {
+                PermissionNames.PagesUsers_Promote,
+                PermissionNames.PagesUsers_Relegate,
+            });
+            CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>()
+            {
+                PermissionNames.PagesUsers_Relegate,
+            });
             CreateExtraRoles(StaticRoleNames.Tenants.Default, isDefault: true, new List<string>());
-            CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>());
         }
     }
 }

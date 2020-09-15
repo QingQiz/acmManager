@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.AutoMapper;
 using acmManager.Authorization.Users;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace acmManager.Users.Dto
 {
@@ -31,6 +33,8 @@ namespace acmManager.Users.Dto
         // 姓名
         public string Name { get; set; }
         // 类型
+        [EnumDataType(typeof(UserType))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public UserType Type { get; set; }
     }
 }

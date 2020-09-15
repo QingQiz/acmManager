@@ -189,7 +189,7 @@ namespace acmManager.Users
         
         #endregion
 
-        #region NormalApi
+        #region UpdateInformation
 
         /// <summary>
         /// 从翱翔门户更新用户资料

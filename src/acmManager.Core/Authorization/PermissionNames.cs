@@ -15,5 +15,8 @@
         public const string PagesUsers_Update = "Pages.Users.Update";
         public const string PagesUsers_Delete = "Pages.Users.Delete";
         public const string PagesUsers_GetAll = "Pages.Users.GetAll";
+
+        public const string PagesUsers_Promote = "Pages.Users.Promote";
+        public const string PagesUsers_Relegate = "Pages.Users.Relegate";
     }
 }

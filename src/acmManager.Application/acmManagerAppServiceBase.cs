@@ -23,9 +23,14 @@ namespace acmManager
             LocalizationSourceName = acmManagerConsts.LocalizationSourceName;
         }
 
-        protected virtual async Task<User> GetCurrentUserAsync()
+        protected virtual async Task<User> GetCurrentUserAsync(bool includeRoles=false)
         {
-            return await UserManager.GetUserByIdAsync(AbpSession.GetUserId());
+            var currentUserId = AbpSession.GetUserId();
+            if (includeRoles)
+            {
+                return await UserManager.GetUserByIdWithRolesAsync(currentUserId);
+            }
+            return await UserManager.GetUserByIdAsync(currentUserId);
         }
 
         protected virtual Task<Tenant> GetCurrentTenantAsync()

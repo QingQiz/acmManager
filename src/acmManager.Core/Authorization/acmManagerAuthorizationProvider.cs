@@ -22,6 +22,8 @@ namespace acmManager.Authorization
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Update, L("Users.Update"));
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Delete, L("Users.Delete"));
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_GetAll, L("Users.GetAll"));
+            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Promote, L("Users.Promote"));
+            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Relegate, L("Users.Relegate"));
         }
 
         private static ILocalizableString L(string name)

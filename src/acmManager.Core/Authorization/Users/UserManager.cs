@@ -15,6 +15,7 @@ using Abp.Runtime.Caching;
 using Abp.UI;
 using acmManager.Authorization.Roles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace acmManager.Authorization.Users
 {
@@ -59,16 +60,28 @@ namespace acmManager.Authorization.Users
         {
         }
 
-        public override async Task<User> GetUserByIdAsync(long userId)
+        public IIncludableQueryable<User, UserInfo> MakeQueryById(long userId)
         {
             var res = Users.Where(u => u.Id == userId);
 
-            if (await res.CountAsync() == 0)
+            if (!res.Any())
             {
                 throw new UserFriendlyException("User not found");
             }
 
-            return await res.Include(u => u.UserInfo).FirstAsync();
+            return res.Include(u => u.UserInfo);
+        }
+
+        public override async Task<User> GetUserByIdAsync(long userId)
+        {
+            return await MakeQueryById(userId).FirstAsync();
+        }
+
+        public async Task<User> GetUserByIdWithRolesAsync(long userId)
+        {
+            return await MakeQueryById(userId)
+                .Include(u => u.Roles)
+                .FirstAsync();
         }
     }
 }
