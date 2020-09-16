@@ -189,6 +189,11 @@ namespace acmManager.Users
             await CurrentUnitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 获取所有用户的信息，筛选+分页
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.PagesUsers_GetAll)]
         public async Task<IEnumerable<UserDto>> GetAllUserAsync(GetAllUserInput input)
         {
