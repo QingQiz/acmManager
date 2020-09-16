@@ -88,5 +88,12 @@ namespace acmManager.Authorization.Users
                 .Include(u => u.Roles)
                 .FirstAsync();
         }
+
+        public async Task<User> GetUserByIdWithPhotoAsync(long userId)
+        {
+            return await MakeQueryById(userId)
+                .ThenInclude(info => info.Photo)
+                .FirstAsync();
+        }
     }
 }
