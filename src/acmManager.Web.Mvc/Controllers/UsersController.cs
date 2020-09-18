@@ -12,9 +12,9 @@ namespace acmManager.Web.Controllers
     [AbpMvcAuthorize(PermissionNames.PagesUsers)]
     public class UsersController : acmManagerControllerBase
     {
-        private readonly IUserAppService _userAppService;
+        private readonly UserAppService _userAppService;
 
-        public UsersController(IUserAppService userAppService)
+        public UsersController(UserAppService userAppService)
         {
             _userAppService = userAppService;
         }

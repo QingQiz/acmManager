@@ -75,38 +75,24 @@ namespace acmManager.Web.Controllers
 
         #region Login / Logout
 
-        public ActionResult Login(string userNameOrEmailAddress = "", string returnUrl = "", string successMessage = "")
+        public ActionResult Login(string returnUrl = "")
         {
-            if (string.IsNullOrWhiteSpace(returnUrl))
-            {
-                returnUrl = GetAppHomeUrl();
-            }
-
             return View(new LoginFormViewModel
             {
-                ReturnUrl = returnUrl,
-                IsMultiTenancyEnabled = _multiTenancyConfig.IsEnabled,
-                IsSelfRegistrationAllowed = IsSelfRegistrationEnabled(),
-                MultiTenancySide = AbpSession.MultiTenancySide
+                ReturnUrl = NormalizeReturnUrl(returnUrl),
             });
         }
 
         [HttpPost]
         [UnitOfWork]
-        public virtual async Task<JsonResult> Login(LoginViewModel loginModel, string returnUrl = "", string returnUrlHash = "")
+        public virtual async Task<JsonResult> Login(LoginViewModel loginModel, string returnUrl = "")
         {
-            returnUrl = NormalizeReturnUrl(returnUrl);
-            if (!string.IsNullOrWhiteSpace(returnUrlHash))
-            {
-                returnUrl = returnUrl + returnUrlHash;
-            }
-
-            var loginResult = await GetLoginResultAsync(loginModel.UsernameOrEmailAddress, loginModel.Password, GetTenancyNameOrNull());
+            var loginResult = await GetLoginResultAsync(loginModel.Username, loginModel.Password, GetTenancyNameOrNull());
 
             await _signInManager.SignInAsync(loginResult.Identity, loginModel.RememberMe);
             await UnitOfWorkManager.Current.SaveChangesAsync();
 
-            return Json(new AjaxResponse { TargetUrl = returnUrl });
+            return Json(new AjaxResponse { TargetUrl = NormalizeReturnUrl(returnUrl) });
         }
 
         public async Task<ActionResult> Logout()
@@ -115,16 +101,16 @@ namespace acmManager.Web.Controllers
             return RedirectToAction("Login");
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string username, string password, string tenancyName)
         {
-            var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
+            var loginResult = await _logInManager.LoginAsync(username, password, tenancyName);
 
             switch (loginResult.Result)
             {
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, username, tenancyName);
             }
         }
 
@@ -408,22 +394,14 @@ namespace acmManager.Web.Controllers
 
         private string NormalizeReturnUrl(string returnUrl, Func<string> defaultValueBuilder = null)
         {
-            if (defaultValueBuilder == null)
-            {
-                defaultValueBuilder = GetAppHomeUrl;
-            }
+            defaultValueBuilder ??= GetAppHomeUrl;
 
             if (returnUrl.IsNullOrEmpty())
             {
                 return defaultValueBuilder();
             }
 
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return returnUrl;
-            }
-
-            return defaultValueBuilder();
+            return Url.IsLocalUrl(returnUrl) ? returnUrl : defaultValueBuilder();
         }
 
         #endregion

@@ -251,3 +251,4 @@ paket-files/
 .idea/
 *.sln.iml
 /src/acmManager.Web.Host/App_Data/Logs/Logs.txt
+/src/acmManager.Web.Host/App_Data/Uploads/

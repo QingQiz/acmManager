@@ -43,7 +43,25 @@
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.10.1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\bootstrap" />
     <Folder Include="wwwroot\libs\" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\Users\EditUserModalViewModel.cs" />
+    <Compile Remove="Controllers\UsersController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\Users\_EditModal.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.min.css.map" />
   </ItemGroup>
 </Project>

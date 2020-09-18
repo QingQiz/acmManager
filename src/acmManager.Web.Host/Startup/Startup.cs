@@ -127,9 +127,12 @@ namespace acmManager.Web.Host.Startup
             app.UseCors(_defaultCorsPolicyName); // Enable CORS!
 
 
+            var uploadsPath = Directory.GetCurrentDirectory() + "/App_Data/Uploads";
+            if (!Directory.Exists(uploadsPath)) Directory.CreateDirectory(uploadsPath);
+
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory() + "/App_Data/Uploads"),
+                FileProvider = new PhysicalFileProvider(uploadsPath),
                 RequestPath = "/Uploads"
             });
 

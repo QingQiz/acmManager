@@ -6,7 +6,7 @@ namespace acmManager.Web.Models.Account
     public class LoginViewModel
     {
         [Required]
-        public string UsernameOrEmailAddress { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [DisableAuditing]

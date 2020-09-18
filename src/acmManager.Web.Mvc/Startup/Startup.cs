@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ using acmManager.Web.Resources;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.Dependency;
 using Abp.Json;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 
@@ -78,6 +80,15 @@ namespace acmManager.Web.Startup
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            var uploadsPath = Directory.GetCurrentDirectory() + "/App_Data/Uploads";
+            if (!Directory.Exists(uploadsPath)) Directory.CreateDirectory(uploadsPath);
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(uploadsPath),
+                RequestPath = "/Uploads"
+            });
 
             app.UseStaticFiles();
 
