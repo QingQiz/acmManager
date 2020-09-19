@@ -1,0 +1,9 @@
+﻿nav>span {
+    color: #eaeaea;
+}
+
+.userPhoto {
+    display: block;
+    border-radius: 50%;
+    max-width: 40px;
+}

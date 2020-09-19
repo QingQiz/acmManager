@@ -43,8 +43,10 @@
     <PackageReference Include="Abp.Castle.Log4Net" Version="5.10.1" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\Uploads" />
     <Folder Include="wwwroot\bootstrap" />
     <Folder Include="wwwroot\libs\" />
+    <Folder Include="wwwroot\view-resources\Views\Home" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
   </ItemGroup>
   <ItemGroup>

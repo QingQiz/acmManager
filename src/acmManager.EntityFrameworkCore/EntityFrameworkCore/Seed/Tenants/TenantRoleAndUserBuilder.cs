@@ -115,12 +115,19 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
                 adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
                 adminUser.IsEmailConfirmed = true;
                 adminUser.IsActive = true;
+                adminUser.UserInfo = null;
 
                 _context.Users.Add(adminUser);
                 _context.SaveChanges();
 
                 // Assign Admin role to admin user
                 _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
+                _context.SaveChanges();
+            }
+
+            if (adminUser.UserInfo == null)
+            {
+                adminUser.UserInfo = new UserInfo();
                 _context.SaveChanges();
             }
             

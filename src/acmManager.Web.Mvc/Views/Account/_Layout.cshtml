@@ -18,6 +18,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <title>@pageTitle</title>
+    <style>
+        body {
+            /*background-image: url("");*/
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
 
     @await Html.PartialAsync("_Styles.cshtml")
     @await RenderSectionAsync("styles", required: false)
