@@ -1,79 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Abp;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
 using Abp.Authorization.Users;
-using Abp.Configuration;
-using Abp.Configuration.Startup;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Notifications;
-using Abp.Runtime.Session;
-using Abp.Threading;
 using Abp.Timing;
-using Abp.UI;
 using Abp.Web.Models;
-using Abp.Zero.Configuration;
 using acmManager.Authorization;
+using acmManager.Authorization.Accounts;
+using acmManager.Authorization.Accounts.Dto;
 using acmManager.Authorization.Users;
 using acmManager.Controllers;
 using acmManager.Identity;
 using acmManager.MultiTenancy;
-using acmManager.Sessions;
 using acmManager.Web.Models.Account;
-using acmManager.Web.Views.Shared.Components.TenantChange;
 
 namespace acmManager.Web.Controllers
 {
     public class AccountController : acmManagerControllerBase
     {
-        private readonly UserManager _userManager;
-        private readonly TenantManager _tenantManager;
-        private readonly IMultiTenancyConfig _multiTenancyConfig;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
         private readonly LogInManager _logInManager;
         private readonly SignInManager _signInManager;
-        private readonly UserRegistrationManager _userRegistrationManager;
-        private readonly ISessionAppService _sessionAppService;
         private readonly ITenantCache _tenantCache;
         private readonly INotificationPublisher _notificationPublisher;
+        private readonly IAccountAppService _accountAppService;
 
-        public AccountController(
-            UserManager userManager,
-            IMultiTenancyConfig multiTenancyConfig,
-            TenantManager tenantManager,
-            IUnitOfWorkManager unitOfWorkManager,
-            AbpLoginResultTypeHelper abpLoginResultTypeHelper,
-            LogInManager logInManager,
-            SignInManager signInManager,
-            UserRegistrationManager userRegistrationManager,
-            ISessionAppService sessionAppService,
-            ITenantCache tenantCache,
-            INotificationPublisher notificationPublisher)
+        public AccountController(AbpLoginResultTypeHelper abpLoginResultTypeHelper, LogInManager logInManager, SignInManager signInManager, ITenantCache tenantCache, INotificationPublisher notificationPublisher, IAccountAppService accountAppService)
         {
-            _userManager = userManager;
-            _multiTenancyConfig = multiTenancyConfig;
-            _tenantManager = tenantManager;
-            _unitOfWorkManager = unitOfWorkManager;
             _abpLoginResultTypeHelper = abpLoginResultTypeHelper;
             _logInManager = logInManager;
             _signInManager = signInManager;
-            _userRegistrationManager = userRegistrationManager;
-            _sessionAppService = sessionAppService;
             _tenantCache = tenantCache;
             _notificationPublisher = notificationPublisher;
+            _accountAppService = accountAppService;
         }
 
-        #region Login / Logout
+        #region Login / Logout / Register
 
         public ActionResult Login(string returnUrl = "")
         {
@@ -114,241 +82,13 @@ namespace acmManager.Web.Controllers
             }
         }
 
-        #endregion
-
-        #region Register
-
-        public ActionResult Register()
-        {
-            return RegisterView(new RegisterViewModel());
-        }
-
-        private ActionResult RegisterView(RegisterViewModel model)
-        {
-            ViewBag.IsMultiTenancyEnabled = _multiTenancyConfig.IsEnabled;
-
-            return View("Register", model);
-        }
-
-        private bool IsSelfRegistrationEnabled()
-        {
-            if (!AbpSession.TenantId.HasValue)
-            {
-                return false; // No registration enabled for host users!
-            }
-
-            return true;
-        }
-
         [HttpPost]
         [UnitOfWork]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<JsonResult> Register(RegisterViewModel model)
         {
-            try
-            {
-                ExternalLoginInfo externalLoginInfo = null;
-                if (model.IsExternalLogin)
-                {
-                    externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
-                    if (externalLoginInfo == null)
-                    {
-                        throw new Exception("Can not external login!");
-                    }
-
-                    model.UserName = model.EmailAddress;
-                    model.Password = Authorization.Users.User.CreateRandomPassword();
-                }
-                else
-                {
-                    if (model.UserName.IsNullOrEmpty() || model.Password.IsNullOrEmpty())
-                    {
-                        throw new UserFriendlyException(L("FormIsNotValidMessage"));
-                    }
-                }
-
-                var user = await _userRegistrationManager.RegisterAsync(
-                    model.Name,
-                    model.Surname,
-                    model.EmailAddress,
-                    model.UserName,
-                    model.Password,
-                    true // Assumed email address is always confirmed. Change this if you want to implement email confirmation.
-                );
-
-                // Getting tenant-specific settings
-                var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
-
-                if (model.IsExternalLogin)
-                {
-                    Debug.Assert(externalLoginInfo != null);
-
-                    if (string.Equals(externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email), model.EmailAddress, StringComparison.OrdinalIgnoreCase))
-                    {
-                        user.IsEmailConfirmed = true;
-                    }
-
-                    user.Logins = new List<UserLogin>
-                    {
-                        new UserLogin
-                        {
-                            LoginProvider = externalLoginInfo.LoginProvider,
-                            ProviderKey = externalLoginInfo.ProviderKey,
-                            TenantId = user.TenantId
-                        }
-                    };
-                }
-
-                await _unitOfWorkManager.Current.SaveChangesAsync();
-
-                Debug.Assert(user.TenantId != null);
-
-                var tenant = await _tenantManager.GetByIdAsync(user.TenantId.Value);
-
-                // Directly login if possible
-                if (user.IsActive && (user.IsEmailConfirmed || !isEmailConfirmationRequiredForLogin))
-                {
-                    AbpLoginResult<Tenant, User> loginResult;
-                    if (externalLoginInfo != null)
-                    {
-                        loginResult = await _logInManager.LoginAsync(externalLoginInfo, tenant.TenancyName);
-                    }
-                    else
-                    {
-                        loginResult = await GetLoginResultAsync(user.UserName, model.Password, tenant.TenancyName);
-                    }
-
-                    if (loginResult.Result == AbpLoginResultType.Success)
-                    {
-                        await _signInManager.SignInAsync(loginResult.Identity, false);
-                        return Redirect(GetAppHomeUrl());
-                    }
-
-                    Logger.Warn("New registered user could not be login. This should not be normally. login result: " + loginResult.Result);
-                }
-
-                return View("RegisterResult", new RegisterResultViewModel
-                {
-                    TenancyName = tenant.TenancyName,
-                    NameAndSurname = user.Name + " " + user.Surname,
-                    UserName = user.UserName,
-                    EmailAddress = user.EmailAddress,
-                    IsEmailConfirmed = user.IsEmailConfirmed,
-                    IsActive = user.IsActive,
-                    IsEmailConfirmationRequiredForLogin = isEmailConfirmationRequiredForLogin
-                });
-            }
-            catch (UserFriendlyException ex)
-            {
-                ViewBag.ErrorMessage = ex.Message;
-
-                return View("Register", model);
-            }
-        }
-
-        #endregion
-
-        #region External Login
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ExternalLogin(string provider, string returnUrl)
-        {
-            var redirectUrl = Url.Action(
-                "ExternalLoginCallback",
-                "Account",
-                new
-                {
-                    ReturnUrl = returnUrl
-                });
-
-            return Challenge(
-                // TODO: ...?
-                // new Microsoft.AspNetCore.Http.Authentication.AuthenticationProperties
-                // {
-                //     Items = { { "LoginProvider", provider } },
-                //     RedirectUri = redirectUrl
-                // },
-                provider
-            );
-        }
-
-        [UnitOfWork]
-        public virtual async Task<ActionResult> ExternalLoginCallback(string returnUrl, string remoteError = null)
-        {
-            returnUrl = NormalizeReturnUrl(returnUrl);
-
-            if (remoteError != null)
-            {
-                Logger.Error("Remote Error in ExternalLoginCallback: " + remoteError);
-                throw new UserFriendlyException(L("CouldNotCompleteLoginOperation"));
-            }
-
-            var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
-            if (externalLoginInfo == null)
-            {
-                Logger.Warn("Could not get information from external login.");
-                return RedirectToAction(nameof(Login));
-            }
-
-            await _signInManager.SignOutAsync();
-
-            var tenancyName = GetTenancyNameOrNull();
-
-            var loginResult = await _logInManager.LoginAsync(externalLoginInfo, tenancyName);
-
-            switch (loginResult.Result)
-            {
-                case AbpLoginResultType.Success:
-                    await _signInManager.SignInAsync(loginResult.Identity, false);
-                    return Redirect(returnUrl);
-                case AbpLoginResultType.UnknownExternalLogin:
-                    return await RegisterForExternalLogin(externalLoginInfo);
-                default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(
-                        loginResult.Result,
-                        externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? externalLoginInfo.ProviderKey,
-                        tenancyName
-                    );
-            }
-        }
-
-        private async Task<ActionResult> RegisterForExternalLogin(ExternalLoginInfo externalLoginInfo)
-        {
-            var email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
-            var nameinfo = ExternalLoginInfoHelper.GetNameAndSurnameFromClaims(externalLoginInfo.Principal.Claims.ToList());
-
-            var viewModel = new RegisterViewModel
-            {
-                EmailAddress = email,
-                Name = nameinfo.name,
-                Surname = nameinfo.surname,
-                IsExternalLogin = true,
-                ExternalLoginAuthSchema = externalLoginInfo.LoginProvider
-            };
-
-            if (nameinfo.name != null &&
-                nameinfo.surname != null &&
-                email != null)
-            {
-                return await Register(viewModel);
-            }
-
-            return RegisterView(viewModel);
-        }
-
-        [UnitOfWork]
-        protected virtual async Task<List<Tenant>> FindPossibleTenantsOfUserAsync(UserLoginInfo login)
-        {
-            List<User> allUsers;
-            using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
-            {
-                allUsers = await _userManager.FindAllAsync(login);
-            }
-
-            return allUsers
-                .Where(u => u.TenantId != null)
-                .Select(u => AsyncHelper.RunSync(() => _tenantManager.FindByIdAsync(u.TenantId.Value)))
-                .ToList();
+            var res = await _accountAppService.Register(new RegisterInput()
+                {Username = model.AoxiangUsername, Password = model.AoxiangPassword});
+            return Json(new AjaxResponse(res));
         }
 
         #endregion
@@ -363,19 +103,6 @@ namespace acmManager.Web.Controllers
         public string GetAppHomeUrl()
         {
             return Url.Action("Index", "Home");
-        }
-
-        #endregion
-
-        #region Change Tenant
-
-        public async Task<ActionResult> TenantChangeModal()
-        {
-            var loginInfo = await _sessionAppService.GetCurrentLoginInformations();
-            return View("/Views/Shared/Components/TenantChange/_ChangeModal.cshtml", new ChangeModalViewModel
-            {
-                TenancyName = loginInfo.Tenant?.TenancyName
-            });
         }
 
         #endregion
@@ -401,7 +128,12 @@ namespace acmManager.Web.Controllers
                 return defaultValueBuilder();
             }
 
-            return Url.IsLocalUrl(returnUrl) ? returnUrl : defaultValueBuilder();
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return returnUrl;
+            }
+
+            return defaultValueBuilder();
         }
 
         #endregion

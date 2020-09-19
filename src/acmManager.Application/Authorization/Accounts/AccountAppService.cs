@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.UI;
 using acmManager.Authorization.Accounts.Dto;
@@ -52,6 +53,11 @@ namespace acmManager.Authorization.Accounts
         /// <exception cref="UserFriendlyException"></exception>
         public async Task<UserInfoDto> Register(RegisterInput input)
         {
+            if (_userManager.Query().Any(u => u.UserInfo != null && u.UserInfo.StudentNumber == input.Username))
+            {
+                throw new UserFriendlyException("User Exists");
+            }
+
             var userInfoDto = await _userAppService.GetUserInfoFromAoxiangAsync(input.Username, input.Password);
             
             // true means: Assumed email address is always confirmed.

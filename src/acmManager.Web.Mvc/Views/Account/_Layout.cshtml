@@ -1,11 +1,8 @@
-﻿@using Abp.Configuration.Startup
-@using Abp.Web.Security.AntiForgery
-@using acmManager
+﻿@using Abp.Web.Security.AntiForgery
 @using acmManager.Web.Resources
 @inject IAbpAntiForgeryManager AbpAntiForgeryManager
 @inject IWebResourceManager WebResourceManager
 @inject ILanguageManager LanguageManager
-@inject IMultiTenancyConfig MultiTenancyConfig
 @{
     Layout = null;
     AbpAntiForgeryManager.SetCookie(Context);

@@ -1,7 +1,5 @@
-﻿@using Abp.Authorization.Users
-@model acmManager.Web.Models.Account.LoginFormViewModel
-@{
-    ViewBag.Title = L("LogIn");
+﻿@{
+    ViewBag.Title = "Account";
 }
 @section styles
 {
@@ -9,30 +7,74 @@
         <link href="~/view-resources/Views/Account/Login.css" rel="stylesheet"/>
     </environment>
 }
+@section scripts
+{
+    <environment name="Development">
+        <script type="application/javascript">
+            LoginEvent('@Url.Action("Login")');
+            RegisterEvent('@Url.Action("Register")');
+        </script>
+    </environment>
+}
 <div class="wrapper fadeInDown">
-    <div id="formContent">
+    <div id="LoginForm" class="formContent">
         <div style="height: 25px"></div>
         <div class="fadeIn first" style="margin-bottom: 10px">
-            <img src="~/img/NWPU.png" id="icon" alt="User Icon" style="height: 35px; width: 35px"/>
-            <h2 class="active"> @ViewBag.Title </h2>
+            <img src="~/img/NWPU.png" alt="User Icon" style="height: 40px; width: 40px"/>
+            <h2 class="active"> Login </h2>
+        </div>
+
+        <div class="alert alert-danger" role="alert" style="display: none">
+            <strong>Error!</strong>
+            <p class="ErrorMessage"/>
         </div>
         
-        <div style="height: 25px"></div>
+        <div style="height: 15px"></div>
 
         <!-- Login Form -->
         <form method="post" asp-action="Login">
-            <input type="text" id="login" class="fadeIn second" name="Username" placeholder="username">
-            <input type="password" id="password" class="fadeIn third" name="Password" placeholder="password">
+            <input type="text" id="login" class="fadeIn second" name="Username" placeholder="账号">
+            <input type="password" id="password" class="fadeIn third" name="Password" placeholder="密码">
             <input type="hidden" name="RememberMe" value="true">
             <div style="height: 25px"></div>
-            <input type="submit" class="fadeIn fourth" value="Log In">
+            <input type="button" class="fadeIn fourth" id="Login" value="Login">
         </form>
 
-        <div id="formFooter">
+        <div class="formFooter">
             <p style="text-align: center; font-weight: 600; color: #5a6268; margin-bottom: 5px">
-                Don't have an account? <a class="underlineHover" href="#" style="margin-left: 10px">Sign Up</a>
+                Don't have an account? <a id="SignUpLink" class="underlineHover" href="#" style="margin-left: 10px">Register</a>
             </p>
-            <a class="underlineHover" href="#">Forgot Password?</a>
+            @* <a class="underlineHover" href="#">Forgot Password?</a> *@
+        </div>
+    </div>
+    <div id="SignUpForm" class="formContent" style="display: none; opacity: 0">
+        <div style="height: 25px"></div>
+        <div class="fadeIn first" style="margin-bottom: 10px">
+            <img src="~/img/NWPU.png" alt="User Icon" style="height: 40px; width: 40px"/>
+            <h2 class="active"> Register </h2>
+        </div>
+    
+        <div class="alert alert-danger" role="alert" style="display: none">
+            <strong>Error!</strong>
+            <p class="ErrorMessage"/>
+        </div>
+        <div class="alert alert-success" role="alert" style="display: none" id="RegisterSuccess">
+            <strong>Success!</strong> Please go back to login
+        </div>
+        
+    
+        <div style="height: 15px"></div>
+
+        <!-- Login Form -->
+        <form method="post" asp-action="Register">
+            <input type="text" name="AoxiangUsername" placeholder="学号" class="fadeIn second">
+            <input type="password" name="AoxiangPassword" placeholder="翱翔门户密码" class="fadeIn third">
+            <div style="height: 25px"></div>
+            <input type="button" class="fadeIn fourth" id="Register" value="Register">
+        </form>
+    
+        <div class="formFooter">
+            <a class="underlineHover" href="#" id="BackToLogin">Back to Login</a>
         </div>
     </div>
 </div>
