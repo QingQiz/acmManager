@@ -1,7 +1,10 @@
 ﻿@using acmManager
-<footer class="main-footer">
-    <strong>Copyright &copy; @DateTime.Now.Year <a href="javascript:void(0);">acmManager</a>.</strong> All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
+<footer class="footer">
+    <div class="container">
         <b>@L("Version")</b> @AppVersionHelper.Version [@AppVersionHelper.ReleaseDate.ToString("yyyyMMdd")]
+        <img src="~/img/Github.png" alt=""/><a href="#">Github</a>
+        <div class="float-right d-none d-sm-inline-block">
+            <strong>Copyright &copy; @DateTime.Now.Year <a href="https://github.com/QingQiz">QingQiz</a>.</strong> All rights reserved.
+        </div>
     </div>
 </footer>
