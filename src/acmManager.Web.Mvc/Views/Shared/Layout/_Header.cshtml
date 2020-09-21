@@ -1,7 +1,7 @@
 ﻿@model acmManager.Web.Models.Home.HomeViewModel
 
 @{
-    ViewBag.UserPhoto = Model.PhotoUrl ?? "~/img/defaultUserImage.png";
+    ViewBag.UserPhoto = Model.PhotoUrl ?? "/img/defaultUserImage.png";
 }
 
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow">
@@ -33,7 +33,7 @@
                 <img src="~/img/certificate.svg" alt=""> 我的证书
             </button>
             <hr/>
-            <button class="dropdown-item">
+            <button class="dropdown-item" onclick="window.location.replace('@Url.Action("Logout", "Account")')">
                 <img src="~/img/logout.svg" alt=""> 登出
             </button>
         </div>
