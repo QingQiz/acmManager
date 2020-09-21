@@ -1,0 +1,130 @@
+﻿@using acmManager.Web.Controllers
+@using acmManager.Authorization.Users
+@inject UserController UserController
+@model acmManager.Web.Models.Users.UserProfileViewModel
+@section styles
+{
+    <environment name="Development">
+        <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
+    </environment>
+}
+<div class="content-container" style="max-width: 1300px">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-4 pb-5 userCard">
+                <!-- Account Sidebar-->
+                <div class="author-card pb-3">
+                    <div class="author-card-cover"></div>
+                    <div class="author-card-profile">
+                        <div class="author-card-avatar"><img src="@(Model.Photo?.FilePath ?? UserController.DefaultUserPhoto)" alt="Daniel Adams">
+                        </div>
+                        <div class="author-card-details">
+                            <h5 class="author-card-name text-lg">@(Model.Name ?? "null")</h5><span class="author-card-position">Joined @(Model.CreationTime)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wizard">
+                    <nav class="list-group list-group-flush">
+                        <a class="list-group-item active" href="#">
+                            <img src="~/img/profile.svg" alt=""> 个人资料
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <img src="~/img/contest.svg" alt=""> 我的比赛
+                        </a>
+                        <a class="list-group-item" href="#">
+                            <img src="~/img/certificate.svg" alt=""> 我的证书
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            <!-- Profile Settings-->
+            <div class="col-lg-8 pb-5">
+                <form class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-name">姓名</label>
+                            <input class="form-control" type="text" disabled id="account-name" value="@(Model.Name ?? "null")">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-gender">性别</label>
+                            <input class="form-control" type="email" id="account-gender" value="@(Model.Gender == UserGender.Male ? "男" : "女")" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-sn">学号</label>
+                            <input class="form-control" type="text" disabled id="account-sn" value="@(Model.StudentNumber ?? "null")">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-cn">班号</label>
+                            <input class="form-control" type="text" disabled id="account-cn" value="@(Model.ClassId ?? "null")">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-org">学院</label>
+                            <input class="form-control" type="email" id="account-org" value="@(Model.Org ?? "null")" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-major">专业</label>
+                            <input class="form-control" type="email" id="account-major" value="@(Model.Major ?? "null")" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-email">邮箱</label>
+                            <input class="form-control" type="email" id="account-email" value="@(Model.Email ?? "null")">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-phone">电话</label>
+                            <input class="form-control" type="text" id="account-phone" value="@(Model.Mobile ?? "null")">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-location">校区</label>
+                            <input class="form-control" type="email" id="account-location" value="@(Model.Location ?? "null")" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-st-type">学生类型</label>
+                            <input class="form-control" type="email" id="account-st-type" value="@(Model.StudentType ?? "null")" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-type">账号类型</label>
+                            @* Assume one is administrator if is granted PagesUsers_Delete *@
+                            <input class="form-control" type="email" id="account-type" value="@(UserController.UserTypeToString(Model.Type))" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="account-id">ID</label>
+                            <input class="form-control" type="email" id="account-id" value="@(Model.UserId)" disabled>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr class="mt-2 mb-3">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                            <div class="custom-control custom-checkbox d-block">
+                                <input class="custom-control-input" type="checkbox" id="subscribe_me" checked="">
+                                <label class="custom-control-label" for="subscribe_me">Subscribe me to Newsletter</label>
+                            </div>
+                            <button class="btn btn-style-1 btn-primary" type="button" data-toast="" data-toast-position="topRight" data-toast-type="success" data-toast-icon="fe-icon-check-circle" data-toast-title="Success!" data-toast-message="Your profile updated successfuly.">Update Profile</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

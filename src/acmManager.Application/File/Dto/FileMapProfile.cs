@@ -12,7 +12,7 @@ namespace acmManager.File.Dto
                     , opt => opt.MapFrom(f => f.UploadName))
                 .ForMember(o => o.FilePath
                     , opt
-                        => opt.MapFrom(f => f.RealPath.Substring(f.RealPath.IndexOf("Upload", StringComparison.Ordinal)).Replace('\\', '/')));
+                        => opt.MapFrom(f => "/" + f.RealPath.Substring(f.RealPath.IndexOf("Upload", StringComparison.Ordinal)).Replace('\\', '/')));
         }
     }
 }

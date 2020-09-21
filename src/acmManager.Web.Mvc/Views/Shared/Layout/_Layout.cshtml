@@ -5,7 +5,6 @@
 @inject ILanguageManager LanguageManager
 @{
     AbpAntiForgeryManager.SetCookie(Context);
-
     var pageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
     pageTitle += "acmManager";
 }

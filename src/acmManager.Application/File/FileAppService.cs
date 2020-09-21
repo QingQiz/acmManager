@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Domain.Uow;
 using Abp.UI;
 using acmManager.Authorization.Users;
 using acmManager.File.Dto;
@@ -18,7 +19,8 @@ namespace acmManager.File
         /// <returns></returns>
         /// <exception cref="UserFriendlyException"></exception>
         [AbpAuthorize]
-        public async Task UploadUserPhotoAsync(IFormFile photo)
+        [UnitOfWork]
+        public virtual async Task UploadUserPhotoAsync(IFormFile photo)
         {
             if (!photo.ContentType.Contains("image"))
             {

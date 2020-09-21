@@ -36,6 +36,7 @@
     - 修改 `crawler.py`
     - 修改 `Application/Users/UserAppService.cs` 中的 `CreateAsync`
     - 修改 `Application/Authorization/Accounts/AccountAppService.cs` 中的 `Register`
+ - MVC 依赖注入(`inject`) 时使用的方法必须是 `[UnitOfWord]` 和 `virtual` 的
  
  感慨
  --

@@ -1,6 +1,6 @@
 ﻿.page-container {
     position: relative;
-    min-height: 50vh;
+    min-height: 83vh;
 }
 
 .content-wrapper {
@@ -9,8 +9,8 @@
 }
 
 .content-container {
-    box-shadow: 0 0 15px 0 rgba(0,0,0,0.3);
-    border-radius: 2px;
+    box-shadow: 0 0 20px -7px rgba(0,0,0,0.3);
+    border-radius: 13px;
     padding: 20px 50px;
     margin: auto auto 20px;
 }

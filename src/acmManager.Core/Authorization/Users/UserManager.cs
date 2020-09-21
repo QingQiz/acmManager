@@ -89,7 +89,8 @@ namespace acmManager.Authorization.Users
                 .FirstAsync();
         }
 
-        public async Task<User> GetUserByIdWithPhotoAsync(long userId)
+        [UnitOfWork]
+        public virtual async Task<User> GetUserByIdWithPhotoAsync(long userId)
         {
             return await MakeQueryById(userId)
                 .ThenInclude(info => info.Photo)
