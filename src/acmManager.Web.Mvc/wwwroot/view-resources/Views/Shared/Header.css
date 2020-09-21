@@ -1,9 +1,71 @@
 ﻿nav>span {
     color: #eaeaea;
 }
+nav>a {
+    color: #92badd;
+    display:inline-block;
+    text-decoration: none;
+    font-weight: 400;
+}
+nav>a:hover {
+    text-decoration: none;
+}
 
 .userPhoto {
     display: block;
     border-radius: 50%;
     max-height: 35px;
+}
+
+/* Simple CSS3 Fade-in Animation */
+.underlineHover:after {
+    display: block;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 2px;
+    background-color: #56baed;
+    content: "";
+    transition: width 0.2s;
+}
+
+.underlineHover:hover {
+    color: #0d0d0d;
+}
+
+.underlineHover:hover:after{
+    width: 100%;
+}
+
+.dropdown-menu {
+    margin-top: 10px;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,0.3);
+    border-color: rgb(255,255,255);
+}
+
+.dropdown-menu:before {
+    border-bottom: 9px solid rgba(0, 0, 0, 0.2);
+    border-left: 9px solid rgba(0, 0, 0, 0);
+    border-right: 9px solid rgba(0, 0, 0, 0);
+    content: "";
+    display: inline-block;
+    right: 15%; /* position */
+    position: absolute;
+    top: -8px;
+}
+
+.dropdown-menu:after {
+    border-bottom: 8px solid #FFFFFF;
+    border-left: 9px solid rgba(0, 0, 0, 0);
+    border-right: 9px solid rgba(0, 0, 0, 0);
+    content: "";
+    display: inline-block;
+    right: 15%; /* position */
+    position: absolute;
+    top: -7px;
+}
+.dropdown-item>img {
+    width: 17px;
+    margin-bottom: 5px;
+    margin-right: 2px;
 }
