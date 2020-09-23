@@ -276,6 +276,9 @@ namespace acmManager.Users
         [AbpAuthorize]
         public async Task<UserInfoDto> UpdateInfoAsync(UpdateUserInfoInput input)
         {
+            input.Email ??= "";
+            input.Mobile ??= "";
+
             var user = await GetCurrentUserAsync();
 
             if (!(new Regex(

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
+using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.UI;
+using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Authorization.Users;
 using acmManager.Controllers;
 using acmManager.File;
 using acmManager.Users;
+using acmManager.Users.Dto;
 using acmManager.Web.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,6 +67,14 @@ namespace acmManager.Web.Controllers
             model.CreationTime = (await _userManager.GetUserByIdAsync(userId)).CreationTime;
 
             return View("Profile", model);
+        }
+
+        [HttpPost]
+        [UnitOfWork]
+        public virtual async Task<JsonResult> UpdateUserProfile(UpdateUserInfoInput input)
+        {
+            await _userAppService.UpdateInfoAsync(input);
+            return Json(new AjaxResponse());
         }
     }
 }

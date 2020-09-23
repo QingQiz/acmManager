@@ -8,6 +8,15 @@
         <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
     </environment>
 }
+@section scripts
+{
+    <environment name="Development">
+        <script src="~/view-resources/Views/Users/Profile.js" type="application/javascript"></script>
+        <script type="application/javascript">
+            updateProfileEvent("@Url.Action("UpdateUserProfile")");
+        </script>
+    </environment>
+}
 <div class="content-container" style="max-width: 1300px">
     <div class="container mt-5">
         <div class="row">
@@ -34,12 +43,15 @@
                         <a class="list-group-item" href="#">
                             <img src="~/img/certificate.svg" alt=""> 我的证书
                         </a>
+                        <a class="list-group-item" href="#">
+                            <img src="~/img/edit.svg" alt=""> 更改密码
+                        </a>
                     </nav>
                 </div>
             </div>
             <!-- Profile Settings-->
             <div class="col-lg-8 pb-5">
-                <form class="row">
+                <form class="row" id="ProfileForm" method="post" asp-action="@Url.Action("UpdateUserProfile")">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-name">姓名</label>
@@ -49,7 +61,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-gender">性别</label>
-                            <input class="form-control" type="email" id="account-gender" value="@(Model.Gender == UserGender.Male ? "男" : "女")" disabled>
+                            <input class="form-control" type="text" id="account-gender" value="@(Model.Gender == UserGender.Male ? "男" : "女")" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -67,60 +79,61 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-org">学院</label>
-                            <input class="form-control" type="email" id="account-org" value="@(Model.Org ?? "null")" disabled>
+                            <input class="form-control" type="text" id="account-org" value="@(Model.Org ?? "null")" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-major">专业</label>
-                            <input class="form-control" type="email" id="account-major" value="@(Model.Major ?? "null")" disabled>
+                            <input class="form-control" type="text" id="account-major" value="@(Model.Major ?? "null")" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-email">邮箱</label>
-                            <input class="form-control" type="email" id="account-email" value="@(Model.Email ?? "null")">
+                            <input class="form-control" name="Email" type="email" id="account-email" value="@(Model.Email ?? "null")">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">电话</label>
-                            <input class="form-control" type="text" id="account-phone" value="@(Model.Mobile ?? "null")">
+                            <input class="form-control" name="Mobile" type="text" id="account-phone" value="@(Model.Mobile ?? "null")">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-location">校区</label>
-                            <input class="form-control" type="email" id="account-location" value="@(Model.Location ?? "null")" disabled>
+                            <input class="form-control" type="text" id="account-location" value="@(Model.Location ?? "null")" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-st-type">学生类型</label>
-                            <input class="form-control" type="email" id="account-st-type" value="@(Model.StudentType ?? "null")" disabled>
+                            <input class="form-control" type="text" id="account-st-type" value="@(Model.StudentType ?? "null")" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-type">账号类型</label>
                             @* Assume one is administrator if is granted PagesUsers_Delete *@
-                            <input class="form-control" type="email" id="account-type" value="@(UserController.UserTypeToString(Model.Type))" disabled>
+                            <input class="form-control" type="text" id="account-type" value="@(UserController.UserTypeToString(Model.Type))" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-id">ID</label>
-                            <input class="form-control" type="email" id="account-id" value="@(Model.UserId)" disabled>
+                            <input class="form-control" type="text" id="account-id" value="@(Model.UserId)" disabled>
                         </div>
                     </div>
                     <div class="col-12">
                         <hr class="mt-2 mb-3">
                         <div class="d-flex flex-wrap justify-content-between align-items-center">
-                            <div class="custom-control custom-checkbox d-block">
-                                <input class="custom-control-input" type="checkbox" id="subscribe_me" checked="">
-                                <label class="custom-control-label" for="subscribe_me">Subscribe me to Newsletter</label>
+                            <div class="d-block">
+                                <div class="alert alert-danger" style="display: none">
+                                    
+                                </div>
                             </div>
-                            <button class="btn btn-style-1 btn-primary" type="button" data-toast="" data-toast-position="topRight" data-toast-type="success" data-toast-icon="fe-icon-check-circle" data-toast-title="Success!" data-toast-message="Your profile updated successfuly.">Update Profile</button>
+                            <button class="btn btn-style-1 btn-primary" type="button" id="UpdateProfile">Upadte Profile</button>
                         </div>
                     </div>
                 </form>
