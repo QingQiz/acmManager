@@ -6,14 +6,19 @@
 {
     <environment name="Development">
         <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
+        <link href="~/css/cropper.min.css" rel="stylesheet">
     </environment>
 }
 @section scripts
 {
     <environment name="Development">
+        <script type="text/javascript" src="~/js/cropper.min.js"></script>
         <script src="~/view-resources/Views/Users/Profile.js" type="application/javascript"></script>
         <script type="application/javascript">
-            updateProfileEvent("@Url.Action("UpdateUserProfile")");
+            updateProfileEvent();
+            selectFileEvent();
+            InitCropper();
+            clickUserPhotoEvent();
         </script>
     </environment>
 }
@@ -25,7 +30,10 @@
                 <div class="author-card pb-3">
                     <div class="author-card-cover"></div>
                     <div class="author-card-profile">
-                        <div class="author-card-avatar"><img src="@(Model.Photo?.FilePath ?? UserController.DefaultUserPhoto)" alt="Daniel Adams">
+                        <div class="author-card-avatar">
+                            <button class="btn btn-default" type="button" data-toggle="modal" data-target="#EditUserPhoto">
+                                <img src="@(Model.Photo?.FilePath ?? UserController.DefaultUserPhoto)" alt="UserPhoto">
+                            </button>
                         </div>
                         <div class="author-card-details">
                             <h5 class="author-card-name text-lg">@(Model.Name ?? "null")</h5><span class="author-card-position">Joined @(Model.CreationTime)</span>
@@ -51,7 +59,7 @@
             </div>
             <!-- Profile Settings-->
             <div class="col-lg-8 pb-5">
-                <form class="row" id="ProfileForm" method="post" asp-action="@Url.Action("UpdateUserProfile")">
+                <form class="row" id="ProfileForm" method="post" asp-action="UpdateUserProfile">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-name">姓名</label>
@@ -137,6 +145,38 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- User Photo -->
+<div class="modal fade" id="EditUserPhoto" tabindex="-1" role="dialog" aria-labelledby="EditUserPhoto" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">修改头像</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="EditUserPhoto" enctype="multipart/form-data" id="UpdatePhotoForm">
+                    <div class="container">
+                        <input type="file" class="custom-file-input" id="CropperFile" name="OriginalPhoto"/>
+                        <label for="CropperFile" class="custom-file-label">Choose an image</label>
+                        <br/> <br/>
+                        <div>
+                            <img src="" id="cropper-img" alt=""/>
+                        </div>
+                    </div>
+                    <input type="submit">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="UpdatePhotoBtn">Save changes</button>
             </div>
         </div>
     </div>

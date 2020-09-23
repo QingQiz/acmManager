@@ -76,5 +76,13 @@ namespace acmManager.Web.Controllers
             await _userAppService.UpdateInfoAsync(input);
             return Json(new AjaxResponse());
         }
+
+        [HttpPost]
+        [UnitOfWork]
+        public virtual async Task<JsonResult> EditUserPhoto(EditUserPhotoViewModel input)
+        {
+            await _fileAppService.UploadUserPhotoAsync(input.Photo);
+            return Json(new AjaxResponse());
+        }
     }
 }

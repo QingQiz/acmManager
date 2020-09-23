@@ -1,4 +1,7 @@
-﻿a img {
+﻿label.custom-file-label {
+    margin: 20px 30px;
+}
+a img {
     max-height: 20px;
     max-width: 20px;
     margin-bottom: 5px;
@@ -41,7 +44,6 @@
     padding: 0 10px;
 }
 .author-card .author-card-profile {
-    display: table;
     position: relative;
     margin-top: -22px;
     padding-right: 15px;
@@ -50,21 +52,22 @@
     z-index: 5;
 }
 .author-card .author-card-profile .author-card-avatar, .author-card .author-card-profile .author-card-details {
-    display: table-cell;
+    text-align: center;
     vertical-align: middle;
 }
 .author-card .author-card-profile .author-card-avatar {
-    width: 85px;
+    margin: auto;
+    width: 150px;
     border-radius: 50%;
     overflow: hidden;
 }
-.author-card .author-card-profile .author-card-avatar > img {
+.author-card .author-card-profile .author-card-avatar img {
     display: block;
     width: 100%;
+    border-radius: 50%;
 }
 .author-card .author-card-profile .author-card-details {
     padding-top: 20px;
-    padding-left: 15px;
 }
 .author-card .author-card-profile .author-card-name {
     margin-bottom: 2px;
