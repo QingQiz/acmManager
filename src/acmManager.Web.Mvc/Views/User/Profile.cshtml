@@ -19,6 +19,7 @@
             selectFileEvent();
             InitCropper();
             clickUserPhotoEvent();
+            changePasswordEvent();
         </script>
     </environment>
 }
@@ -42,109 +43,141 @@
                 </div>
                 <div class="wizard">
                     <nav class="list-group list-group-flush">
-                        <a class="list-group-item active" href="#">
+                        <a class="list-group-item active" href="#profile-setting" data-toggle="pill">
                             <img src="~/img/profile.svg" alt=""> 个人资料
                         </a>
-                        <a class="list-group-item" href="#">
+                        <a class="list-group-item" href="#" data-toggle="pill">
                             <img src="~/img/contest.svg" alt=""> 我的比赛
                         </a>
-                        <a class="list-group-item" href="#">
+                        <a class="list-group-item" href="#" data-toggle="pill">
                             <img src="~/img/certificate.svg" alt=""> 我的证书
                         </a>
-                        <a class="list-group-item" href="#">
+                        <a class="list-group-item" href="#profile-change-password" data-toggle="pill">
                             <img src="~/img/edit.svg" alt=""> 更改密码
                         </a>
                     </nav>
                 </div>
             </div>
-            <!-- Profile Settings-->
-            <div class="col-lg-8 pb-5">
-                <form class="row" id="ProfileForm" method="post" asp-action="UpdateUserProfile">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-name">姓名</label>
-                            <input class="form-control" type="text" disabled id="account-name" value="@(Model.Name ?? "null")">
+            <div class="col-lg-8 pb-5 tab-content">
+                <!-- Profile Settings-->
+                <div class="tab-pane fade show active" id="profile-setting">
+                    <form class="row" id="ProfileForm" method="post" asp-action="UpdateUserProfile">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-name">姓名</label>
+                                <input class="form-control" type="text" disabled id="account-name" value="@(Model.Name ?? "null")">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-gender">性别</label>
-                            <input class="form-control" type="text" id="account-gender" value="@(Model.Gender == UserGender.Male ? "男" : "女")" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-gender">性别</label>
+                                <input class="form-control" type="text" id="account-gender" value="@(Model.Gender == UserGender.Male ? "男" : "女")" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-sn">学号</label>
-                            <input class="form-control" type="text" disabled id="account-sn" value="@(Model.StudentNumber ?? "null")">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-sn">学号</label>
+                                <input class="form-control" type="text" disabled id="account-sn" value="@(Model.StudentNumber ?? "null")">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-cn">班号</label>
-                            <input class="form-control" type="text" disabled id="account-cn" value="@(Model.ClassId ?? "null")">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-cn">班号</label>
+                                <input class="form-control" type="text" disabled id="account-cn" value="@(Model.ClassId ?? "null")">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-org">学院</label>
-                            <input class="form-control" type="text" id="account-org" value="@(Model.Org ?? "null")" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-org">学院</label>
+                                <input class="form-control" type="text" id="account-org" value="@(Model.Org ?? "null")" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-major">专业</label>
-                            <input class="form-control" type="text" id="account-major" value="@(Model.Major ?? "null")" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-major">专业</label>
+                                <input class="form-control" type="text" id="account-major" value="@(Model.Major ?? "null")" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-email">邮箱</label>
-                            <input class="form-control" name="Email" type="email" id="account-email" value="@(Model.Email ?? "null")">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-email">邮箱</label>
+                                <input class="form-control" name="Email" type="email" id="account-email" value="@(Model.Email ?? "null")">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-phone">电话</label>
-                            <input class="form-control" name="Mobile" type="text" id="account-phone" value="@(Model.Mobile ?? "null")">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-phone">电话</label>
+                                <input class="form-control" name="Mobile" type="text" id="account-phone" value="@(Model.Mobile ?? "null")">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-location">校区</label>
-                            <input class="form-control" type="text" id="account-location" value="@(Model.Location ?? "null")" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-location">校区</label>
+                                <input class="form-control" type="text" id="account-location" value="@(Model.Location ?? "null")" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-st-type">学生类型</label>
-                            <input class="form-control" type="text" id="account-st-type" value="@(Model.StudentType ?? "null")" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-st-type">学生类型</label>
+                                <input class="form-control" type="text" id="account-st-type" value="@(Model.StudentType ?? "null")" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-type">账号类型</label>
-                            @* Assume one is administrator if is granted PagesUsers_Delete *@
-                            <input class="form-control" type="text" id="account-type" value="@(UserController.UserTypeToString(Model.Type))" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-type">账号类型</label>
+                                <input class="form-control" type="text" id="account-type" value="@(UserController.UserTypeToString(Model.Type))" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="account-id">ID</label>
-                            <input class="form-control" type="text" id="account-id" value="@(Model.UserId)" disabled>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="account-id">ID</label>
+                                <input class="form-control" type="text" id="account-id" value="@(Model.UserId)" disabled>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <hr class="mt-2 mb-3">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center">
-                            <div class="d-block">
-                                <div class="alert alert-danger" style="display: none">
-                                    
+                        <div class="col-12">
+                            <hr class="mt-2 mb-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="d-block">
+                                    <div class="alert alert-danger" style="display: none">
+
+                                    </div>
+                                </div>
+                                <button class="btn btn-style-1 btn-primary" type="button" id="UpdateProfile">Upadte Profile</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Change Password-->
+                <div class="tab-pane fade" id="profile-change-password">
+                    <form method="post" asp-action="ChangeUserPassword" id="ChangePasswordForm">
+                        <div class="form-group">
+                            <label for="change-password-current">Current Password</label>
+                            <input class="form-control" type="password" name="CurrentPassword" id="change-password-current" placeholder="Current">
+                        </div>
+                        <div class="form-group">
+                            <label for="change-password-new">New Password</label>
+                            <input class="form-control" type="password" name="NewPassword" id="change-password-new" placeholder="New Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="change-password-new">New Password Again</label>
+                            <input class="form-control" type="password" name="NewPasswordAgain" id="change-password-new-again" placeholder="New Password">
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-10">
+                                <div class="alert alert-danger" style="display: none" id="change-password-error">
+                                </div>
+                                <div class="alert alert-success" style="display: none" id="change-password-success">
+                                    Success
                                 </div>
                             </div>
-                            <button class="btn btn-style-1 btn-primary" type="button" id="UpdateProfile">Upadte Profile</button>
+                            <div class="col-2" style="text-align: right">
+                                <button class="btn btn-style-1 btn-primary" type="button" id="ChangePasswordBtn">Submit</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -171,7 +204,6 @@
                             <img src="" id="cropper-img" alt=""/>
                         </div>
                     </div>
-                    <input type="submit">
                 </form>
             </div>
             <div class="modal-footer">

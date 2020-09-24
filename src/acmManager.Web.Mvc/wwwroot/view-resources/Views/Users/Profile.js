@@ -4,12 +4,12 @@
     })
 }
 
-let putErrorMsg = function (xhr) {
+let putErrorMsg = function (xhr, selector='.alert-danger') {
     let errorMessage = JSON.parse(xhr.responseText)['error'];
     errorMessage = errorMessage['details'] == null ? errorMessage['message'] : errorMessage['details'];
     errorMessage = errorMessage.trim().split('\n').join('<br>');
 
-    $('.alert-danger').html(errorMessage).css('opacity', 0).show().animate({opacity: 1}, 500);
+    $(selector).html(errorMessage).css('opacity', 0).show().animate({opacity: 1}, 500);
 }
 
 let updateProfileEvent = function () {
@@ -97,4 +97,23 @@ let InitCropper = function () {
             });
         });
     })
+}
+
+let changePasswordEvent = function () {
+    $('#ChangePasswordBtn').click(function () {
+        let form = $('#ChangePasswordForm');
+        $.ajax({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function () {
+                $('#change-password-error').animate({opacity: 0}, 500).hide();
+                $('#change-password-success').css('opacity', 0).show().animate({opacity: 1}, 500);
+            },
+            error: function (xhr, status, error) {
+                $('#change-password-success').animate({opacity: 0}, 500).hide();
+                putErrorMsg(xhr, '#change-password-error');
+            }
+        })
+    });
 }

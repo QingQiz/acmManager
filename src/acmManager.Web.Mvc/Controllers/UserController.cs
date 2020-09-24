@@ -84,5 +84,21 @@ namespace acmManager.Web.Controllers
             await _fileAppService.UploadUserPhotoAsync(input.Photo);
             return Json(new AjaxResponse());
         }
+
+        [HttpPost]
+        [UnitOfWork]
+        public virtual async Task<JsonResult> ChangeUserPassword(ChangeUserPasswordViewModel input)
+        {
+            if (input.NewPassword != input.NewPasswordAgain)
+            {
+                throw new UserFriendlyException("`new password` should be same with `new password again`");
+            }
+            await _userAppService.ChangePasswordAsync(new ChangePasswordDto()
+            {
+                CurrentPassword = input.CurrentPassword,
+                NewPassword = input.NewPassword
+            });
+            return Json(new AjaxResponse());
+        }
     }
 }
