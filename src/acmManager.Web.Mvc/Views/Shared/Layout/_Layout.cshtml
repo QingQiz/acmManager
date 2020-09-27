@@ -21,7 +21,7 @@
     @await RenderSectionAsync("styles", required: false)
 </head>
 <body>
-@await Html.PartialAsync("_Header.cshtml")
+@await Html.PartialAsync("Layout/Header/_Header")
 <div class="page-container">
     <div class="content-wrapper">
         @RenderBody()
