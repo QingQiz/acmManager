@@ -18,5 +18,7 @@
 
         public const string PagesUsers_Promote = "Pages.Users.Promote";
         public const string PagesUsers_Relegate = "Pages.Users.Relegate";
+
+        public const string PagesUsers_Admin = "Pages.Users.Admin";
     }
 }

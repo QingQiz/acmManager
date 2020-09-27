@@ -137,6 +137,7 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             {
                 PermissionNames.PagesUsers_Promote,
                 PermissionNames.PagesUsers_Relegate,
+                PermissionNames.PagesUsers_Admin,
             });
             CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>()
             {

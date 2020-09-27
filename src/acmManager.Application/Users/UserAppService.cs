@@ -7,6 +7,7 @@ using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Authorization;
@@ -306,8 +307,9 @@ namespace acmManager.Users
         /// 获取当前用户的信息
         /// </summary>
         /// <returns><see cref="UserInfoDto"/></returns>
+        [UnitOfWork]
         [AbpAuthorize]
-        public async Task<UserDto> GetMeAsync()
+        public virtual async Task<UserDto> GetMeAsync()
         {
             var user = await GetCurrentUserAsync();
 

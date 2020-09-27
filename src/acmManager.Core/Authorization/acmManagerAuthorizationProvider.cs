@@ -18,6 +18,7 @@ namespace acmManager.Authorization
             // register permission here
             
             // Permissions for Pages_Users
+            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Admin, L("Users.Admin"));
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Create, L("Users.Create"));
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Update, L("Users.Update"));
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Delete, L("Users.Delete"));
