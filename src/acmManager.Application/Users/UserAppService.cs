@@ -260,10 +260,12 @@ namespace acmManager.Users
             }
 
             // get user info from aoxiang
+            var userType = user.UserInfo.Type;
             var userInfoDto = await GetUserInfoFromAoxiangAsync(user.UserName, input.Password);
 
             // map new info to old info
             ObjectMapper.Map(userInfoDto, user.UserInfo);
+            user.UserInfo.Type = userType;
             
             return userInfoDto;
         }
