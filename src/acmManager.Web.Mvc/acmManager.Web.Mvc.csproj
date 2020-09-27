@@ -65,5 +65,10 @@
     <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.css.map" />
     <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.min.css" />
     <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.min.css.map" />
+    <_ContentIncludedByDefault Remove="Views\Users\ChangePassword.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\Index.AdvancedSearch.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\_CreateModal.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Users\_EditModal.cshtml" />
   </ItemGroup>
 </Project>
