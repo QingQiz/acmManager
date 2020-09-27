@@ -1,0 +1,30 @@
+﻿<div id="SignUpForm" class="formContent" style="display: none; opacity: 0">
+    <div style="height: 25px"></div>
+    <div class="fadeIn first" style="margin-bottom: 10px">
+        <img src="~/img/NWPU.png" alt="User Icon" style="height: 40px; width: 40px"/>
+        <h2 class="active"> Register </h2>
+    </div>
+
+    <div class="alert alert-danger" role="alert" style="display: none">
+        <strong>Error!</strong>
+        <p class="ErrorMessage"/>
+    </div>
+    <div class="alert alert-success" role="alert" style="display: none" id="RegisterSuccess">
+        <strong>Success!</strong> Please go back to login
+    </div>
+
+
+    <div style="height: 15px"></div>
+
+    <!-- Login Form -->
+    <form method="post" asp-action="Register">
+        <input type="text" name="AoxiangUsername" placeholder="学号" class="fadeIn second">
+        <input type="password" name="AoxiangPassword" placeholder="翱翔门户密码" class="fadeIn third">
+        <div style="height: 25px"></div>
+        <input type="button" class="fadeIn fourth" id="Register" value="Register">
+    </form>
+
+    <div class="formFooter">
+        <a class="underlineHover" href="#" id="BackToLogin">Back to Login</a>
+    </div>
+</div>

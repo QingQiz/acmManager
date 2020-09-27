@@ -1,0 +1,87 @@
+﻿@using acmManager.Authorization.Users
+@using acmManager.Web.Controllers
+@inject UserController UserController;
+
+<form class="row" id="ProfileForm" method="post" asp-action="UpdateUserProfile">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-name">姓名</label>
+            <input class="form-control" type="text" disabled id="account-name" value="@(Model.Name ?? "null")">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-gender">性别</label>
+            <input class="form-control" type="text" id="account-gender" value="@(Model.Gender == UserGender.Male ? "男" : "女")" disabled>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-sn">学号</label>
+            <input class="form-control" type="text" disabled id="account-sn" value="@(Model.StudentNumber ?? "null")">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-cn">班号</label>
+            <input class="form-control" type="text" disabled id="account-cn" value="@(Model.ClassId ?? "null")">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-org">学院</label>
+            <input class="form-control" type="text" id="account-org" value="@(Model.Org ?? "null")" disabled>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-major">专业</label>
+            <input class="form-control" type="text" id="account-major" value="@(Model.Major ?? "null")" disabled>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-email">邮箱</label>
+            <input class="form-control" name="Email" type="email" id="account-email" value="@(Model.Email ?? "null")">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-phone">电话</label>
+            <input class="form-control" name="Mobile" type="text" id="account-phone" value="@(Model.Mobile ?? "null")">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-location">校区</label>
+            <input class="form-control" type="text" id="account-location" value="@(Model.Location ?? "null")" disabled>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-st-type">学生类型</label>
+            <input class="form-control" type="text" id="account-st-type" value="@(Model.StudentType ?? "null")" disabled>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-type">账号类型</label>
+            <input class="form-control" type="text" id="account-type" value="@(UserController.UserTypeToString(Model.Type))" disabled>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-id">ID</label>
+            <input class="form-control" type="text" id="account-id" value="@(Model.UserId)" disabled>
+        </div>
+    </div>
+    <div class="col-12">
+        <hr class="mt-2 mb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <div class="d-block">
+                <div class="alert alert-danger" style="display: none"></div>
+            </div>
+            <button class="btn btn-style-1 btn-primary" type="button" id="UpdateProfile">Upadte Profile</button>
+        </div>
+    </div>
+</form>
