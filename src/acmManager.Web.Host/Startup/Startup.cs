@@ -135,6 +135,7 @@ namespace acmManager.Web.Host.Startup
                 FileProvider = new PhysicalFileProvider(uploadsPath),
                 RequestPath = "/Uploads"
             });
+            app.UseStaticFiles();
 
             app.UseRouting();
 

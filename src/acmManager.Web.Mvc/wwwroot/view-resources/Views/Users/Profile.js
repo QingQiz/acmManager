@@ -117,3 +117,36 @@ let changePasswordEvent = function () {
         })
     });
 }
+
+let changeUserTypeEvent = function () {
+    $('#usertype-changes-apply').click(function () {
+        let form = $('#change-usertype-form')
+        $.ajax({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function () {
+                $('usertype-changes-dismiss').click();
+                location.reload();
+            },
+        })
+    })
+}
+
+let updateFromAoxiangEvent = function () {
+    $('#update-from-aoxiang-submit').click(function () {
+        let form = $('#update-from-aoxiang-form');
+        $.ajax({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function () {
+                $('#update-from-aoxiang-cancel').click();
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                putErrorMsg(xhr, '#update-from-aoxiang-alert');
+            }
+        })
+    })
+}

@@ -20,6 +20,8 @@
             InitCropper();
             clickUserPhotoEvent();
             changePasswordEvent();
+            changeUserTypeEvent();
+            updateFromAoxiangEvent();
         </script>
     </environment>
 }
@@ -46,11 +48,8 @@
                         <a class="list-group-item active" href="#profile-setting" data-toggle="pill">
                             <img src="~/img/profile.svg" alt=""> 个人资料
                         </a>
-                        <a class="list-group-item" href="#" data-toggle="pill">
-                            <img src="~/img/contest.svg" alt=""> 我的比赛
-                        </a>
-                        <a class="list-group-item" href="#" data-toggle="pill">
-                            <img src="~/img/certificate.svg" alt=""> 我的证书
+                        <a class="list-group-item" href="#profile-settings" data-toggle="pill">
+                            <img src="~/img/settings.svg" alt=""> 账户设置
                         </a>
                         <a class="list-group-item" href="#profile-change-password" data-toggle="pill">
                             <img src="~/img/edit.svg" alt=""> 更改密码
@@ -146,6 +145,98 @@
                             </div>
                         </div>
                     </form>
+                </div>
+                
+                <div class="tab-pane fade" id="profile-settings">
+                    @if (Model.Type == UserType.TeamLeader || Model.Type == UserType.Member)
+                    {
+                        <div class="alert alert-danger">
+                            @if (Model.Type == UserType.Member)
+                            {
+                                <h4 class="alert-heading">
+                                    我要退役
+                                </h4>
+                                <p>
+                                    此操作会使你的用户类型从 <strong> 正式队员 </strong> 变为 <strong> 退役队员 </strong>，且不可恢复
+                                </p>
+                            }
+                            else
+                            {
+                                <h4 class="alert-heading">
+                                    我要辞职
+                                </h4>
+                                <p>
+                                    此操作会使你的用户类型从 <strong> 队长 </strong> 变为 <strong> 正式成员 </strong>，且不可恢复
+                                </p>
+                            }
+                            <hr>
+                            <div style="text-align: right">
+                                <button class="btn btn-danger" id="submit-usertype-changes" data-toggle="modal" data-target="#are-you-sure"> 确认 </button>
+                            </div>
+                            <div class="modal fade" id="are-you-sure">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            你确定吗
+                                        </div>
+                                        <div class="modal-body">
+                                            此操作不可逆 ！！
+                                        </div>
+                                        <form asp-action="Relegate" method="post" id="change-usertype-form">
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="usertype-changes-dismiss">取消</button>
+                                                <button type="button" class="btn btn-danger btn-ok" id="usertype-changes-apply">确认</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.StudentNumber != null && Model.StudentNumber.Length == 10)
+                    {
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">
+                                更新你的个人信息
+                            </h4>
+                            <p>
+                                此操作会从翱翔门户拉取你的学生信息。因此需要你提供翱翔门户的密码。
+                            </p>
+                            <hr>
+                            <div style="text-align: right">
+                                <button class="btn btn-info" data-toggle="modal" data-target="#input-aoxiang-password">
+                                    确认
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="input-aoxiang-password">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        输入你的翱翔门户密码
+                                    </div>
+                                    <div class="modal-body">
+                                        <form asp-action="UpdateFromAoxiang" method="post" id="update-from-aoxiang-form">
+                                            <input style="display: none" type="password" name="fake-password-remembered" />
+                                            <div class="form-group">
+                                                <label for="update-from-aoxiang-password">Password</label>
+                                                <input class="form-control" type="password" name="Password" id="update-from-aoxiang-password" placeholder="Password">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="update-from-aoxiang-password-again">Password Again</label>
+                                                <input class="form-control" type="password" name="PasswordAgain" id="update-from-aoxiang-password-again" placeholder="Password Again">
+                                            </div>
+                                            <div class="alert alert-danger" style="display: none" id="update-from-aoxiang-alert"></div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="update-from-aoxiang-cancel">取消</button>
+                                                <button type="button" class="btn btn-danger btn-ok" id="update-from-aoxiang-submit">确认</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <!-- Change Password-->
