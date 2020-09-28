@@ -1,0 +1,30 @@
+﻿@using acmManager.Users.Dto
+
+@await Html.PartialAsync("User/_UserFilter")
+<hr>
+@if (Model.Users != null)
+{
+    <table class="table table-hover">
+        <thead><tr>
+            <th scope="col">@L("UserInfo.StudentNumber")</th>
+            <th scope="col">@L("UserInfo.Name")</th>
+            <th scope="col">@L("UserInfo.Gender")</th>
+            <th scope="col">@L("UserInfo.Org")</th>
+            <th scope="col">@L("UserInfo.StudentType")</th>
+            <th scope="col">@L("UserInfo.Type")</th>
+        </tr></thead>
+        <tbody>
+            @foreach (UserDto userInfo in Model.Users)
+            {
+                <tr>
+                    <th scope="row">@(userInfo.StudentNumber ?? "null")</th>
+                    <td>@(userInfo.Name ?? "null")</td>
+                    <td>@L(userInfo.Gender.ToString())</td>
+                    <td>@(userInfo.Org ?? "null")</td>
+                    <td>@(userInfo.StudentType ?? "null")</td>
+                    <td>@L(userInfo.Type.ToString())</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

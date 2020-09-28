@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="zh-Hans">
     <texts>
+        <text name="empty" value="" />
+        
         <text name="Male" value="男" />
         <text name="Female" value="女" />
 
@@ -11,6 +13,19 @@
         <text name="Teacher" value="老师" />
         <text name="Administrator" value="管理员" />
 
+        <text name="UserInfo.Name" value="姓名" />
+        <text name="UserInfo.StudentNumber" value="学号" />
+        <text name="UserInfo.Gender" value="性别" />
+        <text name="UserInfo.ClassId" value="班级" />
+        <text name="UserInfo.Org" value="学院" />
+        <text name="UserInfo.Major" value="专业" />
+        <text name="UserInfo.Email" value="邮箱" />
+        <text name="UserInfo.Mobile" value="电话" />
+        <text name="UserInfo.Location" value="校区" />
+        <text name="UserInfo.StudentType" value="学生类型" />
+        <text name="UserInfo.Type" value="账号类型" />
+
+        <text name="Submit" value="提交" />
 
 
         <text name="HomePage" value="主页" />
