@@ -15,52 +15,62 @@
 
 <div class="collapse pt-3" id="user-filter">
     <form asp-action="GetAllWithFilter" method="post" id="user-filter-form">
-        @foreach (var descriptor in TypeDescriptor.GetProperties(filter).Cast<PropertyDescriptor>().Where(descriptor => descriptor.Name != "MaxResultCount" && descriptor.Name != "SkipCount"))
-        {
-            if (descriptor.Name == "Type")
+        <div class="row">
+            @foreach (var descriptor in TypeDescriptor.GetProperties(filter).Cast<PropertyDescriptor>().Where(descriptor => descriptor.Name != "MaxResultCount" && descriptor.Name != "SkipCount"))
             {
-                <div class="input-group input-group mb-3">
-                    <select class="custom-select" name="@descriptor.Name">
-                        <option selected value="@(descriptor.GetValue(filter)?.ToString() ?? "")">@L(descriptor.GetValue(filter)?.ToString() ?? "empty")</option>
-                        <option/>
-                        @foreach (var val in Enum.GetNames(typeof(UserType)))
-                        {
-                            <option value="@val">@L(val)</option>
-                        }
-                    </select>
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                if (descriptor.Name == "Type")
+                {
+                    <div class="col-md-6">
+                        <div class="input-group input-group mb-3">
+                            <select class="custom-select" name="@descriptor.Name">
+                                <option selected value="@(descriptor.GetValue(filter)?.ToString() ?? "")">@L(descriptor.GetValue(filter)?.ToString() ?? "empty")</option>
+                                <option/>
+                                @foreach (var val in Enum.GetNames(typeof(UserType)))
+                                {
+                                    <option value="@val">@L(val)</option>
+                                }
+                            </select>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            }
-            else if (descriptor.Name == "Gender")
-            {
-                <div class="input-group input-group mb-3">
-                    <select class="custom-select" name="@descriptor.Name">
-                        <option value="@(descriptor.GetValue(filter)?.ToString() ?? "")" selected>@L(descriptor.GetValue(filter)?.ToString() ?? "empty")</option>
-                        <option/>
-                        <option value="Male">@L("Male")</option>
-                        <option value="Female">@L("Female")</option>
-                    </select>
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                }
+                else if (descriptor.Name == "Gender")
+                {
+                    <div class="col-md-6">
+                        <div class="input-group input-group mb-3">
+                            <select class="custom-select" name="@descriptor.Name">
+                                <option value="@(descriptor.GetValue(filter)?.ToString() ?? "")" selected>@L(descriptor.GetValue(filter)?.ToString() ?? "empty")</option>
+                                <option/>
+                                <option value="Male">@L("Male")</option>
+                                <option value="Female">@L("Female")</option>
+                            </select>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            }
-            else
-            {
-                <div class="input-group input-group mb-3">
-                    <input type="text" name="@descriptor.Name" class="form-control" aria-label="Small" aria-describedby="inputGroup-user-filter-@descriptor.Name" value="@(descriptor.GetValue(filter)?.ToString() ?? "")">
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="input-group input-group mb-3">
+                            <input type="text" name="@descriptor.Name" class="form-control" aria-label="Small" aria-describedby="inputGroup-user-filter-@descriptor.Name" value="@(descriptor.GetValue(filter)?.ToString() ?? "")">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
             }
-        }
-        <input type="hidden" name="MaxResultCount" value="30" id="page-size">
-        <input type="hidden" name="SkipCount" value="0" id="skip-count">
-        <div class="text-right mt-2">
-            <button class="btn btn-primary" id="user-filter-btn" type="submit"> @L("Submit") </button>
+            <div class="col-md-6">
+                <input type="hidden" name="MaxResultCount" value="30" id="page-size">
+                <input type="hidden" name="SkipCount" value="0" id="skip-count">
+                <div class="text-right mt-2">
+                    <button class="btn btn-primary" id="user-filter-btn" type="submit"> @L("Submit") </button>
+                </div>
+            </div>
         </div>
     </form>
 </div>
