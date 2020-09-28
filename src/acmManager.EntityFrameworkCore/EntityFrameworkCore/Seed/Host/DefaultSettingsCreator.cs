@@ -32,7 +32,7 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
             AddSettingIfNotExists(EmailSettingNames.DefaultFromDisplayName, "sofeeys@outlook.com mailer", tenantId);
 
             // Languages
-            AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "en", tenantId);
+            AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "zh-Hans", tenantId);
             
             // Crawler
             var crawlerPath = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\crawler.py";

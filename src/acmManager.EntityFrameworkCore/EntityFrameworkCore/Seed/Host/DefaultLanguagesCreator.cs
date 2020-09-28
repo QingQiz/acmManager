@@ -25,7 +25,7 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
                 // new ApplicationLanguage(tenantId, "pt-BR", "Português", "famfamfam-flags br"),
                 // new ApplicationLanguage(tenantId, "tr", "Türkçe", "famfamfam-flags tr"),
                 // new ApplicationLanguage(tenantId, "ru", "Русский", "famfamfam-flags ru"),
-                // new ApplicationLanguage(tenantId, "zh-Hans", "简体中文", "famfamfam-flags cn"),
+                new ApplicationLanguage(tenantId, "zh-Hans", "简体中文", "famfamfam-flags cn"),
                 // new ApplicationLanguage(tenantId, "es-MX", "Español México", "famfamfam-flags mx"),
                 // new ApplicationLanguage(tenantId, "nl", "Nederlands", "famfamfam-flags nl"),
                 // new ApplicationLanguage(tenantId, "ja", "日本語", "famfamfam-flags jp")
