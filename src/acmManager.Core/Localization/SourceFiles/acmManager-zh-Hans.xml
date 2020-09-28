@@ -25,6 +25,8 @@
         <text name="UserInfo.StudentType" value="学生类型" />
         <text name="UserInfo.Type" value="账号类型" />
 
+        <text name="MaxResultCount" value="分页大小" />
+
         <text name="Submit" value="提交" />
 
 

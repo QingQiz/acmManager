@@ -14,7 +14,7 @@
 </button>
 
 <div class="collapse pt-3" id="user-filter">
-    <form asp-action="GetAllWithFilter" method="post" id="user-filter-form">
+    <form asp-action="GetAllWithFilter" method="post" id="get-all-user-filter-form">
         <div class="row">
             @foreach (var descriptor in TypeDescriptor.GetProperties(filter).Cast<PropertyDescriptor>().Where(descriptor => descriptor.Name != "MaxResultCount" && descriptor.Name != "SkipCount"))
             {
@@ -31,7 +31,7 @@
                                 }
                             </select>
                             <div class="input-group-append">
-                                <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                                <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
                             </div>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                                 <option value="Female">@L("Female")</option>
                             </select>
                             <div class="input-group-append">
-                                <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                                <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
                             </div>
                         </div>
                     </div>
@@ -58,15 +58,23 @@
                         <div class="input-group input-group mb-3">
                             <input type="text" name="@descriptor.Name" class="form-control" aria-label="Small" aria-describedby="inputGroup-user-filter-@descriptor.Name" value="@(descriptor.GetValue(filter)?.ToString() ?? "")">
                             <div class="input-group-append">
-                                <span class="input-group-text" id="inputGroup-user-filter-@descriptor.Name">@L("UserInfo." + descriptor.Name)</span>
+                                <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
                             </div>
                         </div>
                     </div>
                 }
             }
             <div class="col-md-6">
-                <input type="hidden" name="MaxResultCount" value="30" id="page-size">
-                <input type="hidden" name="SkipCount" value="0" id="skip-count">
+                <div class="input-group input-group mb-3">
+                    <input type="text" name="MaxResultCount" id="get-all-user-filter-MaxResultCount" class="form-control" aria-label="Small" aria-describedby="inputGroup-user-filter-MaxResultCount" value="@(Model.CurrentUserFilter?.MaxResultCount ?? 30)">
+                    <div class="input-group-append">
+                        <span class="input-group-text">@L("MaxResultCount")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                <input type="hidden" name="SkipCount" value="@(Model.CurrentUserFilter?.SkipCount ?? 0)" id="get-all-user-filter-skip-count">
                 <div class="text-right mt-2">
                     <button class="btn btn-primary" id="user-filter-btn" type="submit"> @L("Submit") </button>
                 </div>
