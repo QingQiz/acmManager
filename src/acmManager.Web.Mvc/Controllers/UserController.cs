@@ -39,14 +39,8 @@ namespace acmManager.Web.Controllers
         {
             return type switch
             {
-                UserType.Administrator => "管理员",
-                UserType.TempMember => "预备队员",
-                UserType.RetiredMember => "退役队员",
-                UserType.Member => "正式队员",
-                UserType.TeamLeader => "队长",
-                UserType.Teacher => "教师",
-                null => "管理员",
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                null => L("Administrator"),
+                _ => L(type.ToString())
             };
         }
 

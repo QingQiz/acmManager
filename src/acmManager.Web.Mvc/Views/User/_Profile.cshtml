@@ -1,71 +1,70 @@
-﻿@using acmManager.Authorization.Users
-@using acmManager.Web.Controllers
+﻿@using acmManager.Web.Controllers
 @inject UserController UserController;
 
 <form class="row" id="ProfileForm" method="post" asp-action="UpdateUserProfile">
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-name">姓名</label>
+            <label for="account-name">@L("UserInfo.Name")</label>
             <input class="form-control" type="text" disabled id="account-name" value="@(Model.Name ?? "null")">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-gender">性别</label>
-            <input class="form-control" type="text" id="account-gender" value="@(Model.Gender == UserGender.Male ? "男" : "女")" disabled>
+            <label for="account-gender">@L("UserInfo.Gender")</label>
+            <input class="form-control" type="text" id="account-gender" value="@L(Model.Gender.ToString())" disabled>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-sn">学号</label>
+            <label for="account-sn">@L("UserInfo.StudentNumber")</label>
             <input class="form-control" type="text" disabled id="account-sn" value="@(Model.StudentNumber ?? "null")">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-cn">班号</label>
+            <label for="account-cn">@L("UserInfo.ClassId")</label>
             <input class="form-control" type="text" disabled id="account-cn" value="@(Model.ClassId ?? "null")">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-org">学院</label>
+            <label for="account-org">@L("UserInfo.Org")</label>
             <input class="form-control" type="text" id="account-org" value="@(Model.Org ?? "null")" disabled>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-major">专业</label>
+            <label for="account-major">@L("UserInfo.Major")</label>
             <input class="form-control" type="text" id="account-major" value="@(Model.Major ?? "null")" disabled>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-email">邮箱</label>
+            <label for="account-email">@L("UserInfo.Email")</label>
             <input class="form-control" name="Email" type="email" id="account-email" value="@(Model.Email ?? "null")">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-phone">电话</label>
+            <label for="account-phone">@L("UserInfo.Mobile")</label>
             <input class="form-control" name="Mobile" type="text" id="account-phone" value="@(Model.Mobile ?? "null")">
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-location">校区</label>
+            <label for="account-location">@L("UserInfo.Location")</label>
             <input class="form-control" type="text" id="account-location" value="@(Model.Location ?? "null")" disabled>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-st-type">学生类型</label>
+            <label for="account-st-type">@L("UserInfo.StudentType")</label>
             <input class="form-control" type="text" id="account-st-type" value="@(Model.StudentType ?? "null")" disabled>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
-            <label for="account-type">账号类型</label>
+            <label for="account-type">@L("UserInfo.Type")</label>
             <input class="form-control" type="text" id="account-type" value="@(UserController.UserTypeToString(Model.Type))" disabled>
         </div>
     </div>
