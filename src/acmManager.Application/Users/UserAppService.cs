@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -216,25 +217,34 @@ namespace acmManager.Users
                     _userManager.Query().Skip(input.SkipCount).Take(input.MaxResultCount).ToList().Select(UserToDto));
             }
 
+            var empty = new Func<string, bool>(string.IsNullOrEmpty);
+            var substr = new Func<string, string, bool>((s1, s2) => s1 != null && s1.Contains(s2));
+
             return await Task.Run(() => _userManager
                 .Query()
                 .Where(u => u.UserInfo != null)
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.StudentNumber),
-                    u => u.UserInfo.StudentNumber.Contains(input.Filter.StudentNumber))
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.Org), u => u.UserInfo.Org.Contains(input.Filter.Org))
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.Mobile),
-                    u => u.UserInfo.Mobile.Contains(input.Filter.Mobile))
-                .WhereIf(input.Filter.Gender != null, u => u.UserInfo.Gender == input.Filter.Gender)
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.Major), u => u.UserInfo.Major.Contains(input.Filter.Major))
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.ClassId),
-                    u => u.UserInfo.ClassId.Contains(input.Filter.ClassId))
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.Location),
-                    u => u.UserInfo.Location.Contains(input.Filter.Location))
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.StudentType),
-                    u => u.UserInfo.StudentType.Contains(input.Filter.StudentType))
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.Email), u => u.UserInfo.Email.Contains(input.Filter.Email))
-                .WhereIf(!string.IsNullOrEmpty(input.Filter.Name), u => u.UserInfo.Name.Contains(input.Filter.Name))
-                .WhereIf(input.Filter.Type != null, u => u.UserInfo.Type == input.Filter.Type)
+                .WhereIf(!empty(input.Filter.StudentNumber),
+                    u => substr(u.UserInfo.StudentNumber, input.Filter.StudentNumber))
+                .WhereIf(!empty(input.Filter.Org), 
+                    u => substr(u.UserInfo.Org, input.Filter.Org))
+                .WhereIf(!empty(input.Filter.Mobile),
+                    u => substr(u.UserInfo.Mobile, input.Filter.Mobile))
+                .WhereIf(!empty(input.Filter.Major), 
+                    u => substr(u.UserInfo.Major, input.Filter.Major))
+                .WhereIf(!empty(input.Filter.ClassId),
+                    u => substr(u.UserInfo.ClassId, input.Filter.ClassId))
+                .WhereIf(!empty(input.Filter.Location),
+                    u => substr(u.UserInfo.Location, input.Filter.Location))
+                .WhereIf(!empty(input.Filter.StudentType),
+                    u => substr(u.UserInfo.StudentType, input.Filter.StudentType))
+                .WhereIf(!empty(input.Filter.Email), 
+                    u => substr(u.UserInfo.Email, input.Filter.Email))
+                .WhereIf(!empty(input.Filter.Name), 
+                    u => substr(u.UserInfo.Name, input.Filter.Name))
+                .WhereIf(input.Filter.Gender != null, 
+                    u => u.UserInfo.Gender == input.Filter.Gender)
+                .WhereIf(input.Filter.Type != null, 
+                    u => u.UserInfo.Type == input.Filter.Type)
                 .Skip(input.SkipCount).Take(input.MaxResultCount).ToList().Select(UserToDto));
         }
         
