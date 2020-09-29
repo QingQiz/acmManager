@@ -7,17 +7,15 @@ using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Configuration;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Authorization;
 using acmManager.Authorization.Accounts;
 using acmManager.Authorization.Accounts.Dto;
-using acmManager.Authorization.Roles;
 using acmManager.Authorization.Users;
 using acmManager.Configuration;
 using acmManager.Users.Dto;
+using acmManager.Users.Type;
 using Microsoft.AspNetCore.Identity;
 
 namespace acmManager.Users
@@ -25,31 +23,24 @@ namespace acmManager.Users
     public class UserAppService : acmManagerAppServiceBase
     {
         private readonly UserManager _userManager;
-        private readonly RoleManager _roleManager;
-        private readonly IRepository<Role> _roleRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
         private readonly UserRegistrationManager _userRegistrationManager;
         private readonly UserInfoManager _userInfoManager;
         private readonly SettingManager _settingManager;
+        private readonly UserTypeAppService _userTypeAppService;
 
         public UserAppService(UserManager userManager,
-            RoleManager roleManager,
-            IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
-            IAbpSession abpSession,
-            LogInManager logInManager, UserRegistrationManager userRegistrationManager, UserInfoManager userInfoManager, SettingManager settingManager)
+            LogInManager logInManager, UserRegistrationManager userRegistrationManager, UserInfoManager userInfoManager, SettingManager settingManager, UserTypeAppService userTypeAppService)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
-            _roleRepository = roleRepository;
             _passwordHasher = passwordHasher;
-            _abpSession = abpSession;
             _logInManager = logInManager;
             _userRegistrationManager = userRegistrationManager;
             _userInfoManager = userInfoManager;
             _settingManager = settingManager;
+            _userTypeAppService = userTypeAppService;
         }
 
         #region NotRemoteToService
@@ -158,7 +149,14 @@ namespace acmManager.Users
         public async Task<UserDto> UpdateAsync(UserDto input)
         {
             var user = await UserManager.GetUserByIdAsync(input.UserId);
+            var oldType = user.UserInfo.Type;
             ObjectMapper.Map(input, user.UserInfo);
+            var newType = user.UserInfo.Type;
+
+            if (newType !=  oldType)
+            {
+                await _userTypeAppService.ChangeUserTypeAsync(user, newType);
+            }
             
             return UserToDto(user);
         }
