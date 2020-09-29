@@ -40,4 +40,8 @@ $('#get-all-user-filter-submit-btn').click(function () {
             getAllUserPaginationEvent();
         }
     })
-})
+});
+
+$(function () {
+    $('#get-all-user-filter-submit-btn').click();
+});

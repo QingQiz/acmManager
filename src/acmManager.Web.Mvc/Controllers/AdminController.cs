@@ -61,5 +61,13 @@ namespace acmManager.Web.Controllers
             await _userAppService.UpdateAsync(input);
             return Json(new AjaxResponse());
         }
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Delete)]
+        public async Task<JsonResult> DeleteUser(long userId)
+        {
+            await _userAppService.DeleteAsync(userId);
+            return Json(new AjaxResponse());
+        }
     }
 }
