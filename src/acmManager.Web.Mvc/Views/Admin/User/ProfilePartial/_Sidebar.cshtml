@@ -25,12 +25,12 @@
 
             <!-- Settings -->
             <div class="tab-pane fade" id="profile-settings">
-                @await Html.PartialAsync("User/ProfilePartial/_Settings");
+                @await Html.PartialAsync("User/ProfilePartial/_Settings")
             </div>
 
             <!-- Change Password-->
             <div class="tab-pane fade" id="profile-change-password">
-                @* @await Html.PartialAsync("_ChangePassword") *@
+                @await Html.PartialAsync("User/ProfilePartial/_ResetPassword")
             </div>
         </div>
     </div>

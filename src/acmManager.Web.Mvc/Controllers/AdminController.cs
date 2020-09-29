@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
+using Abp.UI;
 using Abp.Web.Models;
 using acmManager.Authorization;
+using acmManager.Authorization.Accounts.Dto;
 using acmManager.Controllers;
 using acmManager.Users;
 using acmManager.Users.Dto;
@@ -67,6 +69,23 @@ namespace acmManager.Web.Controllers
         public async Task<JsonResult> DeleteUser(long userId)
         {
             await _userAppService.DeleteAsync(userId);
+            return Json(new AjaxResponse());
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Update)]
+        public async Task<JsonResult> ResetPassword(ResetPasswordViewModel input)
+        {
+            if (input.NewPassword != input.NewPasswordAgain)
+            {
+                throw new UserFriendlyException("`new password` should be same with `new password again`");
+            }
+            
+            await _userAppService.ResetPasswordAsync(new ResetPasswordDto()
+            {
+                UserId = input.UserId,
+                NewPassword = input.NewPassword
+            });
             return Json(new AjaxResponse());
         }
     }
