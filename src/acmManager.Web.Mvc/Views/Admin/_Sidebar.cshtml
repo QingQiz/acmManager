@@ -1,5 +1,4 @@
-﻿@using acmManager.Web.Models.Admin
-@model acmManager.Web.Models.Admin.IndexViewModel
+﻿@model acmManager.Web.Models.Admin.IndexViewModel
 
 <div class="row">
     <div class="col-lg-3 userCard">
@@ -19,8 +18,9 @@
     </div>
     <div class="col-lg-9 tab-content">
         <!-- User Management -->
-        <div class="tab-pane fade @(Model.CurrentPage == CurrentPage.GetAllUserPage ? "show active" : "")" id="user-management" style="padding-top: 10px">
-            @await Html.PartialAsync("User/_GetAllUserTab")
+        <div class="tab-pane fade show active" id="user-management" style="padding-top: 10px">
+            @await Html.PartialAsync("User/_UserFilter")
+            <div id="get-all-user-table"> </div>
         </div>
 
         <!-- Settings -->

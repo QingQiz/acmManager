@@ -9,7 +9,7 @@
     var filter = Model.CurrentUserFilter ?? new GetAllUserWithFilterViewModel();
 }
 
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#user-filter" aria-expanded="false" aria-controls="user-filter">
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#user-filter" aria-expanded="false" aria-controls="user-filter" id="get-all-user-filter-btn">
     Filter
 </button>
 
@@ -76,7 +76,7 @@
             <div class="col-md-6">
                 <input type="hidden" name="SkipCount" value="@(Model.CurrentUserFilter?.SkipCount ?? 0)" id="get-all-user-filter-skip-count">
                 <div class="text-right mt-2">
-                    <button class="btn btn-primary" id="user-filter-btn" type="submit"> @L("Submit") </button>
+                    <button class="btn btn-primary" id="get-all-user-filter-submit-btn" type="button"> @L("Submit") </button>
                 </div>
             </div>
         </div>

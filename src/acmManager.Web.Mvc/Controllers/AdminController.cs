@@ -28,7 +28,7 @@ namespace acmManager.Web.Controllers
         [HttpPost]
         [UnitOfWork]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_GetAll)]
-        public async Task<ActionResult> GetAllWithFilter(GetAllUserWithFilterViewModel input)
+        public async Task<PartialViewResult> GetAllWithFilter(GetAllUserWithFilterViewModel input)
         {
             var filter = ObjectMapper.Map<UserInfoDto>(input);
             var filterResult = await _userAppService.GetAllUserAsync(new GetAllUserInput()
@@ -37,7 +37,7 @@ namespace acmManager.Web.Controllers
                 MaxResultCount = input.MaxResultCount,
                 SkipCount = input.SkipCount
             });
-            return View("Index", new IndexViewModel()
+            return PartialView("User/_UserTable", new IndexViewModel()
             {
                 Users = filterResult,
                 CurrentUserFilter = input

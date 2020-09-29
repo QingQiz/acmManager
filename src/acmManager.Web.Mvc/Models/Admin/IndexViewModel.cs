@@ -7,11 +7,5 @@ namespace acmManager.Web.Models.Admin
     {
         [CanBeNull] public GetAllUserViewModel Users;
         [CanBeNull] public GetAllUserWithFilterViewModel CurrentUserFilter;
-        public readonly CurrentPage CurrentPage;
-
-        public IndexViewModel(CurrentPage page = CurrentPage.GetAllUserPage)
-        {
-            CurrentPage = page;
-        }
     }
 }
