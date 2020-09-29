@@ -1,0 +1,17 @@
+﻿@using acmManager.File
+@using acmManager.Web.Controllers
+@inject FileAppService FileAppService;
+@model acmManager.Web.Models.Admin.UserProfileViewModel
+
+<div class="author-card pb-3">
+    <div class="author-card-cover"></div>
+    <div class="author-card-profile">
+        <div class="author-card-avatar">
+            <img src="@((await FileAppService.GetUserPhotoAsync(Model.UserId))?.FilePath ?? UserController.DefaultUserPhoto)" alt="UserPhoto">
+        </div>
+        <div class="author-card-details">
+            <h5 class="author-card-name text-lg">@(Model.Name ?? "null")</h5><span class="author-card-position">StudentNumber: @(Model.StudentNumber ?? "null")</span>
+        </div>
+    </div>
+</div>
+

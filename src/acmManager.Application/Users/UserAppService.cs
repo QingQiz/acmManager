@@ -204,6 +204,17 @@ namespace acmManager.Users
         }
 
         /// <summary>
+        /// 获取单个用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [AbpAuthorize(PermissionNames.PagesUsers_GetAll)]
+        public async Task<UserDto> GetUserAsync(long userId)
+        {
+            return UserToDto(await _userManager.GetUserByIdAsync(userId));
+        }
+
+        /// <summary>
         /// 获取所有用户的信息，筛选+分页
         /// </summary>
         /// <param name="input"></param>

@@ -1,12 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
+using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Controllers;
 using acmManager.Users;
 using acmManager.Users.Dto;
 using acmManager.Web.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
+using UserProfileViewModel = acmManager.Web.Models.Admin.UserProfileViewModel;
 
 namespace acmManager.Web.Controllers
 {
@@ -42,6 +44,22 @@ namespace acmManager.Web.Controllers
                 Users = filterResult,
                 CurrentUserFilter = input
             });
+        }
+
+        [UnitOfWork]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_GetAll)]
+        public async Task<ActionResult> GetUserProfile(long userId)
+        {
+            var userInfo = await _userAppService.GetUserAsync(userId);
+            return View("User/Profile", ObjectMapper.Map<UserProfileViewModel>(userInfo));
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Update)]
+        public async Task<JsonResult> UpdateUser(UserDto input)
+        {
+            await _userAppService.UpdateAsync(input);
+            return Json(new AjaxResponse());
         }
     }
 }

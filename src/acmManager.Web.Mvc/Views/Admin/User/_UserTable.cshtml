@@ -16,7 +16,7 @@
 
         @foreach (var userInfo in Model.Users ?? new List<UserDto>())
         {
-            <tr>
+            <tr onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
                 <th scope="row">@(userInfo.StudentNumber ?? "null")</th>
                 <td>@(userInfo.Name ?? "null")</td>
                 <td>@L(userInfo.Gender.ToString())</td>
