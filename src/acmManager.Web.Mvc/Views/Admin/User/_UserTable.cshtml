@@ -1,5 +1,4 @@
 ﻿@using acmManager.Users.Dto
-@using acmManager.Web.Models.Admin
 @model acmManager.Web.Models.Admin.IndexViewModel
 
 <div class="overflow-auto mt-3">
@@ -11,44 +10,28 @@
             <th scope="col">@L("UserInfo.Org")</th>
             <th scope="col">@L("UserInfo.StudentType")</th>
             <th scope="col">@L("UserInfo.Type")</th>
+            <th scope="col" style="text-align: center;">详细</th>
         </tr></thead>
         <tbody>
 
         @foreach (var userInfo in Model.Users ?? new List<UserDto>())
         {
-            <tr onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
+            <tr>
                 <th scope="row">@(userInfo.StudentNumber ?? "null")</th>
                 <td>@(userInfo.Name ?? "null")</td>
                 <td>@L(userInfo.Gender.ToString())</td>
                 <td>@(userInfo.Org ?? "null")</td>
                 <td>@(userInfo.StudentType ?? "null")</td>
                 <td>@L(userInfo.Type.ToString())</td>
+                <td>
+                    <button class="btn btn-block" onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
+                        <img src="~/img/more.svg" alt="" style="max-width: 18px"/>
+                    </button>
+                </td>
             </tr>
         }
         </tbody>
     </table>
 </div>
 <hr/>
-<nav aria-label="Page navigation" id="get-all-user-page-footer" class="overflow-auto">
-    @{
-        var filter = Model.CurrentUserFilter ?? new GetAllUserWithFilterViewModel();
-        var index = filter.SkipCount / filter.MaxResultCount + 1;
-        var indexStart = Math.Max(1, index - 3);
-    }
-    <ul class="pagination justify-content-end mt-3 mr-3">
-        <li class="page-item"><a class="page-link" href="#" id="get-all-user-page-first">First</a></li>
-        <li class="page-item @(index == 1 ? "disabled" : "")"><a class="page-link" href="#" id="get-all-user-page-previous">Previous</a></li>
-        @foreach (var i in Enumerable.Range(indexStart, 7))
-        {
-            @if (i == index)
-            {
-                <li class="page-item active"><a class="page-link" href="#">@i</a></li>
-            }
-            else
-            {
-                <li class="page-item"><a class="page-link get-all-user-page-link" href="#">@i</a></li>
-            }
-        }
-        <li class="page-item"><a class="page-link" href="#" id="get-all-user-page-next">Next</a></li>
-    </ul>
-</nav>
+@await Html.PartialAsync("_Pagination");

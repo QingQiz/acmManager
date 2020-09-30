@@ -66,7 +66,7 @@
             }
             <div class="col-md-6">
                 <div class="input-group input-group mb-3">
-                    <input type="text" name="MaxResultCount" id="get-all-user-filter-MaxResultCount" class="form-control" aria-label="Small" aria-describedby="inputGroup-user-filter-MaxResultCount" value="@(Model.CurrentUserFilter?.MaxResultCount ?? 30)">
+                    <input type="text" name="MaxResultCount" class="form-control get-all-user-filter-MaxResultCount" aria-label="Small" aria-describedby="inputGroup-user-filter-MaxResultCount" value="@(Model.CurrentUserFilter?.MaxResultCount ?? 30)">
                     <div class="input-group-append">
                         <span class="input-group-text">@L("MaxResultCount")</span>
                     </div>
@@ -74,9 +74,9 @@
             </div>
             <div class="col-md-6"></div>
             <div class="col-md-6">
-                <input type="hidden" name="SkipCount" value="@(Model.CurrentUserFilter?.SkipCount ?? 0)" id="get-all-user-filter-skip-count">
+                <input type="hidden" name="SkipCount" class="get-all-user-filter-skip-count" value="@(Model.CurrentUserFilter?.SkipCount ?? 0)">
                 <div class="text-right mt-2">
-                    <button class="btn btn-primary" id="get-all-user-filter-submit-btn" type="button"> @L("Submit") </button>
+                    <button class="btn btn-primary get-all-user-filter-submit-btn" type="button"> @L("Submit") </button>
                 </div>
             </div>
         </div>
