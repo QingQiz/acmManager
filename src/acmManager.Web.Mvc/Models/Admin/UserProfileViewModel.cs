@@ -3,7 +3,7 @@ using acmManager.Users.Dto;
 
 namespace acmManager.Web.Models.Admin
 {
-    [AutoMapFrom(typeof(UserDto))]
+    [AutoMapFrom(typeof(GetUserInfoDto), typeof(UserDto))]
     public class UserProfileViewModel : UserDto
     {
     }

@@ -49,11 +49,20 @@ namespace acmManager.Web.Controllers
         }
 
         [UnitOfWork]
-        [AbpMvcAuthorize(PermissionNames.PagesUsers_GetAll)]
         public async Task<ActionResult> GetUserProfile(long userId)
         {
-            var userInfo = await _userAppService.GetUserAsync(userId);
-            return View("User/Profile", ObjectMapper.Map<UserProfileViewModel>(userInfo));
+            if (await IsGrantedAsync(PermissionNames.PagesUsers_GetOne))
+            {
+                var userInfo = await _userAppService.GetAsync(userId);
+                return View("User/Profile", ObjectMapper.Map<UserProfileViewModel>(userInfo));
+            }
+            else
+            {
+                var userInfo = await _userAppService.GetUserInfoAsync(userId);
+                var model = ObjectMapper.Map<UserProfileViewModel>(userInfo);
+                model.UserId = userId;
+                return View("User/Profile", model);
+            }
         }
 
         [HttpPost]

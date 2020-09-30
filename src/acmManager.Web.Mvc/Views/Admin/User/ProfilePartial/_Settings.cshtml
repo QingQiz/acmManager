@@ -1,31 +1,35 @@
-﻿@model acmManager.Web.Models.Admin.UserProfileViewModel
+﻿@using acmManager.Authorization
+@model acmManager.Web.Models.Admin.UserProfileViewModel
 
-<div class="alert alert-danger">
-    <h4 class="alert-heading"> 删除用户 </h4>
-    <p>
-        此操作会将学号为 <strong>@Model.StudentNumber</strong> 的用户永久删除，且不可逆
-    </p>
-    <hr>
-    <div style="text-align: right">
-        <button class="btn btn-danger" id="submit-usertype-changes" data-toggle="modal" data-target="#are-you-sure"> 确认 </button>
-    </div>
-    <div class="modal fade" id="are-you-sure">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    你确定吗
-                </div>
-                <div class="modal-body">
-                    此操作不可逆 ！！
-                </div>
-                <form asp-action="DeleteUser" method="post" id="delete-user-form">
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="delete-user-cancel">取消</button>
-                        <button type="button" class="btn btn-danger btn-ok" id="delete-user-submit">确认</button>
+@if (IsGranted(PermissionNames.PagesUsers_Delete))
+{
+    <div class="alert alert-danger">
+        <h4 class="alert-heading"> 删除用户 </h4>
+        <p>
+            此操作会将学号为 <strong>@Model.StudentNumber</strong> 的用户永久删除，且不可逆
+        </p>
+        <hr>
+        <div style="text-align: right">
+            <button class="btn btn-danger" id="submit-usertype-changes" data-toggle="modal" data-target="#are-you-sure"> 确认 </button>
+        </div>
+        <div class="modal fade" id="are-you-sure">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        你确定吗
                     </div>
-                    <input type="hidden" name="userId" value="@Model.UserId">
-                </form>
+                    <div class="modal-body">
+                        此操作不可逆 ！！
+                    </div>
+                    <form asp-action="DeleteUser" method="post" id="delete-user-form">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="delete-user-cancel">取消</button>
+                            <button type="button" class="btn btn-danger btn-ok" id="delete-user-submit">确认</button>
+                        </div>
+                        <input type="hidden" name="userId" value="@Model.UserId">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+}

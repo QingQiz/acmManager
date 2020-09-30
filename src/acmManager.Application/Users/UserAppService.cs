@@ -148,7 +148,7 @@ namespace acmManager.Users
         [AbpAuthorize(PermissionNames.PagesUsers_Update)]
         public async Task<UserDto> UpdateAsync(UserDto input)
         {
-            var user = await UserManager.GetUserByIdAsync(input.UserId);
+            var user = await UserManager.GetUserByIdWithRolesAsync(input.UserId);
             var oldType = user.UserInfo.Type;
             ObjectMapper.Map(input, user.UserInfo);
             var newType = user.UserInfo.Type;
@@ -194,22 +194,11 @@ namespace acmManager.Users
         /// </summary>
         /// <param name="userId"></param>
         /// <returns><see cref="UserDto"/></returns>
-        [AbpAuthorize(PermissionNames.PagesUsers_GetAll)]
+        [AbpAuthorize(PermissionNames.PagesUsers_GetOne)]
         public async Task<UserDto> GetAsync(long userId)
         {
             var user = await _userManager.GetUserByIdAsync(userId);
             return UserToDto(user);
-        }
-
-        /// <summary>
-        /// 获取单个用户信息
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        [AbpAuthorize(PermissionNames.PagesUsers_GetAll)]
-        public async Task<UserDto> GetUserAsync(long userId)
-        {
-            return UserToDto(await _userManager.GetUserByIdAsync(userId));
         }
 
         /// <summary>

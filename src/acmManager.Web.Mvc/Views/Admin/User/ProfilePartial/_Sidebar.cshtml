@@ -1,4 +1,8 @@
-﻿<div class="mt-5">
+﻿@using acmManager.Authorization
+@{
+    var canResetPassword = IsGranted(PermissionNames.PagesUsers_Update);
+}
+<div class="mt-5">
     <div class="row">
         <div class="col-lg-3 pb-5 userCard">
             @await Html.PartialAsync("User/ProfilePartial/_Photo")
@@ -11,9 +15,12 @@
                     <a class="list-group-item" href="#profile-settings" data-toggle="pill">
                         <img src="~/img/settings.svg" alt=""> 账户设置
                     </a>
-                    <a class="list-group-item" href="#profile-change-password" data-toggle="pill">
-                        <img src="~/img/edit.svg" alt=""> 重置密码
-                    </a>
+                    @if (canResetPassword)
+                    {
+                        <a class="list-group-item" href="#profile-change-password" data-toggle="pill">
+                            <img src="~/img/edit.svg" alt=""> 重置密码
+                        </a>
+                    }
                 </nav>
             </div>
         </div>
@@ -28,10 +35,13 @@
                 @await Html.PartialAsync("User/ProfilePartial/_Settings")
             </div>
 
-            <!-- Change Password-->
-            <div class="tab-pane fade" id="profile-change-password">
-                @await Html.PartialAsync("User/ProfilePartial/_ResetPassword")
-            </div>
+            @if (canResetPassword)
+            {
+                <!-- Reset Password-->
+                <div class="tab-pane fade" id="profile-change-password">
+                    @await Html.PartialAsync("User/ProfilePartial/_ResetPassword")
+                </div>
+            }
         </div>
     </div>
 </div>

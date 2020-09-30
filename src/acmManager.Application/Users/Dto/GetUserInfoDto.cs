@@ -9,6 +9,8 @@ namespace acmManager.Users.Dto
     [AutoMapFrom(typeof(UserInfo))]
     public class GetUserInfoDto
     {
+        // 学号
+        public string StudentNumber { get; set; }
         // 姓名
         public string Name { get; set; }
         // 性别
@@ -19,6 +21,8 @@ namespace acmManager.Users.Dto
         public string Email { get; set; }
         // 学院
         public string Org { get; set; }
+        // 专业
+        public string Major { get; set; }
         // 类型
         [EnumDataType(typeof(UserType))]
         [JsonConverter(typeof(StringEnumConverter))]

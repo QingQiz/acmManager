@@ -1,64 +1,95 @@
 ﻿@using System.ComponentModel
+@using acmManager.Authorization
 @using acmManager.Authorization.Users
 @model acmManager.Web.Models.Admin.UserProfileViewModel
-<form class="row" id="update-user-form" method="post" asp-action="UpdateUser">
-    @foreach (var descriptor in TypeDescriptor.GetProperties(Model).Cast<PropertyDescriptor>())
-    {
-        @if (descriptor.Name == "UserId")
+
+@if (IsGranted(PermissionNames.PagesUsers_Update))
+{
+    <form class="row" id="update-user-form" method="post" asp-action="UpdateUser">
+        @foreach (var descriptor in TypeDescriptor.GetProperties(Model).Cast<PropertyDescriptor>())
         {
-            <input type="hidden" name="@descriptor.Name" value="@descriptor.GetValue(Model)">
-        }
-        else if (descriptor.Name == "Type")
-        {
-            <div class="col-md-6">
-                <div class="input-group input-group mb-3">
-                    <select class="custom-select" name="@descriptor.Name">
-                        <option selected value="@(descriptor.GetValue(Model)?.ToString() ?? "")">@L(descriptor.GetValue(Model)?.ToString() ?? "empty")</option>
-                        @foreach (var val in Enum.GetNames(typeof(UserType)))
-                        {
-                            <option value="@val">@L(val)</option>
-                        }
-                    </select>
-                    <div class="input-group-append">
-                        <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+            @if (descriptor.Name == "UserId")
+            {
+                <input type="hidden" name="@descriptor.Name" value="@descriptor.GetValue(Model)">
+            }
+            else if (descriptor.Name == "Type")
+            {
+                <div class="col-md-6">
+                    <div class="input-group input-group mb-3">
+                        <select class="custom-select" name="@descriptor.Name">
+                            <option selected value="@(descriptor.GetValue(Model)?.ToString() ?? "")">@L(descriptor.GetValue(Model)?.ToString() ?? "empty")</option>
+                            @foreach (var val in Enum.GetNames(typeof(UserType)))
+                            {
+                                <option value="@val">@L(val)</option>
+                            }
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        else if (descriptor.Name == "Gender")
-        {
-            <div class="col-md-6">
-                <div class="input-group input-group mb-3">
-                    <select class="custom-select" name="@descriptor.Name">
-                        <option value="@(descriptor.GetValue(Model)?.ToString() ?? "")" selected>@L(descriptor.GetValue(Model)?.ToString() ?? "empty")</option>
-                        <option value="Male">@L("Male")</option>
-                        <option value="Female">@L("Female")</option>
-                    </select>
-                    <div class="input-group-append">
-                        <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+            }
+            else if (descriptor.Name == "Gender")
+            {
+                <div class="col-md-6">
+                    <div class="input-group input-group mb-3">
+                        <select class="custom-select" name="@descriptor.Name">
+                            <option value="@(descriptor.GetValue(Model)?.ToString() ?? "")" selected>@L(descriptor.GetValue(Model)?.ToString() ?? "empty")</option>
+                            <option value="Male">@L("Male")</option>
+                            <option value="Female">@L("Female")</option>
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        else
-        {
-            <div class="col-md-6">
-                <div class="input-group input-group mb-3">
-                    <input type="text" name="@descriptor.Name" class="form-control" aria-label="Small" aria-describedby="inputGroup-user-filter-@descriptor.Name" value="@(descriptor.GetValue(Model)?.ToString() ?? "")">
-                    <div class="input-group-append">
-                        <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+            }
+            else
+            {
+                <div class="col-md-6">
+                    <div class="input-group input-group mb-3">
+                        <input type="text" name="@descriptor.Name" class="form-control" aria-label="Small" aria-describedby="inputGroup-user-filter-@descriptor.Name" value="@(descriptor.GetValue(Model)?.ToString() ?? "")">
+                        <div class="input-group-append">
+                            <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
-    }
-    <div class="col-12">
-        <hr class="mt-2 mb-3">
-        <div class="d-flex flex-wrap justify-content-between align-items-center">
-            <div class="d-block">
-                <div class="alert alert-danger" style="display: none"></div>
+        <div class="col-12">
+            <hr class="mt-2 mb-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div class="d-block">
+                    <div class="alert alert-danger" style="display: none"></div>
+                </div>
+                <button class="btn btn-style-1 btn-primary" type="button" id="update-user-btn">Upadte Profile</button>
             </div>
-            <button class="btn btn-style-1 btn-primary" type="button" id="update-user-btn">Upadte Profile</button>
         </div>
+    </form>
+}
+else
+{
+    <div class="row">
+        @foreach (var descriptor in TypeDescriptor.GetProperties(Model).Cast<PropertyDescriptor>())
+        {
+            if (descriptor.GetValue(Model) == default || descriptor.Name == "UserId")
+            {
+                continue;
+            }
+            <div class="col-md-6"> <div class="input-group input-group mb-3">
+                    @if (descriptor.Name == "Type" || descriptor.Name == "Gender")
+                    {
+                        <input type="text" disabled class="form-control" value="@L(descriptor.GetValue(Model)?.ToString() ?? "empty")">
+                    }
+                    else
+                    {
+                        <input type="text" disabled class="form-control" value="@(descriptor.GetValue(Model)?.ToString() ?? "")">
+                    }
+                    <div class="input-group-append">
+                        <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-</form>
+}
