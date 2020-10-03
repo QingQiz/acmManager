@@ -41,7 +41,7 @@ namespace acmManager.Web.Controllers
                 MaxResultCount = input.MaxResultCount,
                 SkipCount = input.SkipCount
             });
-            return PartialView("User/_UserTable", new IndexViewModel()
+            return PartialView("User/GetAllUserPartial/_UserTable", new IndexViewModel()
             {
                 Users = filterResult,
                 CurrentUserFilter = input
@@ -54,14 +54,14 @@ namespace acmManager.Web.Controllers
             if (await IsGrantedAsync(PermissionNames.PagesUsers_GetOne))
             {
                 var userInfo = await _userAppService.GetAsync(userId);
-                return View("User/Profile", ObjectMapper.Map<UserProfileViewModel>(userInfo));
+                return View("User/ProfilePartial/Profile", ObjectMapper.Map<UserProfileViewModel>(userInfo));
             }
             else
             {
                 var userInfo = await _userAppService.GetUserInfoAsync(userId);
                 var model = ObjectMapper.Map<UserProfileViewModel>(userInfo);
                 model.UserId = userId;
-                return View("User/Profile", model);
+                return View("User/ProfilePartial/Profile", model);
             }
         }
 
