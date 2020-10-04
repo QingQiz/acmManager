@@ -72,9 +72,39 @@ let userPromotePaginationEvent = function () {
     });
 }
 
+// UserPromote Checkbox Actions
+let userPromoteCheckboxEvent = function () {
+    let form = $('#user-promote-form');
+    $('.user-promote-checkbox').click(function () {
+        let userId = $(this).attr('id').split('-').slice(-1);
+        if ($(this).is(':checked')) {
+            // add an input to form
+            form.append(`<input type="hidden" name="Users[]" value="${userId}" id="user-promote-form-user-${userId}">`);
+        } else {
+            // remove the input from form
+            let inputId = `#user-promote-form-user-${userId}`;
+            $(inputId).remove();
+        }
+    });
+    
+    $('.user-promote-checkbox-select-all').click(function () {
+        if ($(this).is(':checked')) {
+            // select all
+            $('.user-promote-checkbox').each(function () {
+                if (!$(this).is(':checked')) $(this).click();
+            });
+        } else {
+            // unselect all
+            $('.user-promote-checkbox').each(function () {
+                if ($(this).is(':checked')) $(this).click();
+            });
+        }
+    });
+}
+
 // UserPromoteFilter Submission
 $('#user-promote .user-promote-filter-submit-btn').click(function () {
-    let form = $('#user-promote-form');
+    let form = $('#user-promote-filter-form');
     
     $.ajax({
         url: form.attr('action'),
@@ -84,10 +114,12 @@ $('#user-promote .user-promote-filter-submit-btn').click(function () {
             $('#user-promote-filter').collapse('hide');
             $('#user-promote-table').html(res);
             userPromotePaginationEvent();
+            userPromoteCheckboxEvent();
         }
     })
 })
 
+// load one page on ready
 $(function () {
     $('#user-management .get-all-user-filter-submit-btn').click();
     $('#user-promote .user-promote-filter-submit-btn').click();

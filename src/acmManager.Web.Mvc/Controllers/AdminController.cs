@@ -9,6 +9,7 @@ using acmManager.Authorization.Users;
 using acmManager.Controllers;
 using acmManager.Users;
 using acmManager.Users.Dto;
+using acmManager.Users.Type;
 using acmManager.Web.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
 using UserProfileViewModel = acmManager.Web.Models.Admin.UserProfileViewModel;
@@ -19,10 +20,12 @@ namespace acmManager.Web.Controllers
     public class AdminController : acmManagerControllerBase
     {
         private readonly UserAppService _userAppService;
+        private readonly UserTypeAppService _userTypeAppService;
 
-        public AdminController(UserAppService userAppService)
+        public AdminController(UserAppService userAppService, UserTypeAppService userTypeAppService)
         {
             _userAppService = userAppService;
+            _userTypeAppService = userTypeAppService;
         }
 
         public virtual ActionResult Index()
@@ -126,6 +129,17 @@ namespace acmManager.Web.Controllers
                 CurrentUserFilter = input,
                 Users = res
             });
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Promote)]
+        public async Task<JsonResult> UserPromote(UserPromoteModelView input)
+        {
+            foreach (var userId in input.Users)
+            {
+                await _userTypeAppService.ToMemberAsync(userId);
+            }
+            return Json(new AjaxResponse());
         }
     }
 }

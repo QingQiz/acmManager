@@ -4,27 +4,32 @@
 <div class="overflow-auto mt-3">
     <table class="table table-hover" id="get-all-user-table">
         <thead><tr>
+            <td><input type="checkbox" class="user-promote-checkbox-select-all"></td>
             <th scope="col">@L("UserInfo.StudentNumber")</th>
             <th scope="col">@L("UserInfo.Name")</th>
             <th scope="col">@L("UserInfo.Gender")</th>
             <th scope="col">@L("UserInfo.Org")</th>
-            <th scope="col">@L("UserInfo.Type")</th>
+            <th scope="col">@L("UserInfo.Major")</th>
         </tr></thead>
         <tbody>
 
         @foreach (var userInfo in Model.Users ?? new List<UserDto>())
         {
             <tr>
+                <td><input type="checkbox" class="user-promote-checkbox" id="user-promote-user-@userInfo.UserId"></td>
                 <th scope="row">@(userInfo.StudentNumber ?? "null")</th>
                 <td>@(userInfo.Name ?? "null")</td>
                 <td>@L(userInfo.Gender.ToString())</td>
                 <td>@(userInfo.Org ?? "null")</td>
-                <td>@L(userInfo.Type.ToString())</td>
+                <td>@(userInfo.Major ?? "null")</td>
             </tr>
         }
         </tbody>
     </table>
 </div>
+@* submit *@
+<form asp-action="UserPromote" method="post" id="user-promote-form" style="display: none"> </form>
 <hr/>
-@await Html.PartialAsync("_Pagination");
+@* Pagination *@
+@await Html.PartialAsync("_Pagination")
 
