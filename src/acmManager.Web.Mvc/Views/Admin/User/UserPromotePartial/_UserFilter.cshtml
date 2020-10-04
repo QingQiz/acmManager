@@ -1,0 +1,62 @@
+﻿@using acmManager.Web.Models.Admin
+@using System.ComponentModel
+@using acmManager.Authorization.Users
+@model acmManager.Web.Models.Admin.IndexViewModel
+
+@{
+    var filter = Model.CurrentUserFilter ?? new GetAllUserWithFilterViewModel();
+}
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#user-promote-filter" aria-expanded="false" aria-controls="user-promote-filter" id="user-promote-filter-btn">
+    Filter
+</button>
+
+<div class="collapse pt-3" id="user-promote-filter">
+    <form asp-action="GetAllWithFilter" method="post" id="user-promote-form"><div class="row">
+        @foreach (var descriptor in TypeDescriptor.GetProperties(filter).Cast<PropertyDescriptor>()
+            .Where(d => new List<string> {"MaxResultCount", "SkipCount", "Type"}.All(n => n != d.Name)))
+        {
+            if (descriptor.Name == "Gender")
+            {
+                <div class="col-md-6"><div class="input-group input-group mb-3">
+                    <select class="custom-select" name="@descriptor.Name">
+                        <option value="@(descriptor.GetValue(filter)?.ToString() ?? "")" selected>@L(descriptor.GetValue(filter)?.ToString() ?? "empty")</option>
+                        <option/>
+                        <option value="Male">@L("Male")</option>
+                        <option value="Female">@L("Female")</option>
+                    </select>
+                    <div class="input-group-append"><span class="input-group-text">@L("UserInfo." + descriptor.Name)</span></div>
+                </div></div>
+            }
+            else
+            {
+                <div class="col-md-6"><div class="input-group input-group mb-3">
+                    <input type="text" name="@descriptor.Name" class="form-control" value="@(descriptor.GetValue(filter)?.ToString() ?? "")">
+                    <div class="input-group-append"><span class="input-group-text">@L("UserInfo." + descriptor.Name)</span></div>
+                </div></div>
+            }
+        }
+        @* User Type *@
+        <div class="col-md-6"><div class="input-group input-group mb-3">
+            <input type="text" class="form-control" disabled aria-label="Small" value="@L(UserType.TempMember.ToString())">
+            <input type="hidden" name="Type" value="@UserType.TempMember.ToString()">
+            <div class="input-group-append"><span class="input-group-text">@L("UserInfo.Type")</span></div>
+        </div></div>
+
+        @* Page Size *@
+        <div class="col-md-6"><div class="input-group input-group mb-3">
+            <input type="text" name="MaxResultCount" class="form-control user-promote-filter-MaxResultCount" value="@(Model.CurrentUserFilter?.MaxResultCount ?? 30)">
+            <div class="input-group-append"><span class="input-group-text">@L("MaxResultCount")</span></div>
+        </div></div>
+        
+        @* Skip Count *@
+        <input type="hidden" name="SkipCount" class="user-promote-filter-skip-count" value="@(Model.CurrentUserFilter?.SkipCount ?? 0)">
+
+        @* Submit btn *@
+        <div class="col-md-6"></div>
+        <div class="col-md-6">
+            <div class="text-right mt-2">
+                <button class="btn btn-primary user-promote-filter-submit-btn" type="button"> @L("Submit") </button>
+            </div>
+        </div>
+    </div></form>
+</div>
