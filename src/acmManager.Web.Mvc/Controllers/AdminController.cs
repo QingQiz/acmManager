@@ -5,6 +5,7 @@ using Abp.UI;
 using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Authorization.Accounts.Dto;
+using acmManager.Authorization.Users;
 using acmManager.Controllers;
 using acmManager.Users;
 using acmManager.Users.Dto;
@@ -29,6 +30,8 @@ namespace acmManager.Web.Controllers
             return View(new IndexViewModel());
         }
 
+        #region GetAllUser
+
         [HttpPost]
         [UnitOfWork]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_GetAll)]
@@ -47,6 +50,11 @@ namespace acmManager.Web.Controllers
                 CurrentUserFilter = input
             });
         }
+        
+
+        #endregion
+
+        #region UserProfile
 
         [UnitOfWork]
         public async Task<ActionResult> GetUserProfile(long userId)
@@ -96,6 +104,28 @@ namespace acmManager.Web.Controllers
                 NewPassword = input.NewPassword
             });
             return Json(new AjaxResponse());
+        }
+
+        #endregion
+
+
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_GetAll)]
+        public async Task<PartialViewResult> UserPromoteFilter(GetAllUserWithFilterViewModel input)
+        {
+            var filter = ObjectMapper.Map<UserInfoDto>(input);
+            // only find TempMember
+            filter.Type = UserType.TempMember;
+            var res = await _userAppService.GetAllUserAsync(new GetAllUserInput()
+            {
+                Filter = filter,
+                MaxResultCount = input.MaxResultCount,
+                SkipCount = input.SkipCount
+            });
+            return PartialView("User/UserPromotePartial/_UserPromote", new IndexViewModel()
+            {
+                CurrentUserFilter = input,
+                Users = res
+            });
         }
     }
 }

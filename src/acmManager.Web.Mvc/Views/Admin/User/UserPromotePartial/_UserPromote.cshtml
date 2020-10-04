@@ -1,0 +1,30 @@
+﻿@using acmManager.Users.Dto
+@model acmManager.Web.Models.Admin.IndexViewModel
+
+<div class="overflow-auto mt-3">
+    <table class="table table-hover" id="get-all-user-table">
+        <thead><tr>
+            <th scope="col">@L("UserInfo.StudentNumber")</th>
+            <th scope="col">@L("UserInfo.Name")</th>
+            <th scope="col">@L("UserInfo.Gender")</th>
+            <th scope="col">@L("UserInfo.Org")</th>
+            <th scope="col">@L("UserInfo.Type")</th>
+        </tr></thead>
+        <tbody>
+
+        @foreach (var userInfo in Model.Users ?? new List<UserDto>())
+        {
+            <tr>
+                <th scope="row">@(userInfo.StudentNumber ?? "null")</th>
+                <td>@(userInfo.Name ?? "null")</td>
+                <td>@L(userInfo.Gender.ToString())</td>
+                <td>@(userInfo.Org ?? "null")</td>
+                <td>@L(userInfo.Type.ToString())</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<hr/>
+@await Html.PartialAsync("_Pagination");
+
