@@ -10,6 +10,7 @@
             <th scope="col">@L("UserInfo.Gender")</th>
             <th scope="col">@L("UserInfo.Org")</th>
             <th scope="col">@L("UserInfo.Major")</th>
+            <th scope="col" style="text-align: center;">详细</th>
         </tr></thead>
         <tbody>
 
@@ -22,13 +23,23 @@
                 <td>@L(userInfo.Gender.ToString())</td>
                 <td>@(userInfo.Org ?? "null")</td>
                 <td>@(userInfo.Major ?? "null")</td>
+                <td><button class="btn btn-block" onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
+                    <img src="~/img/more.svg" alt="" style="max-width: 18px"/>
+                </button></td>
             </tr>
         }
         </tbody>
     </table>
 </div>
+
+@* submit btn *@
+<div class="collapse" id="user-promote-form-submit-collapse"><div class="text-right"><hr/>
+    <button class="btn btn-success" id="user-promote-form-submit-btn">@L("Submit")</button>
+</div></div>
+
 @* submit *@
 <form asp-action="UserPromote" method="post" id="user-promote-form" style="display: none"> </form>
+
 <hr/>
 @* Pagination *@
 @await Html.PartialAsync("_Pagination")

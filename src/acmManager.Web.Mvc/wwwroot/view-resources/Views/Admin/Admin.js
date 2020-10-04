@@ -75,27 +75,50 @@ let userPromotePaginationEvent = function () {
 // UserPromote Checkbox Actions
 let userPromoteCheckboxEvent = function () {
     let form = $('#user-promote-form');
-    $('.user-promote-checkbox').click(function () {
+    let selected = 0;
+    let checkbox = $('.user-promote-checkbox');
+    let checkboxSize = checkbox.length;
+    let selectAll = $('.user-promote-checkbox-select-all');
+ 
+    checkbox.click(function () {
         let userId = $(this).attr('id').split('-').slice(-1);
         if ($(this).is(':checked')) {
             // add an input to form
             form.append(`<input type="hidden" name="Users[]" value="${userId}" id="user-promote-form-user-${userId}">`);
+            selected++;
         } else {
             // remove the input from form
             let inputId = `#user-promote-form-user-${userId}`;
             $(inputId).remove();
+            selected--;
+        }
+        
+        // click selectAll when all checkbox is checked
+        if (selected === checkboxSize) {
+            if (!selectAll.is(':checked')) selectAll.click();
+        }
+
+        // click selectAll when none checkbox is checked
+        if (selected === 0) {
+            if (selectAll.is(':checked')) selectAll.click();
+        }
+        
+        // show submit btn if select any
+        if (selected === 0) {
+            $('#user-promote-form-submit-collapse').collapse('hide');
+        } else {
+            $('#user-promote-form-submit-collapse').collapse('show');
         }
     });
-    
-    $('.user-promote-checkbox-select-all').click(function () {
+
+    // select all and unselect all
+    selectAll.click(function () {
         if ($(this).is(':checked')) {
-            // select all
-            $('.user-promote-checkbox').each(function () {
+            checkbox.each(function () {
                 if (!$(this).is(':checked')) $(this).click();
             });
         } else {
-            // unselect all
-            $('.user-promote-checkbox').each(function () {
+            checkbox.each(function () {
                 if ($(this).is(':checked')) $(this).click();
             });
         }
