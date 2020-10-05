@@ -7,7 +7,7 @@
         var index = filter.SkipCount / filter.MaxResultCount + 1;
         var indexStart = Math.Max(1, index - 3);
     }
-    <ul class="pagination justify-content-end mt-3 mr-3">
+    <ul class="pagination justify-content-end mt-3 mr-0">
         <li class="page-item"><a class="page-link page-first" href="#">First</a></li>
         <li class="page-item @(index == 1 ? "disabled" : "")"><a class="page-link page-previous" href="#">Previous</a></li>
         @foreach (var i in Enumerable.Range(indexStart, 7))

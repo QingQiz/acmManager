@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
 using Abp.UI;
@@ -111,6 +112,7 @@ namespace acmManager.Web.Controllers
 
         #endregion
 
+        #region UserPromote
 
         [AbpMvcAuthorize(PermissionNames.PagesUsers_GetAll)]
         public async Task<PartialViewResult> UserPromoteFilter(GetAllUserWithFilterViewModel input)
@@ -133,13 +135,15 @@ namespace acmManager.Web.Controllers
 
         [HttpPost]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Promote)]
-        public async Task<JsonResult> UserPromote(UserPromoteModelView input)
+        public async Task<JsonResult> UserPromote(List<long> ids)
         {
-            foreach (var userId in input.Users)
+            foreach (var userId in ids)
             {
                 await _userTypeAppService.ToMemberAsync(userId);
             }
             return Json(new AjaxResponse());
         }
+
+        #endregion
     }
 }

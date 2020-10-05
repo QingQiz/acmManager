@@ -10,24 +10,18 @@
             <th scope="col">@L("UserInfo.Org")</th>
             <th scope="col">@L("UserInfo.StudentType")</th>
             <th scope="col">@L("UserInfo.Type")</th>
-            <th scope="col" style="text-align: center;">详细</th>
         </tr></thead>
         <tbody>
 
         @foreach (var userInfo in Model.Users ?? new List<UserDto>())
         {
-            <tr>
+            <tr onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
                 <th scope="row">@(userInfo.StudentNumber ?? "null")</th>
                 <td>@(userInfo.Name ?? "null")</td>
                 <td>@L(userInfo.Gender.ToString())</td>
                 <td>@(userInfo.Org ?? "null")</td>
                 <td>@(userInfo.StudentType ?? "null")</td>
                 <td>@L(userInfo.Type.ToString())</td>
-                <td>
-                    <button class="btn btn-block" onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
-                        <img src="~/img/more.svg" alt="" style="max-width: 18px"/>
-                    </button>
-                </td>
             </tr>
         }
         </tbody>

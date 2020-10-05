@@ -79,12 +79,17 @@ let userPromoteCheckboxEvent = function () {
     let checkbox = $('.user-promote-checkbox');
     let checkboxSize = checkbox.length;
     let selectAll = $('.user-promote-checkbox-select-all');
+    
+    $('#user-promote-table tr').click(function () {
+        $(this).find('input[type=checkbox]').click();
+    });
  
-    checkbox.click(function () {
+    checkbox.click(function (e) {
+        e.stopPropagation();
         let userId = $(this).attr('id').split('-').slice(-1);
         if ($(this).is(':checked')) {
             // add an input to form
-            form.append(`<input type="hidden" name="Users[]" value="${userId}" id="user-promote-form-user-${userId}">`);
+            form.append(`<input type="hidden" name="Users" value="${userId}" id="user-promote-form-user-${userId}">`);
             selected++;
         } else {
             // remove the input from form
@@ -93,16 +98,14 @@ let userPromoteCheckboxEvent = function () {
             selected--;
         }
         
-        // click selectAll when all checkbox is checked
         if (selected === checkboxSize) {
-            if (!selectAll.is(':checked')) selectAll.click();
+            // click selectAll when all checkbox is checked
+            if (!selectAll.is(':checked')) selectAll.prop('checked', true);
+        } else {
+            // click selectAll when none checkbox is checked
+            if (selectAll.is(':checked')) selectAll.prop('checked', false);
         }
 
-        // click selectAll when none checkbox is checked
-        if (selected === 0) {
-            if (selectAll.is(':checked')) selectAll.click();
-        }
-        
         // show submit btn if select any
         if (selected === 0) {
             $('#user-promote-form-submit-collapse').collapse('hide');
@@ -112,7 +115,8 @@ let userPromoteCheckboxEvent = function () {
     });
 
     // select all and unselect all
-    selectAll.click(function () {
+    selectAll.click(function (e) {
+        e.stopPropagation();
         if ($(this).is(':checked')) {
             checkbox.each(function () {
                 if (!$(this).is(':checked')) $(this).click();
@@ -122,6 +126,30 @@ let userPromoteCheckboxEvent = function () {
                 if ($(this).is(':checked')) $(this).click();
             });
         }
+    });
+}
+
+let userPromoteSubmitEvent = function () {
+    $('#user-promote-form-submit-btn').click(function () {
+        let form = $('#user-promote-form');
+        let formData = Array.from(form.find('input[name="Users"]').map(function () {
+            return $(this).attr('id').split('-').slice(-1);
+        }));
+        console.log(formData);
+        
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: {
+                ids: formData,
+                __RequestVerificationToken: form.find('input[name="__RequestVerificationToken"]').attr('value')
+            },
+            success: function () {
+                $('#user-promote-filter .user-promote-filter-submit-btn').click();
+            },
+            dataType: 'json',
+            traditional: true
+        })
     });
 }
 
@@ -138,6 +166,7 @@ $('#user-promote .user-promote-filter-submit-btn').click(function () {
             $('#user-promote-table').html(res);
             userPromotePaginationEvent();
             userPromoteCheckboxEvent();
+            userPromoteSubmitEvent();
         }
     })
 })
