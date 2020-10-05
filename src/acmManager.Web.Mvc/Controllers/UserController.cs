@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
@@ -20,14 +19,14 @@ namespace acmManager.Web.Controllers
     [AbpMvcAuthorize]
     public class UserController : acmManagerControllerBase
     {
-        private readonly UserAppService _userAppService;
+        public const string DefaultUserPhoto = "/img/defaultUserImage.png";
         private readonly FileAppService _fileAppService;
+        private readonly UserAppService _userAppService;
         private readonly UserManager _userManager;
         private readonly UserTypeAppService _userTypeAppService;
 
-        public const string DefaultUserPhoto = "/img/defaultUserImage.png";
-
-        public UserController(UserAppService userAppService, FileAppService fileAppService, UserManager userManager, UserTypeAppService userTypeAppService)
+        public UserController(UserAppService userAppService, FileAppService fileAppService, UserManager userManager,
+            UserTypeAppService userTypeAppService)
         {
             _userAppService = userAppService;
             _fileAppService = fileAppService;
@@ -35,36 +34,32 @@ namespace acmManager.Web.Controllers
             _userTypeAppService = userTypeAppService;
         }
 
-        public virtual string UserTypeToString(UserType? type)
-        {
-            return type switch
-            {
-                null => L("Administrator"),
-                _ => L(type.ToString())
-            };
-        }
+        #region GET
 
-        public async Task<ActionResult> UserProfile(long userId=0)
+        public async Task<ActionResult> UserProfile(long userId = 0)
         {
             if (userId != 0 && userId != AbpSession.GetUserId())
             {
                 if (!await IsGrantedAsync(PermissionNames.PagesUsers_GetAll))
-                {
                     throw new UserFriendlyException("PermissionDenied");
-                }
             }
             else
             {
                 userId = AbpSession.GetUserId();
             }
+
             var userInfo = await _userAppService.GetAsync(userId);
 
             var model = ObjectMapper.Map<UserProfileViewModel>(userInfo);
-            model.Photo = (await _fileAppService.GetUserPhotoAsync(userInfo.UserId));
+            model.Photo = await _fileAppService.GetUserPhotoAsync(userInfo.UserId);
             model.CreationTime = (await _userManager.GetUserByIdAsync(userId)).CreationTime;
 
             return View("Profile", model);
         }
+
+        #endregion
+
+        #region Update
 
         [HttpPost]
         [UnitOfWork]
@@ -87,14 +82,27 @@ namespace acmManager.Web.Controllers
         public virtual async Task<JsonResult> ChangeUserPassword(ChangeUserPasswordViewModel input)
         {
             if (input.NewPassword != input.NewPasswordAgain)
-            {
                 throw new UserFriendlyException("`new password` should be same with `new password again`");
-            }
-            await _userAppService.ChangePasswordAsync(new ChangePasswordDto()
+            await _userAppService.ChangePasswordAsync(new ChangePasswordDto
             {
                 CurrentPassword = input.CurrentPassword,
                 NewPassword = input.NewPassword
             });
+            return Json(new AjaxResponse());
+        }
+
+        [HttpPost]
+        [UnitOfWork]
+        public virtual async Task<JsonResult> UpdateFromAoxiang(UpdateFromAoxiangViewModel input)
+        {
+            if (input.Password != input.PasswordAgain)
+                throw new UserFriendlyException("`password` should be same with `password again`");
+
+            await _userAppService.UpdateInfoFromAoxiangAsync(new UpdateUserInfoFromAoxiangInput
+            {
+                Password = input.Password
+            });
+
             return Json(new AjaxResponse());
         }
 
@@ -120,21 +128,6 @@ namespace acmManager.Web.Controllers
             return Json(new AjaxResponse());
         }
 
-        [HttpPost]
-        [UnitOfWork]
-        public virtual async Task<JsonResult> UpdateFromAoxiang(UpdateFromAoxiangViewModel input)
-        {
-            if (input.Password != input.PasswordAgain)
-            {
-                throw new UserFriendlyException("`password` should be same with `password again`");
-            }
-
-            await _userAppService.UpdateInfoFromAoxiangAsync(new UpdateUserInfoFromAoxiangInput()
-            {
-                Password = input.Password
-            });
-
-            return Json(new AjaxResponse());
-        }
+        #endregion
     }
 }
