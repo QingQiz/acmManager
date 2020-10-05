@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Domain.Uow;
+using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Authorization.Users;
 using acmManager.File.Dto;
@@ -13,6 +14,15 @@ namespace acmManager.File
 {
     public class FileAppService : acmManagerAppServiceBase
     {
+        private readonly FileManager _fileManager;
+        private readonly UserManager _userManager;
+
+        public FileAppService(FileManager fileManager, UserManager userManager)
+        {
+            _fileManager = fileManager;
+            _userManager = userManager;
+        }
+
         [RemoteService(false)]
         public static async Task<File> SaveFormFileAsync(IFormFile input)
         {
@@ -30,7 +40,7 @@ namespace acmManager.File
 
             return new File
             {
-                UploadName = input.Name,
+                UploadName = input.FileName,
                 RealPath = realPath,
                 MimeType = input.ContentType
             };
@@ -52,8 +62,13 @@ namespace acmManager.File
             if (photo.Length > 50 * 1024 * 1024) // 50 MB
                 throw new UserFriendlyException("file length must less than 50 MB");
 
-            var user = await GetCurrentUserAsync();
+            var user = await _userManager.GetUserByIdWithPhotoAsync(AbpSession.GetUserId());
             user.UserInfo ??= new UserInfo();
+            
+            if (user.UserInfo.Photo != null)
+            {
+                await _fileManager.Delete(user.UserInfo.Photo.Id);
+            }
 
             user.UserInfo.Photo = await SaveFormFileAsync(photo);
         }
