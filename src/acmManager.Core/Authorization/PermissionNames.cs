@@ -21,5 +21,8 @@
         public const string PagesUsers_Relegate = "Pages.Users.Relegate";
 
         public const string PagesUsers_Admin = "Pages.Users.Admin";
+
+        public const string PagesUsers_Certificate = "Pages.Users.Certificate";
+        public const string PagesUsers_Certificate_Upload = "Pages.Users.Certificate.Upload";
     }
 }

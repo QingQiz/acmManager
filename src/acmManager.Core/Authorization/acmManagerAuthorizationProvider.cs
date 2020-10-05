@@ -26,6 +26,11 @@ namespace acmManager.Authorization
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_GetOne, L("Users.GetOne"));
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Promote, L("Users.Promote"));
             pageUser.CreateChildPermission(PermissionNames.PagesUsers_Relegate, L("Users.Relegate"));
+
+            var certificate =
+                pageUser.CreateChildPermission(PermissionNames.PagesUsers_Certificate, L("Users.Certificate"));
+            certificate.CreateChildPermission(PermissionNames.PagesUsers_Certificate_Upload,
+                L("Users.Certificate.Upload"));
         }
 
         private static ILocalizableString L(string name)
