@@ -15,9 +15,14 @@ namespace acmManager.Certificate
         {
         }
 
+        public Task<Certificate> GetWithFile(long id)
+        {
+            return Repository.GetAll().Where(cer => cer.Id == id).Include(cer => cer.File).FirstAsync();
+        }
+
         public Task<List<Certificate>> GetAllWithFile(Expression<Func<Certificate, bool>> lambda)
         {
-            return Repository.GetAll().Include(cer => cer.File).Where(lambda).ToListAsync();
+            return Repository.GetAll().Where(lambda).Include(cer => cer.File).ToListAsync();
         }
     }
 }

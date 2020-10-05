@@ -6,16 +6,19 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Authorization;
 using acmManager.Certificate.Dto;
+using acmManager.File;
 
 namespace acmManager.Certificate
 {
     public class CertificateAppService : acmManagerAppServiceBase
     {
         private readonly CertificateManager _certificateManager;
+        private readonly FileManager _fileManager;
 
-        public CertificateAppService(CertificateManager certificateManager)
+        public CertificateAppService(CertificateManager certificateManager, FileManager fileManager)
         {
             _certificateManager = certificateManager;
+            _fileManager = fileManager;
         }
 
         [UnitOfWork]
@@ -43,6 +46,8 @@ namespace acmManager.Certificate
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate)]
         public virtual async Task DeleteCertificateAsync(long certificateId)
         {
+            var cer = await _certificateManager.GetWithFile(certificateId);
+            await _fileManager.Delete(cer.File.Id);
             await _certificateManager.Delete(certificateId);
         }
 
