@@ -1,0 +1,11 @@
+﻿.table img {
+    max-width: 20px;
+}
+
+.table td, .table th {
+    vertical-align: unset;
+}
+
+.custom-icon:hover, .custom-icon:focus {
+    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}

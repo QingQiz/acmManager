@@ -11,7 +11,7 @@ namespace acmManager.Certificate
 {
     public class CertificateAppService : acmManagerAppServiceBase
     {
-        private CertificateManager _certificateManager;
+        private readonly CertificateManager _certificateManager;
 
         public CertificateAppService(CertificateManager certificateManager)
         {
@@ -20,7 +20,7 @@ namespace acmManager.Certificate
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate_Upload)]
-        public virtual async Task UploadCertificate(UploadCertificateInput input)
+        public virtual async Task UploadCertificateAsync(UploadCertificateInput input)
         {
             if (input.File.Length > 50 * 1024 * 1024)
             {
@@ -28,12 +28,12 @@ namespace acmManager.Certificate
             }
 
             var certificate = ObjectMapper.Map<Certificate>(input);
-            await CurrentUnitOfWork.SaveChangesAsync();
+            await _certificateManager.Create(certificate);
         }
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate)]
-        public virtual async Task UpdateCertificate(UpdateCertificateInput input)
+        public virtual async Task UpdateCertificateAsync(UpdateCertificateInput input)
         {
             var certificate = await _certificateManager.Get(input.CertificateId);
             ObjectMapper.Map(input, certificate);
@@ -41,17 +41,17 @@ namespace acmManager.Certificate
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate)]
-        public virtual async Task DeleteCertificate(long certificateId)
+        public virtual async Task DeleteCertificateAsync(long certificateId)
         {
             await _certificateManager.Delete(certificateId);
         }
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate)]
-        public virtual async Task<List<GetCertificateOutput>> GetAllCertificate()
+        public virtual async Task<List<GetCertificateOutput>> GetAllCertificateAsync()
         {
             var currentUserId = AbpSession.GetUserId();
-            var res = await _certificateManager.GetAll(c => c.CreatorUserId == currentUserId);
+            var res = await _certificateManager.GetAllWithFile(c => c.CreatorUserId == currentUserId);
             return ObjectMapper.Map<List<GetCertificateOutput>>(res);
         }
     }

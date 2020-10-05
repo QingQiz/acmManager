@@ -13,7 +13,12 @@ namespace acmManager.Certificate.Dto
                     opt => opt.MapFrom(inp => FileAppService.SaveFormFileAsync(inp.File).Result));
             CreateMap<Certificate, GetCertificateOutput>()
                 .ForMember(res => res.File,
-                    opt => opt.MapFrom(cer => cer.File));
+                    opt => opt.MapFrom(cer => new GetFileOutput
+                    {
+                        FilePath = FileMapProfile.RealPathToVirtualPath(cer.File.RealPath),
+                        FileName = cer.File.UploadName,
+                        MimeType = cer.File.MimeType
+                    }));
         }
     }
 }

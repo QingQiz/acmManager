@@ -5,6 +5,7 @@ namespace acmManager.Certificate.Dto
 {
     public class GetCertificateOutput
     {
+        public long Id { get; set; }
         // 证书名
         public string Name { get; set; }
 
