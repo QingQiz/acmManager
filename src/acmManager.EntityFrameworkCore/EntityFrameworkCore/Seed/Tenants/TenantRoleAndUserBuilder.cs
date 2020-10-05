@@ -139,11 +139,13 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.PagesUsers_Relegate,
                 PermissionNames.PagesUsers_Admin,
                 PermissionNames.PagesUsers_GetAll,
+                PermissionNames.PagesUsers_Certificate,
                 PermissionNames.PagesUsers_Certificate_Upload,
             });
             CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>()
             {
                 PermissionNames.PagesUsers_Relegate,
+                PermissionNames.PagesUsers_Certificate,
                 PermissionNames.PagesUsers_Certificate_Upload,
             });
             CreateExtraRoles(StaticRoleNames.Tenants.Default, isDefault: true, new List<string>());
