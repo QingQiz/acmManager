@@ -14,16 +14,5 @@
 
 <div class="content-container">
     @await Html.PartialAsync("_CertificateTable")
-    <form asp-action="Upload" method="post" id="upload-certificate-form" style="display: none">
-        <input type="text" name="Name"> name
-        <br>
-        <input type="text" name="Level" value="@CertificateLevel.InternationalLevelFirst.ToString()">
-        <br>
-        <input type="file" name="File">
-        <br>
-        <input type="date" name="AwardDate">
-        <br>
-        <input type="button" class="btn btn-primary" id="test-btn">
-    </form>
 </div>
 

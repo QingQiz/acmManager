@@ -4,8 +4,18 @@
 
 .table td, .table th {
     vertical-align: unset;
+    text-align: center;
 }
 
 .custom-icon:hover, .custom-icon:focus {
     filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
+.icon-add {
+    filter: brightness(0) invert(1);
+    vertical-align: unset;
+}
+
+.custom-file-label:after {
+    content: '上传附件';
 }

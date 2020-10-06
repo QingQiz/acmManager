@@ -20,6 +20,7 @@ namespace acmManager.Web.Controllers
             _certificateAppService = certificateAppService;
         }
 
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Certificate)]
         public async Task<ActionResult> Index()
         {
             return View(new IndexViewModel

@@ -1,21 +1,10 @@
-﻿$('#test-btn').click(function () {
-    let form = $('#upload-certificate-form').closest("form");
-    let formData = new FormData(form[0]);
-    
-    $.ajax(form.attr('action'), {
-        method: 'post',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function () {
-            alert('success')
-        },
-        error: function(xhr, error, status) {
-            alert('error');
-            console.log(error, status);
-        }
-    })
-});
+﻿let putErrorMsg = function (xhr, selector='.alert-danger') {
+    let errorMessage = JSON.parse(xhr.responseText)['error'];
+    errorMessage = errorMessage['details'] == null ? errorMessage['message'] : errorMessage['details'];
+    errorMessage = errorMessage.trim().split('\n').join('<br>');
+
+    $(selector).html(errorMessage).css('opacity', 0).show().animate({opacity: 1}, 500);
+}
 
 $('.delete-certificate-submit').click(function () {
     let form = $(this).closest("form");
@@ -29,4 +18,24 @@ $('.delete-certificate-submit').click(function () {
             location.reload();
         }
     });
-})
+});
+
+$('#upload-certificate-submit-btn').click(function () {
+    let form = $('#upload-certificate-form').closest("form");
+    let formData = new FormData(form[0]);
+
+    $.ajax(form.attr('action'), {
+        method: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function () {
+            $('.modal').hide();
+            location.reload();
+        },
+        error: function(xhr, error, status) {
+            putErrorMsg(xhr, '.modal .alert-danger')
+        }
+    })
+});
+

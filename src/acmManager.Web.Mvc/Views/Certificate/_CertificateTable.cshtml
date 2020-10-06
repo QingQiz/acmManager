@@ -45,14 +45,9 @@
                 </tr>
             }
             <tr>
-                <th></th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="text-center">
-                    <button class="btn btn-success">
-                        <img src="~/img/add.svg" style="filter: brightness(0) invert(1); vertical-align: unset" alt=""/>
-                    </button>
+                <th/> <td/> <td/> <td/>
+                <td>
+                    @await Html.PartialAsync("_AddCertificate")
                 </td>
             </tr>
         </tbody>

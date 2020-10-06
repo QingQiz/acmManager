@@ -1,0 +1,51 @@
+﻿@using acmManager.Certificate
+
+<button class="btn btn-success" data-toggle="modal" data-target="#add-certificate" xmlns="http://www.w3.org/1999/html">
+    <img src="~/img/add.svg" class="icon-add" alt=""/>
+</button>
+
+<div class="modal fade" id="add-certificate">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"> 添加证书 </div>
+            <div class="modal-body">
+                <form asp-action="Upload" method="post" id="upload-certificate-form" class="row m-3">
+                    <div class="alert alert-danger" style="min-width: 100%; display: none; text-align: left"> </div>
+                    <div class="input-group mb-3">
+                        <input type="text" name="Name" class="form-control" value="">
+                        <div class="input-group-append">
+                            <span class="input-group-text">@L("Certificate.Name")</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <select class="custom-select" name="Level">
+                            <option/>
+                            @foreach (var val in Enum.GetNames(typeof(CertificateLevel)))
+                            {
+                                <option value="@val">@L(val)</option>
+                            }
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">@L("Certificate.Level")</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="date" name="AwardDate" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">@L("Certificate.AwardDate")</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="file" name="File" class="custom-file-input">
+                        <div class="input-group-append">
+                            <span class="input-group-text custom-file-label">@L("Certificate.Attachment")</span>
+                        </div>
+                    </div>
+                    <div class="text-right col pr-0">
+                        <input type="button" class="btn btn-primary" id="upload-certificate-submit-btn" value="@L("Submit")">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

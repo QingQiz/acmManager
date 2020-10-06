@@ -25,6 +25,29 @@
         <text name="UserInfo.StudentType" value="学生类型" />
         <text name="UserInfo.Type" value="账号类型" />
 
+        <text name="InternationalLevelGrand" value="国际级特等奖"/>
+        <text name="InternationalLevelFirst" value="国际级一等奖"/>
+        <text name="InternationalLevelSecond" value="国际级二等奖"/>
+        <text name="InternationalLevelThird" value="国际级三等奖"/>
+        <text name="NationalLevelGrand" value="国家级特等奖"/>
+        <text name="NationalLevelFirst" value="国家级一等奖"/>
+        <text name="NationalLevelSecond" value="国家级二等奖"/>
+        <text name="NationalLevelThird" value="国家级三等奖"/>
+        <text name="ProvincialLevelGrand" value="省级特等奖"/>
+        <text name="ProvincialLevelFirst" value="省级一等奖"/>
+        <text name="ProvincialLevelSecond" value="省级二等奖"/>
+        <text name="ProvincialLevelThird" value="省级三等奖"/>
+        <text name="SchoolLevelGrand" value="校级特等奖"/>
+        <text name="SchoolLevelFirst" value="校级一等奖"/>
+        <text name="SchoolLevelSecond" value="校级二等奖"/>
+        <text name="SchoolLevelThird" value="校级三等奖"/>
+        
+        <text name="Certificate.Name" value="比赛名称"/>
+        <text name="Certificate.Level" value="证书级别"/>
+        <text name="Certificate.AwardDate" value="获奖日期"/>
+        <text name="Certificate.Attachment" value="附件"/>
+        <text name="Certificate.Delete" value="删除"/>
+
         <text name="MaxResultCount" value="分页大小" />
 
         <text name="Submit" value="提交" />
