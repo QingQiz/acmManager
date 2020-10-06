@@ -131,11 +131,14 @@ namespace acmManager.Users
         [AbpAuthorize(PermissionNames.PagesUsers_Create)]
         public async Task<UserDto> CreateAsync(CreateUserInput input)
         {
-            var user = await _userRegistrationManager.RegisterAsync(input.Name, input.Name, input.Email,
+            var user = await _userRegistrationManager.RegisterAsync(input.Name, input.Name, input.Email ?? "",
                 input.StudentNumber, input.Password, true);
             
             var userInfo = ObjectMapper.Map<UserInfo>(input);
             user.UserInfo = userInfo;
+
+            // change user role and user type
+            await _userTypeAppService.ChangeUserTypeAsync(user, userInfo.Type);
 
             return UserToDto(user);
         }

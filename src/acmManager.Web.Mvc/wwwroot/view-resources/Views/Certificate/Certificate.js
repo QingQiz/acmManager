@@ -30,7 +30,7 @@ $('#upload-certificate-submit-btn').click(function () {
         processData: false,
         contentType: false,
         success: function () {
-            $('.modal').hide();
+            $('.modal').modal('hide');
             location.reload();
         },
         error: function(xhr, error, status) {

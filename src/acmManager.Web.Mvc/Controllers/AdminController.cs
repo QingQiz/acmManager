@@ -145,5 +145,13 @@ namespace acmManager.Web.Controllers
         }
 
         #endregion
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Create)]
+        public async Task<JsonResult> CreateUser(CreateUserInput inp)
+        {
+            await _userAppService.CreateAsync(inp);
+            return Json(new AjaxResponse());
+        }
     }
 }

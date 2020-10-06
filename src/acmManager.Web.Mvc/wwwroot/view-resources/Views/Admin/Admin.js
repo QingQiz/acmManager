@@ -176,3 +176,38 @@ $(function () {
     $('#user-management .get-all-user-filter-submit-btn').click();
     $('#user-promote .user-promote-filter-submit-btn').click();
 });
+
+
+// Create User
+$('#create-user-submit-btn').click(function () {
+    let form = $('#create-user-form');
+
+    $('#create-user-confirm-username').html(form.find('input[name=StudentNumber]').val())
+    $('#create-user-confirm-password').html(form.find('input[name=Password]').val())
+});
+
+$('#create-user-confirm-btn').click(function () {
+    let form = $('#create-user-form');
+    
+    $.ajax({
+        url: form.attr('action'),
+        method: 'post',
+        data: form.serialize(),
+        success: function () {
+            $('.modal').modal('hide');
+            location.reload();
+        },
+        error: function (xhr, a, b) {
+            $('.modal').modal('hide');
+            putErrorMsg(xhr, '#create-user-form .alert')
+        }
+    })
+});
+
+let putErrorMsg = function (xhr, selector='.alert-danger') {
+    let errorMessage = JSON.parse(xhr.responseText)['error'];
+    errorMessage = errorMessage['details'] == null ? errorMessage['message'] : errorMessage['details'];
+    errorMessage = errorMessage.trim().split('\n').join('<br>');
+
+    $(selector).html(errorMessage).css('opacity', 0).show().animate({opacity: 1}, 500);
+}

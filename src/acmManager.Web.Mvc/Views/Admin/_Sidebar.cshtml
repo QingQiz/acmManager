@@ -1,4 +1,8 @@
-﻿@model acmManager.Web.Models.Admin.IndexViewModel
+﻿@using acmManager.Authorization
+@model acmManager.Web.Models.Admin.IndexViewModel
+@{
+    var canCreateUser = IsGranted(PermissionNames.PagesUsers_Create);
+}
 
 <div class="row">
     <div class="col-lg-3 userCard">
@@ -10,6 +14,11 @@
                 <a class="list-group-item" href="#user-promote" data-toggle="pill">
                     <img src="~/img/up.svg" alt=""> 队员转正
                 </a>
+                @if (canCreateUser) {
+                    <a class="list-group-item" href="#user-create" data-toggle="pill">
+                        <img src="~/img/user.svg" alt=""> 添加用户
+                    </a>
+                }
                 <a class="list-group-item" href="#profile-change-password" data-toggle="pill">
                     <img src="~/img/edit.svg" alt=""> Nothing Yet
                 </a>
@@ -22,12 +31,21 @@
             @await Html.PartialAsync("User/GetAllUserPartial/_UserFilter")
             <div id="get-all-user-table"> </div>
         </div>
-
+        
         <!-- Settings -->
         <div class="tab-pane fade" id="user-promote">
             @await Html.PartialAsync("User/UserPromotePartial/_UserFilter")
             <div id="user-promote-table"> </div>
         </div>
+
+        @if (canCreateUser)
+        {
+            <!--  Create User -->
+            <div class="tab-pane fade" id="user-create">
+                @await Html.PartialAsync("User/_CreateUser")
+            </div>
+            
+        }
 
         <!-- Change Password-->
         <div class="tab-pane fade" id="profile-change-password">
