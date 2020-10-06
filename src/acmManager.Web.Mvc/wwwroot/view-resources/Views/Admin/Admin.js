@@ -171,10 +171,16 @@ $('#user-promote .user-promote-filter-submit-btn').click(function () {
     })
 })
 
-// load one page on ready
-$(function () {
+$('a[href="#user-management"]').on('shown.bs.tab', function (e) {
     $('#user-management .get-all-user-filter-submit-btn').click();
+});
+
+$('a[href="#user-promote"]').on('shown.bs.tab', function (e) {
     $('#user-promote .user-promote-filter-submit-btn').click();
+});
+
+$(function () {
+    $('a[href="#user-management"]').trigger('shown.bs.tab')
 });
 
 
