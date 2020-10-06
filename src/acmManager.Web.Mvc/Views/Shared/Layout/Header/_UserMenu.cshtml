@@ -1,4 +1,6 @@
-﻿<div class="dropdown">
+﻿@using acmManager.Authorization
+
+<div class="dropdown">
     <button class="btn btn-default" type="button" id="menu1" data-toggle="dropdown">
         <img src="@ViewBag.UserPhoto" alt="" class="userPhoto">
     </button>
@@ -15,9 +17,12 @@
         <button class="dropdown-item">
             <img src="~/img/contest.svg" alt=""> 我的比赛
         </button>
-        <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Certificate")'">
-            <img src="~/img/certificate.svg" alt=""> 我的证书
-        </button>
+        @if (IsGranted(PermissionNames.PagesUsers_Certificate))
+        {
+            <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Certificate")'">
+                <img src="~/img/certificate.svg" alt=""> 我的证书
+            </button>
+        }
         <hr/>
         <button class="dropdown-item" onclick="window.location.replace('@Url.Action("Logout", "Account")')">
             <img src="~/img/logout.svg" alt=""> 登出
