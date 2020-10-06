@@ -135,7 +135,6 @@ let userPromoteSubmitEvent = function () {
         let formData = Array.from(form.find('input[name="Users"]').map(function () {
             return $(this).attr('id').split('-').slice(-1);
         }));
-        console.log(formData);
         
         $.ajax({
             url: form.attr('action'),
@@ -146,6 +145,7 @@ let userPromoteSubmitEvent = function () {
             },
             success: function () {
                 $('#user-promote-filter .user-promote-filter-submit-btn').click();
+                $('.get-all-user-filter-submit-btn').click();
             },
             dataType: 'json',
             traditional: true
