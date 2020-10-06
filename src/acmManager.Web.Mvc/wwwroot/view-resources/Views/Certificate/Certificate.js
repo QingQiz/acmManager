@@ -39,3 +39,7 @@ $('#upload-certificate-submit-btn').click(function () {
     })
 });
 
+$('input[type=file]').change(function () {
+    let fileName = $(this).val().split('\\').pop();
+    $('.custom-file-label').addClass('selected').html(fileName);
+});
