@@ -47,6 +47,10 @@ namespace acmManager.Certificate
         public virtual async Task DeleteCertificateAsync(long certificateId)
         {
             var cer = await _certificateManager.GetWithFile(certificateId);
+            if (cer.CreatorUserId != AbpSession.GetUserId())
+            {
+                throw new UserFriendlyException("Permission Denied");
+            }
             await _fileManager.Delete(cer.File.Id);
             await _certificateManager.Delete(certificateId);
         }
