@@ -70,8 +70,23 @@ namespace acmManager.Certificate
 
         #region PrivilegeApis
 
-        
+        [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Certificate_DeleteAll)]
+        public virtual async Task DeleteAsync(long id)
+        {
+            var cer = await _certificateManager.GetWithFile(id);
+            await _fileManager.Delete(cer.File.Id);
+            await _certificateManager.Delete(id);
+        }
 
+        [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Certificate_GetAll)]
+        public virtual async Task<IEnumerable<GetCertificateOutput>> GetByUserAsync(long userId)
+        {
+            var res = await _certificateManager.GetAllWithFile(c => c.CreatorUserId == userId);
+            return ObjectMapper.Map<List<GetCertificateOutput>>(res);
+        }
+        
         #endregion
     }
 }

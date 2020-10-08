@@ -4,12 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.UI;
 using acmManager.Public;
 using Microsoft.EntityFrameworkCore;
 
 namespace acmManager.Certificate
 {
-    public class CertificateManager: PublicManagerWithoutTenant<Certificate, long>
+    public class CertificateManager : PublicManagerWithoutTenant<Certificate, long>
     {
         public CertificateManager(IRepository<Certificate, long> repository) : base(repository)
         {
@@ -17,7 +18,10 @@ namespace acmManager.Certificate
 
         public Task<Certificate> GetWithFile(long id)
         {
-            return Repository.GetAll().Where(cer => cer.Id == id).Include(cer => cer.File).FirstAsync();
+            var res = Repository.GetAll().Where(cer => cer.Id == id);
+            if (!res.Any()) throw new UserFriendlyException("Certificate not exists");
+
+            return res.Include(cer => cer.File).FirstAsync();
         }
 
         public Task<List<Certificate>> GetAllWithFile(Expression<Func<Certificate, bool>> lambda)
