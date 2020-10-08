@@ -21,6 +21,8 @@ namespace acmManager.Certificate
             _fileManager = fileManager;
         }
 
+        #region NormalApis
+
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate_Upload)]
         public virtual async Task UploadCertificateAsync(UploadCertificateInput input)
@@ -63,5 +65,13 @@ namespace acmManager.Certificate
             var res = await _certificateManager.GetAllWithFile(c => c.CreatorUserId == currentUserId);
             return ObjectMapper.Map<List<GetCertificateOutput>>(res);
         }
+
+        #endregion
+
+        #region PrivilegeApis
+
+        
+
+        #endregion
     }
 }

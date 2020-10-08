@@ -1,4 +1,5 @@
-﻿using Abp.Authorization;
+﻿using System.Collections.Generic;
+using Abp.Authorization;
 using Abp.Localization;
 using Abp.MultiTenancy;
 
@@ -18,24 +19,44 @@ namespace acmManager.Authorization
             // register permission here
             
             // Permissions for Pages_Users
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Admin, L("Users.Admin"));
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Create, L("Users.Create"));
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Update, L("Users.Update"));
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Delete, L("Users.Delete"));
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_GetAll, L("Users.GetAll"));
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_GetOne, L("Users.GetOne"));
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Promote, L("Users.Promote"));
-            pageUser.CreateChildPermission(PermissionNames.PagesUsers_Relegate, L("Users.Relegate"));
+            CreateManyPermissions(pageUser, new []
+            {
+                PermissionNames.PagesUsers_Admin,
+                PermissionNames.PagesUsers_Create,
+                PermissionNames.PagesUsers_Update,
+                PermissionNames.PagesUsers_Delete,
+                PermissionNames.PagesUsers_GetAll,
+                PermissionNames.PagesUsers_GetOne,
+                PermissionNames.PagesUsers_Promote,
+                PermissionNames.PagesUsers_Relegate
+            });
 
-            var certificate =
-                pageUser.CreateChildPermission(PermissionNames.PagesUsers_Certificate, L("Users.Certificate"));
-            certificate.CreateChildPermission(PermissionNames.PagesUsers_Certificate_Upload,
-                L("Users.Certificate.Upload"));
+            var certificate = CreatePermission(pageUser, PermissionNames.PagesUsers_Certificate);
+            
+            CreateManyPermissions(certificate, new []
+            {
+                PermissionNames.PagesUsers_Certificate_Upload,
+                PermissionNames.PagesUsers_Certificate_DeleteAll,
+                PermissionNames.PagesUsers_Certificate_GetAll
+            });
         }
 
         private static ILocalizableString L(string name)
         {
             return new LocalizableString(name, acmManagerConsts.LocalizationSourceName);
+        }
+
+        private static Permission CreatePermission(Permission permission, string permissionName)
+        {
+            return permission.CreateChildPermission(permissionName, L(permissionName));
+        }
+
+        private static void CreateManyPermissions(Permission parentPermission, IEnumerable<string> permissions)
+        {
+            foreach (var permission in permissions)
+            {
+                CreatePermission(parentPermission, permission);
+            }
         }
     }
 }

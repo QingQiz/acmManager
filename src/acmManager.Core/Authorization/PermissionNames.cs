@@ -20,9 +20,16 @@
         public const string PagesUsers_Promote = "Pages.Users.Promote";
         public const string PagesUsers_Relegate = "Pages.Users.Relegate";
 
+        // 进入管理员界面的权限
         public const string PagesUsers_Admin = "Pages.Users.Admin";
 
+        // 一般的证书权限
         public const string PagesUsers_Certificate = "Pages.Users.Certificate";
+        // 上传证书的权限
         public const string PagesUsers_Certificate_Upload = "Pages.Users.Certificate.Upload";
+        // 删除任意证书的权限
+        public const string PagesUsers_Certificate_DeleteAll = "Pages.Users.Certificate.DeleteAll";
+        // 获取任意证书的权限
+        public const string PagesUsers_Certificate_GetAll = "Pages.Users.Certificate.GetAll";
     }
 }
