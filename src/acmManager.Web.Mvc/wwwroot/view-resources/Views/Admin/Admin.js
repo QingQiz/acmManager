@@ -217,3 +217,15 @@ let putErrorMsg = function (xhr, selector='.alert-danger') {
 
     $(selector).html(errorMessage).css('opacity', 0).show().animate({opacity: 1}, 500);
 }
+
+// 用url里的锚定位tab
+$(function () {
+    let href = '#' + window.location.href.split('#')[1];
+    $(`a[href="${href}"`).click();
+});
+
+// 当切换tab时，网 url 里放置锚
+$('.list-group-item').click(function () {
+    let href = window.location.href.split('#')[0];
+    window.location.replace(href + $(this).attr('href'));
+});

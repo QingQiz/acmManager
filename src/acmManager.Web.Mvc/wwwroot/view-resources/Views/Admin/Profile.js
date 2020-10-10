@@ -50,3 +50,30 @@ $('#reset-password-btn').click(function () {
         }
     })
 })
+
+// delete certificate
+$('.delete-certificate-submit').click(function () {
+    let form = $(this).closest("form");
+
+    $.ajax({
+        url: form.attr('action'),
+        method: 'post',
+        data: form.serialize(),
+        success: function () {
+            form.find('.delete-certificate-dismiss').click();
+            location.reload();
+        }
+    });
+});
+
+// 当切换tab时，网 url 里放置锚
+$('.list-group-item').click(function () {
+    let href = window.location.href.split('#')[0];
+    window.location.replace(href + $(this).attr('href'));
+});
+
+// 用url里的锚定位tab
+$(function () {
+    let href = '#' + window.location.href.split('#')[1];
+    $(`a[href="${href}"`).click();
+});

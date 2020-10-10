@@ -7,6 +7,7 @@ using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Authorization.Accounts.Dto;
 using acmManager.Authorization.Users;
+using acmManager.Certificate;
 using acmManager.Controllers;
 using acmManager.Users;
 using acmManager.Users.Dto;
@@ -22,19 +23,22 @@ namespace acmManager.Web.Controllers
     {
         private readonly UserAppService _userAppService;
         private readonly UserTypeAppService _userTypeAppService;
+        private readonly CertificateAppService _certificateAppService;
 
-        public AdminController(UserAppService userAppService, UserTypeAppService userTypeAppService)
+        public AdminController(UserAppService userAppService, UserTypeAppService userTypeAppService, CertificateAppService certificateAppService)
         {
             _userAppService = userAppService;
             _userTypeAppService = userTypeAppService;
+            _certificateAppService = certificateAppService;
         }
+
+        #region Get
 
         public virtual ActionResult Index()
         {
             return View(new IndexViewModel());
         }
 
-        #region GetAllUser
 
         [HttpPost]
         [UnitOfWork]
@@ -55,27 +59,30 @@ namespace acmManager.Web.Controllers
             });
         }
         
-
-        #endregion
-
-        #region UserProfile
-
         [UnitOfWork]
         public async Task<ActionResult> GetUserProfile(long userId)
         {
             if (await IsGrantedAsync(PermissionNames.PagesUsers_GetOne))
             {
-                var userInfo = await _userAppService.GetAsync(userId);
-                return View("User/ProfilePartial/Profile", ObjectMapper.Map<UserProfileViewModel>(userInfo));
+                var model = ObjectMapper.Map<UserProfileViewModel>(await _userAppService.GetAsync(userId));
+                model.Certificate = await _certificateAppService.GetByUserAsync(userId);
+                
+                return View("User/ProfilePartial/Profile", model);
             }
             else
             {
-                var userInfo = await _userAppService.GetUserInfoAsync(userId);
-                var model = ObjectMapper.Map<UserProfileViewModel>(userInfo);
+                var model = ObjectMapper.Map<UserProfileViewModel>(await _userAppService.GetUserInfoAsync(userId));
                 model.UserId = userId;
+                model.Certificate = await _certificateAppService.GetByUserAsync(userId);
+
                 return View("User/ProfilePartial/Profile", model);
             }
         }
+
+
+        #endregion
+
+        #region ChangeUserTable
 
         [HttpPost]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Update)]
@@ -110,9 +117,6 @@ namespace acmManager.Web.Controllers
             return Json(new AjaxResponse());
         }
 
-        #endregion
-
-        #region UserPromote
 
         [AbpMvcAuthorize(PermissionNames.PagesUsers_GetAll)]
         public async Task<PartialViewResult> UserPromoteFilter(GetAllUserWithFilterViewModel input)
@@ -144,8 +148,6 @@ namespace acmManager.Web.Controllers
             return Json(new AjaxResponse());
         }
 
-        #endregion
-
         [HttpPost]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Create)]
         public async Task<JsonResult> CreateUser(CreateUserInput inp)
@@ -153,5 +155,15 @@ namespace acmManager.Web.Controllers
             await _userAppService.CreateAsync(inp);
             return Json(new AjaxResponse());
         }
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Certificate_DeleteAll)]
+        public async Task<JsonResult> DeleteCertificate(long certificateId)
+        {
+            await _certificateAppService.DeleteAsync(certificateId);
+            return Json(new AjaxResponse());
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,4 @@
-﻿@model acmManager.Web.Models.Certificate.IndexViewModel
+﻿@model acmManager.Web.Models.Admin.UserProfileViewModel
 
 
 <div class="overflow-auto">
@@ -11,7 +11,7 @@
             <th scope="col">@L("Certificate.Delete")</th>
         </tr></thead>
         <tbody>
-            @foreach (var cer in Model.Certificates)
+            @foreach (var cer in Model.Certificate)
             {
                 <tr>
                     <th scope="row">@cer.Name</th>
@@ -31,8 +31,8 @@
                                 <div class="modal-content">
                                     <div class="modal-header"> 你确定吗 </div>
                                     <div class="modal-body"> 此操作不可逆 ！！ </div>
-                                    <form asp-action="Delete" method="post">
-                                        <input type="hidden" name="Id" value="@cer.Id">
+                                    <form asp-action="DeleteCertificate" method="post">
+                                        <input type="hidden" name="certificateId" value="@cer.Id">
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default delete-certificate-dismiss" data-dismiss="modal">取消</button>
                                             <button type="button" class="btn btn-danger btn-ok delete-certificate-submit">确认</button>
@@ -44,12 +44,6 @@
                     </td>
                 </tr>
             }
-            <tr>
-                <th/> <td/> <td/> <td/>
-                <td>
-                    @await Html.PartialAsync("_AddCertificate")
-                </td>
-            </tr>
         </tbody>
     </table>
 </div>

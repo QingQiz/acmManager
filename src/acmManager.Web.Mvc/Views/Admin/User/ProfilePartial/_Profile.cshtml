@@ -6,7 +6,7 @@
 @if (IsGranted(PermissionNames.PagesUsers_Update))
 {
     <form class="row" id="update-user-form" method="post" asp-action="UpdateUser">
-        @foreach (var descriptor in TypeDescriptor.GetProperties(Model).Cast<PropertyDescriptor>())
+        @foreach (var descriptor in TypeDescriptor.GetProperties(Model).Cast<PropertyDescriptor>().Where(d => d.Name != "Certificate"))
         {
             @if (descriptor.Name == "UserId")
             {
