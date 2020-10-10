@@ -26,7 +26,7 @@ namespace acmManager.Certificate
 
         public Task<List<Certificate>> GetAllWithFile(Expression<Func<Certificate, bool>> lambda)
         {
-            return Repository.GetAll().Where(lambda).Include(cer => cer.File).ToListAsync();
+            return Repository.GetAll().Where(lambda).OrderByDescending(c => c.AwardDate).Include(cer => cer.File).ToListAsync();
         }
     }
 }
