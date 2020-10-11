@@ -12,6 +12,8 @@ namespace acmManager.Certificate
 {
     public class CertificateManager : PublicManagerWithoutTenant<Certificate, long>
     {
+        public IEnumerable<Certificate> Certificates => Repository.GetAll();
+
         public CertificateManager(IRepository<Certificate, long> repository) : base(repository)
         {
         }

@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.UI;
@@ -86,7 +89,24 @@ namespace acmManager.Certificate
             var res = await _certificateManager.GetAllWithFile(c => c.CreatorUserId == userId);
             return ObjectMapper.Map<List<GetCertificateOutput>>(res);
         }
-        
+
+        [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Certificate_GetAll)]
+        public virtual async Task<IEnumerable<GetCertificateOutput>> GetWithFilter(GetAllCertificateWithFilter filter)
+        {
+            var emptyStr = new Func<string, bool>(string.IsNullOrEmpty);
+
+            return await Task.Run(() => _certificateManager.Certificates.AsEnumerable()
+                .WhereIf(!emptyStr(filter.Name), c => c.Name.Contains(filter.Name))
+                .WhereIf(filter.Levels != null && filter.Levels.Any(), c => filter.Levels.Contains(c.Level))
+                .Where(c 
+                    => c.AwardDate >= (filter.TimeStart ?? DateTime.MinValue)
+                       && c.AwardDate <= (filter.TimeEnd ?? DateTime.MaxValue))
+                .Skip(filter.SkipCount)
+                .Take(filter.MaxResultCount).ToList().Select(c => ObjectMapper.Map<GetCertificateOutput>(c))
+            );
+        }
+
         #endregion
     }
 }
