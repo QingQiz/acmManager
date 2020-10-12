@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Abp.Configuration;
@@ -35,7 +37,8 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
             AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "zh-Hans", tenantId);
             
             // Crawler
-            var crawlerPath = Directory.GetParent(Directory.GetCurrentDirectory()) + @"\crawler.py";
+            var crawlerPathProb = Directory.GetParent(Directory.GetCurrentDirectory()).ToString();
+            var crawlerPath = GetFiles(crawlerPathProb, "crawler.py");
             AddSettingIfNotExists(AppSettingNames.CrawlerPath, crawlerPath, tenantId);
         }
 
@@ -48,6 +51,31 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
 
             _context.Settings.Add(new Setting(tenantId, null, name, value));
             _context.SaveChanges();
+        }
+
+        private static string GetFiles(string path, string pattern)
+        {
+            var directories = new string[] { };
+
+            try
+            {
+                var res = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
+                if (res.Length != 0) return res[0];
+
+                directories = Directory.GetDirectories(path);
+            }
+            catch (UnauthorizedAccessException) { }
+
+            foreach (var directory in directories)
+            {
+                try
+                {
+                    return GetFiles(directory, pattern);
+                }
+                catch (UnauthorizedAccessException) { }
+                catch (FileNotFoundException) { }
+            }
+            throw new FileNotFoundException($"can not find {pattern} in {path}");
         }
     }
 }
