@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace acmManager.Certificate.Dto
 {
-    public class GetAllCertificateWithFilter
+    public class GetAllCertificateWithFilterInput
     {
         public IEnumerable<CertificateLevel> Levels;
 

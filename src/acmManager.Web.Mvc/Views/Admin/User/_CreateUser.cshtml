@@ -44,7 +44,12 @@
                 <div class="input-group input-group mb-3">
                     <input type="text" name="@descriptor.Name" class="form-control">
                     <div class="input-group-append">
-                        <span class="input-group-text">@L("UserInfo." + descriptor.Name)</span>
+                        <span class="input-group-text">
+                            @L("UserInfo." + descriptor.Name)
+                            @if (descriptor.Name == "Name" || descriptor.Name == "StudentNumber") {
+                                <div style="color: #dd0000">*</div> 
+                            }
+                        </span>
                     </div>
                 </div>
             </div>
@@ -55,7 +60,7 @@
         <div class="input-group input-group mb-3">
             <input type="text" name="Password" class="form-control">
             <div class="input-group-append">
-                <span class="input-group-text">密码</span>
+                <span class="input-group-text">密码<div style="color: #dd0000">*</div></span>
             </div>
         </div>
     </div>

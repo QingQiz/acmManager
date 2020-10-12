@@ -1,0 +1,64 @@
+﻿@using acmManager.Certificate
+@model acmManager.Web.Models.Admin.IndexViewModel
+
+@{
+    var timeStart = (DateTime.Now - new TimeSpan(365, 0, 0, 0)).ToString("yyyy-MM-dd");
+    var timeEnd = DateTime.Now.ToString("yyyy-MM-dd");
+}
+
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#certificate-filter" id="get-all-certificate-filter-btn">
+    Filter
+</button>
+
+<div class="collapse pt-3" id="certificate-filter">
+    <form asp-action="GetAllCertificateWithFilter" method="post" id="get-all-certificate-filter-form" class="row">
+        <div class="col-12">
+            <div class="input-group input-group mb-3">
+                <input type="text" name="Name" class="form-control" value="">
+                <div class="input-group-append">
+                    <span class="input-group-text">@L("Certificate.Name")</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="input-group input-group mb-3">
+                <input type="button" class="form-control" data-toggle="collapse" data-target="#certificate-filter-level">
+                <div class="input-group-append">
+                    <span class="input-group-text">@L("Certificate.Level")</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 collapse" id="certificate-filter-level">
+            <div class="input-group input-group mb-3">
+                <select class="custom-select" multiple name="Levels">
+                    @foreach (var val in Enum.GetNames(typeof(CertificateLevel)))
+                    {
+                        <option value="@val">@L(val)</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="input-group input-group mb-3">
+                <input type="date" name="TimeStart" class="form-control" value="@timeStart" max="@timeEnd">
+                <div class="input-group-text" style="border-radius: 0; min-width: unset;">到</div>
+                <input type="date" name="TimeEnd" class="form-control" value="@timeEnd" max="@DateTime.Now.ToString("yyyy-MM-dd")" min="@timeStart">
+                <div class="input-group-append">
+                    <span class="input-group-text">起止时间</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="input-group input-group mb-3">
+                <input type="text" name="MaxResultCount" class="form-control get-all-certificate-filter-MaxResultCount" value="200">
+                <div class="input-group-append">
+                    <span class="input-group-text">@L("MaxResultCount")</span>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="SkipCount" value="0">
+        <div class="col-12 text-right">
+            <input type="button" class="btn btn-primary get-all-certificate-filter-submit-btn" value="@L("Submit")">
+        </div>
+    </form>
+</div>

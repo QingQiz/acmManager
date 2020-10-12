@@ -179,6 +179,10 @@ $('a[href="#user-promote"]').on('shown.bs.tab', function (e) {
     $('#user-promote .user-promote-filter-submit-btn').click();
 });
 
+$('a[href="#certificate-management"]').on('shown.bs.tab', function () {
+    $('#certificate-management .get-all-certificate-filter-submit-btn').click();
+});
+
 $(function () {
     $('a[href="#user-management"]').trigger('shown.bs.tab')
 });

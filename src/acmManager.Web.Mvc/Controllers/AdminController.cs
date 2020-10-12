@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
@@ -8,6 +10,7 @@ using acmManager.Authorization;
 using acmManager.Authorization.Accounts.Dto;
 using acmManager.Authorization.Users;
 using acmManager.Certificate;
+using acmManager.Certificate.Dto;
 using acmManager.Controllers;
 using acmManager.Users;
 using acmManager.Users.Dto;
@@ -162,6 +165,25 @@ namespace acmManager.Web.Controllers
         {
             await _certificateAppService.DeleteAsync(certificateId);
             return Json(new AjaxResponse());
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Certificate_GetAll)]
+        public async Task<PartialViewResult> GetAllCertificateWithFilter(string name, DateTime timeStart, DateTime timeEnd, List<CertificateLevel> levels, int maxResultCount, int skipCount)
+        {
+            var filter = new GetAllCertificateWithFilterInput
+            {
+                Name = name,
+                TimeStart = timeStart,
+                TimeEnd = timeEnd,
+                Levels = levels,
+                MaxResultCount = maxResultCount,
+                SkipCount = skipCount,
+            };
+            return PartialView("Certificate/_CertificateTable", new GetAllCertificateViewModel
+            {
+                Certificates = await _certificateAppService.GetWithFilter(filter)
+            });
         }
 
         #endregion

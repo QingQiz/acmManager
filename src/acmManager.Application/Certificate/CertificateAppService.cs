@@ -92,18 +92,18 @@ namespace acmManager.Certificate
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate_GetAll)]
-        public virtual async Task<IEnumerable<GetCertificateOutput>> GetWithFilter(GetAllCertificateWithFilter filter)
+        public virtual async Task<IEnumerable<GetCertificateOutput>> GetWithFilter(GetAllCertificateWithFilterInput filterInput)
         {
             var emptyStr = new Func<string, bool>(string.IsNullOrEmpty);
 
             return await Task.Run(() => _certificateManager.Certificates.AsEnumerable()
-                .WhereIf(!emptyStr(filter.Name), c => c.Name.Contains(filter.Name))
-                .WhereIf(filter.Levels != null && filter.Levels.Any(), c => filter.Levels.Contains(c.Level))
+                .WhereIf(!emptyStr(filterInput.Name), c => c.Name.Contains(filterInput.Name))
+                .WhereIf(filterInput.Levels != null && filterInput.Levels.Any(), c => filterInput.Levels.Contains(c.Level))
                 .Where(c 
-                    => c.AwardDate >= (filter.TimeStart ?? DateTime.MinValue)
-                       && c.AwardDate <= (filter.TimeEnd ?? DateTime.MaxValue))
-                .Skip(filter.SkipCount)
-                .Take(filter.MaxResultCount).ToList().Select(c => ObjectMapper.Map<GetCertificateOutput>(c))
+                    => c.AwardDate >= (filterInput.TimeStart ?? DateTime.MinValue)
+                       && c.AwardDate <= (filterInput.TimeEnd ?? DateTime.MaxValue))
+                .Skip(filterInput.SkipCount)
+                .Take(filterInput.MaxResultCount).ToList().Select(c => ObjectMapper.Map<GetCertificateOutput>(c))
             );
         }
 

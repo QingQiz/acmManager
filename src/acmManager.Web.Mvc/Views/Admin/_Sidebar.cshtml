@@ -1,54 +1,76 @@
 ﻿@using acmManager.Authorization
 @model acmManager.Web.Models.Admin.IndexViewModel
 @{
+    var canManageUser = IsGranted(PermissionNames.PagesUsers_GetAll);
+    var canPromoteUser = IsGranted(PermissionNames.PagesUsers_Promote);
     var canCreateUser = IsGranted(PermissionNames.PagesUsers_Create);
+    var canManageCertificate = IsGranted(PermissionNames.PagesUsers_Certificate_GetAll);
 }
 
 <div class="row">
     <div class="col-lg-3 userCard">
         <div class="wizard">
-            <nav class="list-group list-group-flush">
-                <a class="list-group-item" href="#user-management" data-toggle="pill">
-                    <img src="~/img/profile.svg" alt=""> 用户管理
-                </a>
-                <a class="list-group-item" href="#user-promote" data-toggle="pill">
-                    <img src="~/img/up.svg" alt=""> 队员转正
-                </a>
-                @if (canCreateUser) {
+            <nav class="list-group list-group-flush mt-3">
+                @if (canManageUser)
+                {
+                    <a class="list-group-item" href="#user-management" data-toggle="pill">
+                        <img src="~/img/profile.svg" alt=""> 用户管理
+                    </a>
+                }
+                @if (canPromoteUser)
+                {
+                    <a class="list-group-item" href="#user-promote" data-toggle="pill">
+                        <img src="~/img/up.svg" alt=""> 队员转正
+                    </a>
+                }
+                @if (canCreateUser)
+                {
                     <a class="list-group-item" href="#user-create" data-toggle="pill">
                         <img src="~/img/user.svg" alt=""> 添加用户
                     </a>
                 }
-                <a class="list-group-item" href="#profile-change-password" data-toggle="pill">
-                    <img src="~/img/certificate.svg" alt=""> 证书管理
-                </a>
+                @if (canManageCertificate)
+                {
+                    <a class="list-group-item" href="#certificate-management" data-toggle="pill">
+                        <img src="~/img/certificate.svg" alt=""> 证书管理
+                    </a>
+                }
             </nav>
         </div>
     </div>
-    <div class="col-lg-9 tab-content">
-        <!-- User Management -->
-        <div class="tab-pane fade show active" id="user-management">
-            @await Html.PartialAsync("User/GetAllUserPartial/_UserFilter")
-            <div id="get-all-user-table"> </div>
-        </div>
-        
-        <!-- Settings -->
-        <div class="tab-pane fade" id="user-promote">
-            @await Html.PartialAsync("User/UserPromotePartial/_UserFilter")
-            <div id="user-promote-table"> </div>
-        </div>
+    <div class="col-lg-9 tab-content mt-3">
+        @if (canManageUser)
+        {
+            <!-- User Management -->
+            <div class="tab-pane fade show active" id="user-management">
+                @await Html.PartialAsync("User/GetAllUserPartial/_UserFilter")
+                <div id="get-all-user-table"> </div>
+            </div>
+        }
+        @if (canPromoteUser)
+        {
+            <!-- User promotion -->
+            <div class="tab-pane fade" id="user-promote">
+                @await Html.PartialAsync("User/UserPromotePartial/_UserFilter")
+                <div id="user-promote-table"> </div>
+            </div>
+        }
 
         @if (canCreateUser)
         {
-            <!--  Create User -->
+            <!-- Create User -->
             <div class="tab-pane fade" id="user-create">
                 @await Html.PartialAsync("User/_CreateUser")
             </div>
-            
-        }
 
-        <!-- Change Password-->
-        <div class="tab-pane fade" id="profile-change-password">
-        </div>
+        }
+        @if (canManageCertificate)
+        {
+            <!-- Certificates Management -->
+            <div class="tab-pane fade" id="certificate-management">
+                @await Html.PartialAsync("Certificate/_Filter")
+                <div id="certificate-table"> </div>
+            </div>
+        }
     </div>
 </div>
