@@ -38,7 +38,11 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
             
             // Crawler
             var crawlerPathProb = Directory.GetParent(Directory.GetCurrentDirectory()).ToString();
-            var crawlerPath = GetFiles(crawlerPathProb, "crawler.py");
+            if (crawlerPathProb[^1] == '\\')
+            {
+                crawlerPathProb = Directory.GetCurrentDirectory();
+            }
+            var crawlerPath = Directory.GetFiles(crawlerPathProb, "crawler.py", SearchOption.AllDirectories)[0];
             AddSettingIfNotExists(AppSettingNames.CrawlerPath, crawlerPath, tenantId);
         }
 
@@ -51,31 +55,6 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
 
             _context.Settings.Add(new Setting(tenantId, null, name, value));
             _context.SaveChanges();
-        }
-
-        private static string GetFiles(string path, string pattern)
-        {
-            var directories = new string[] { };
-
-            try
-            {
-                var res = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
-                if (res.Length != 0) return res[0];
-
-                directories = Directory.GetDirectories(path);
-            }
-            catch (UnauthorizedAccessException) { }
-
-            foreach (var directory in directories)
-            {
-                try
-                {
-                    return GetFiles(directory, pattern);
-                }
-                catch (UnauthorizedAccessException) { }
-                catch (FileNotFoundException) { }
-            }
-            throw new FileNotFoundException($"can not find {pattern} in {path}");
         }
     }
 }
