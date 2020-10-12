@@ -45,7 +45,6 @@
   <ItemGroup>
     <Folder Include="App_Data\Uploads" />
     <Folder Include="wwwroot\bootstrap" />
-    <Folder Include="wwwroot\libs\" />
     <Folder Include="wwwroot\view-resources\Views\Home" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
   </ItemGroup>
