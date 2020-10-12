@@ -355,8 +355,9 @@ namespace acmManager.Users
         /// </summary>
         /// <param name="userId"></param>
         /// <returns><see cref="GetUserInfoDto"/></returns>
+        [UnitOfWork]
         [AbpAuthorize]
-        public async Task<GetUserInfoDto> GetUserInfoAsync(long userId)
+        public virtual async Task<GetUserInfoDto> GetUserInfoAsync(long userId)
         {
             var user = await UserManager.GetUserByIdAsync(userId);
 

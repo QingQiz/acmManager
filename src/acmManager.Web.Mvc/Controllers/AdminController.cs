@@ -182,7 +182,8 @@ namespace acmManager.Web.Controllers
             };
             return PartialView("Certificate/_CertificateTable", new GetAllCertificateViewModel
             {
-                Certificates = await _certificateAppService.GetWithFilter(filter)
+                Certificates = await _certificateAppService.GetWithFilter(filter),
+                CurrentFilter = filter
             });
         }
 

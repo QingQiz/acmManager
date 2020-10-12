@@ -17,3 +17,7 @@
 .btn-success {
     margin: 15px 0;
 }
+
+#certificate-management .custom-select[multiple] {
+    min-height: 240px;
+}

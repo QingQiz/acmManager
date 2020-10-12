@@ -16,5 +16,7 @@ namespace acmManager.Certificate.Dto
 
         // 获奖日期
         public DateTime AwardDate { get; set; }
+        
+        public long CreatorUserId { get; set; }
     }
 }

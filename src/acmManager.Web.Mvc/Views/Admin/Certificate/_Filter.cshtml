@@ -31,9 +31,25 @@
         <div class="col-12 collapse" id="certificate-filter-level">
             <div class="input-group input-group mb-3">
                 <select class="custom-select" multiple name="Levels">
-                    @foreach (var val in Enum.GetNames(typeof(CertificateLevel)))
+                    @{
+                        var enums = Enum.GetNames(typeof(CertificateLevel))
+                            .Select((x, i) => new {Index = i, Value = x})
+                            .GroupBy(x => x.Index / 4)
+                            .Select(x => x.Select(v => v.Value).ToList())
+                            .ToList();
+                        var labels = new List<string>
+                        {
+                            "国际级", "国家级", "省级", "校级"
+                        };
+                    }
+                    @for (var i = 0; i < 4; ++i)
                     {
-                        <option value="@val">@L(val)</option>
+                        <optgroup label="@labels[i]">
+                            @for (var j = 0; j < 4; ++j)
+                            {
+                                <option value="@enums[i][j]">@L(enums[i][j])</option>
+                            }
+                        </optgroup>
                     }
                 </select>
             </div>
@@ -48,14 +64,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="input-group input-group mb-3">
-                <input type="text" name="MaxResultCount" class="form-control get-all-certificate-filter-MaxResultCount" value="200">
-                <div class="input-group-append">
-                    <span class="input-group-text">@L("MaxResultCount")</span>
-                </div>
-            </div>
-        </div>
+        @* <div class="col-12"> *@
+        @*     <div class="input-group input-group mb-3"> *@
+        @*         <input type="text" name="MaxResultCount" class="form-control get-all-certificate-filter-MaxResultCount" value="200"> *@
+        @*         <div class="input-group-append"> *@
+        @*             <span class="input-group-text">@L("MaxResultCount")</span> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+        <input type="hidden" name="MaxResultCount" value="@int.MaxValue">
         <input type="hidden" name="SkipCount" value="0">
         <div class="col-12 text-right">
             <input type="button" class="btn btn-primary get-all-certificate-filter-submit-btn" value="@L("Submit")">

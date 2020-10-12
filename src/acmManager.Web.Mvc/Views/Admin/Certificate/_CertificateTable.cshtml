@@ -1,3 +1,63 @@
-﻿@model acmManager.Web.Models.Admin.GetAllCertificateViewModel
+﻿@using acmManager.Users
+@model acmManager.Web.Models.Admin.GetAllCertificateViewModel
+@inject UserAppService UserAppService
 
+<div class="overflow-auto mt-3">
+    <table class="table table-hover" id="certificate-table">
+        <thead><tr>
+            <th scope="col">所属者</th>
+            <th scope="col">@L("Certificate.Name")</th>
+            <th scope="col">@L("Certificate.Level")</th>
+            <th scope="col">@L("Certificate.AwardDate")</th>
+            <th scope="col">@L("Certificate.Attachment")</th>
+            <th scope="col">@L("Certificate.Delete")</th>
+        </tr></thead>
+        <tbody>
+        @foreach (var cer in Model.Certificates)
+        {
+            <tr>
+                <th scope="row">
+                    <button class="btn btn-block" onclick="location.href = '@Url.Action("GetUserProfile")?userId=@cer.CreatorUserId'">
+                        <strong>
+                            @((await UserAppService.GetUserInfoAsync(cer.CreatorUserId)).Name)
+                        </strong>
+                    </button>
+                </th>
+                <th scope="row">@cer.Name</th>
+                <td>@L(cer.Level.ToString())</td>
+                <td>@cer.AwardDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <button class="btn btn-block" onclick="location.href = '@cer.File.FilePath'">
+                        <img class="custom-icon" src="~/img/download.svg" alt=""/>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-block delete-certificate-btn" data-toggle="modal" data-target="#delete-certificate-modal" id="certificate-@cer.Id">
+                        <img class="custom-icon" src="~/img/delete.svg" alt=""/>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <hr/>
+    <div class="text-right mt-2" style="color: #8c8c8c">
+        Result Count: @Model.Certificates.Count()
+    </div>
+</div>
 
+<div class="modal fade" id="delete-certificate-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"> 你确定吗 </div>
+            <div class="modal-body"> 此操作不可逆 ！！ </div>
+            <form asp-action="DeleteCertificate" method="post">
+                <input type="hidden" name="CertificateId" value="">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default delete-certificate-dismiss" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger btn-ok delete-certificate-submit">确认</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

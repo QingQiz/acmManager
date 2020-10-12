@@ -10,6 +10,7 @@ using Abp.UI;
 using acmManager.Authorization;
 using acmManager.Certificate.Dto;
 using acmManager.File;
+using Microsoft.EntityFrameworkCore;
 
 namespace acmManager.Certificate
 {
@@ -96,7 +97,7 @@ namespace acmManager.Certificate
         {
             var emptyStr = new Func<string, bool>(string.IsNullOrEmpty);
 
-            return await Task.Run(() => _certificateManager.Certificates.AsEnumerable()
+            return await Task.Run(() => _certificateManager.Certificates.Include(c => c.File)
                 .WhereIf(!emptyStr(filterInput.Name), c => c.Name.Contains(filterInput.Name))
                 .WhereIf(filterInput.Levels != null && filterInput.Levels.Any(), c => filterInput.Levels.Contains(c.Level))
                 .Where(c 

@@ -6,5 +6,6 @@ namespace acmManager.Web.Models.Admin
     public class GetAllCertificateViewModel
     {
         public IEnumerable<GetCertificateOutput> Certificates;
+        public GetAllCertificateWithFilterInput CurrentFilter;
     }
 }
