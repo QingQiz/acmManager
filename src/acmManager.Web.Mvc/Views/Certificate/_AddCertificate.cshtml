@@ -1,5 +1,10 @@
 ﻿@using acmManager.Certificate
 
+@{
+    var timeStart = (DateTime.Now - new TimeSpan(365 * 5 + 2, 0, 0, 0)).ToString("yyyy-MM-dd");
+    var timeEnd = DateTime.Now.ToString("yyyy-MM-dd");
+}
+
 <button class="btn btn-success" data-toggle="modal" data-target="#add-certificate" xmlns="http://www.w3.org/1999/html">
     <img src="~/img/add.svg" class="icon-add" alt=""/>
 </button>
@@ -30,7 +35,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="date" name="AwardDate" class="form-control">
+                        <input type="date" name="AwardDate" class="form-control" min="@timeStart" max="@timeEnd">
                         <div class="input-group-append">
                             <span class="input-group-text">@L("Certificate.AwardDate")</span>
                         </div>
