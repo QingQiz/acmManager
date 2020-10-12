@@ -1,26 +1,22 @@
 ﻿@model acmManager.Web.Models.Users.UserProfileViewModel
 @section styles
 {
-    <environment name="Development">
-        <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
-        <link href="~/css/cropper.min.css" rel="stylesheet">
-    </environment>
+    <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
+    <link href="~/css/cropper.min.css" rel="stylesheet">
 }
 @section scripts
 {
-    <environment name="Development">
-        <script type="text/javascript" src="~/js/cropper.min.js"></script>
-        <script src="~/view-resources/Views/Users/Profile.js" type="application/javascript"></script>
-        <script type="application/javascript">
-            updateProfileEvent();
-            selectFileEvent();
-            InitCropper();
-            clickUserPhotoEvent();
-            changePasswordEvent();
-            changeUserTypeEvent();
-            updateFromAoxiangEvent();
-        </script>
-    </environment>
+    <script type="text/javascript" src="~/js/cropper.min.js"></script>
+    <script src="~/view-resources/Views/Users/Profile.js" type="application/javascript"></script>
+    <script type="application/javascript">
+        updateProfileEvent();
+        selectFileEvent();
+        InitCropper();
+        clickUserPhotoEvent();
+        changePasswordEvent();
+        changeUserTypeEvent();
+        updateFromAoxiangEvent();
+    </script>
 }
 <div class="content-container" style="max-width: 1300px">
     @await Html.PartialAsync("_Sidebar")

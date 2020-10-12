@@ -37,9 +37,3 @@
     - 修改 `Application/Users/UserAppService.cs` 中的 `CreateAsync`
     - 修改 `Application/Authorization/Accounts/AccountAppService.cs` 中的 `Register`
  - MVC 依赖注入(`inject`) 时使用的方法必须是 `[UnitOfWord]` 和 `virtual` 的
- 
- 感慨
- --
- 
- - Abp 太刁了，由于 `Unit Of Work` 每个事务结束后自动提交数据更改，根本不需要显示更新数据库，数据变动就和变量赋值一样方便，
-   而且由于是事务结束后提交，因此事务异常退出的时候根本不会有数据库变动，回滚就是一个很自然的事了

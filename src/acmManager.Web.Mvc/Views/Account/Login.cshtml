@@ -3,18 +3,14 @@
 }
 @section styles
 {
-    <environment name="Development">
-        <link href="~/view-resources/Views/Account/Login.css" rel="stylesheet"/>
-    </environment>
+    <link href="~/view-resources/Views/Account/Login.css" rel="stylesheet"/>
 }
 @section scripts
 {
-    <environment name="Development">
-        <script type="application/javascript">
-            LoginEvent('@Url.Action("Login")');
-            RegisterEvent('@Url.Action("Register")');
-        </script>
-    </environment>
+    <script type="application/javascript">
+        LoginEvent('@Url.Action("Login")');
+        RegisterEvent('@Url.Action("Register")');
+    </script>
 }
 <div class="wrapper fadeInDown">
     @await Html.PartialAsync("_Login")

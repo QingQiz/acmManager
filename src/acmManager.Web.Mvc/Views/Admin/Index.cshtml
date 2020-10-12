@@ -1,17 +1,13 @@
 ﻿@section styles
 {
-    <environment name="Development">
-        <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
-        <link href="~/view-resources/Views/Admin/Admin.css" rel="stylesheet"/>
-        <link href="~/view-resources/Views/Certificate/Certificate.css" rel="stylesheet"/>
-    </environment>
+    <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
+    <link href="~/view-resources/Views/Admin/Admin.css" rel="stylesheet"/>
+    <link href="~/view-resources/Views/Certificate/Certificate.css" rel="stylesheet"/>
 }
 @section scripts
 {
-    <environment name="Development">
-        <script src="~/view-resources/Views/Admin/Admin.js" type="application/javascript"></script>
-        <script src="~/view-resources/Views/Admin/Certificate.js" type="application/javascript"></script>
-    </environment>
+    <script src="~/view-resources/Views/Admin/Admin.js" type="application/javascript"></script>
+    <script src="~/view-resources/Views/Admin/Certificate.js" type="application/javascript"></script>
 }
 <div class="content-container">
     @await Html.PartialAsync("_Sidebar")
