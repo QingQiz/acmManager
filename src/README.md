@@ -11,6 +11,23 @@
             - 如果已经装在了本地，需要先 `pip uninstall package`，然后用管理员权限执行 `pip install package`
     - 需要在数据库中设置当前爬虫的位置
         - 将 `crawler.py` 复制到部署目录下
+- 配置数据库
+    - 修改 `acmManager.Web.Mvc` 下的 `appsettings.json` 中的 `ConnectionStrings`
+- 部署
+    - `dotnet.ext`
+        - 数据库: EF: 
+            - `dotnet ef migrations add migration-name`
+            - `dotnet ef database update`
+    - `visual studio`
+        - 数据库: EF: 
+            - 打开 `Package manager console` 选择 `EntityFrameworkCore`
+            - `Add-Migration migration-name`
+            - `Update-Database`
+        - 部署到 IIS
+            - 在 IIS 中新建网站
+            - 使用 Visual Studio 的 publish 功能发布到新建的网站的文件夹里
+            - 将 `crawler.py` 复制到部署目录下
+            - 重启 IIS
         
 备注
 --
