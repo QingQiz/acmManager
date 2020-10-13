@@ -71,6 +71,7 @@ namespace acmManager.Users
                 }
             };
             process.Start();
+            process.WaitForExit();
 
             // 爬虫执行失败
             if (process.ExitCode != 0)
