@@ -57,28 +57,31 @@ namespace acmManager.Users
         {
             // use crawler to get user information
             var crawlerPath = await _settingManager.GetSettingValueAsync(AppSettingNames.CrawlerPath);
+            var pythonPath = await _settingManager.GetSettingValueAsync(AppSettingNames.PythonPath);
 
             var process = new System.Diagnostics.Process
             {
                 StartInfo =
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/c python {crawlerPath} -u {username} -p {password}",
+                    Arguments = $"/c \"{pythonPath}\" \"{crawlerPath}\" -u {username} -p {password}",
                     UseShellExecute = false,
-                    RedirectStandardOutput = true
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
                 }
             };
             process.Start();
 
-            // 0    1      2      3       4      5     6       7        8        9
-            // id, org, mobile, gender, email, name, class, location, major, studentType
-            var result = (await process.StandardOutput.ReadToEndAsync()).Split("\r\n");
-            
             // 爬虫执行失败
             if (process.ExitCode != 0)
             {
-                throw new UserFriendlyException("Login to uis.nwpu.edu.cn failed, wrong username or password or internal server error");
+                var stderr = (await process.StandardError.ReadToEndAsync()).Split(Environment.NewLine);
+                throw new UserFriendlyException(stderr[^1]);
             }
+
+            // 0    1      2      3       4      5     6       7        8        9
+            // id, org, mobile, gender, email, name, class, location, major, studentType
+            var result = (await process.StandardOutput.ReadToEndAsync()).Split(Environment.NewLine);
 
             return new UserInfoDto()
             {

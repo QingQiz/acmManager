@@ -3,11 +3,14 @@
 
 - 配置爬虫程序
     - 爬虫是用 `python` 写的，因此需要 python 环境
+        - 如果 IIS 没有找到 python 环境，则手动在数据表 `AbpSettings` 中修改 `acmMgr.PythonPath` 项的值
     - 需要安装 python 库
         - `pip install --upgrade git+https://github.com/QingQiz/python_modules`
         - `pip install argh`
+        - **NOTE**: 如果要使用 IIS 部署的话，需要将包装在全局上
+            - 如果已经装在了本地，需要先 `pip uninstall package`，然后用管理员权限执行 `pip install package`
     - 需要在数据库中设置当前爬虫的位置
-        - 如果没有改 `crawler.py` 的位置，就不用动数据库
+        - 将 `crawler.py` 复制到部署目录下
         
 备注
 --
