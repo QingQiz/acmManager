@@ -64,7 +64,7 @@ namespace acmManager.Users
                 StartInfo =
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/c \"{pythonPath}\" \"{crawlerPath}\" -u {username} -p {password}",
+                    Arguments = $"/c \"\"{pythonPath}\" \"{crawlerPath}\" -u {username} -p {password}\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
@@ -76,7 +76,7 @@ namespace acmManager.Users
             // 爬虫执行失败
             if (process.ExitCode != 0)
             {
-                var stderr = (await process.StandardError.ReadToEndAsync()).Split(Environment.NewLine);
+                var stderr = (await process.StandardError.ReadToEndAsync()).Trim().Split(Environment.NewLine);
                 throw new UserFriendlyException(stderr[^1]);
             }
 
