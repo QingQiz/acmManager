@@ -136,6 +136,9 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             // For team leader
             CreateExtraRoles(StaticRoleNames.Tenants.TeamLeader, false, new List<string>()
             {
+                PermissionNames.PagesUsers_Contest,
+                PermissionNames.PagesUsers_Contest_SignUp,
+                
                 PermissionNames.PagesUsers_Article,
                 PermissionNames.PagesUsers_Article_Create,
                 PermissionNames.PagesUsers_Article_Delete,
@@ -153,6 +156,8 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             // for member
             CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>()
             {
+                PermissionNames.PagesUsers_Contest_SignUp,
+                 
                 PermissionNames.PagesUsers_Article,
                 
                 PermissionNames.PagesUsers_Relegate,
@@ -163,6 +168,8 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             // for temp user
             CreateExtraRoles(StaticRoleNames.Tenants.Default, isDefault: true, new List<string>()
             {
+                PermissionNames.PagesUsers_Contest_SignUp,
+                
                 PermissionNames.PagesUsers_Article,
             });
         }

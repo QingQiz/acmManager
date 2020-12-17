@@ -47,6 +47,12 @@ namespace acmManager.Authorization
                 PermissionNames.PagesUsers_Article_Delete,
                 PermissionNames.PagesUsers_Article_Update
             });
+            
+            var contest = CreatePermission(pageUser, PermissionNames.PagesUsers_Contest);
+            CreateManyPermissions(contest, new []
+            {
+                PermissionNames.PagesUsers_Contest_SignUp
+            });
         }
 
         private static ILocalizableString L(string name)
