@@ -39,6 +39,14 @@ namespace acmManager.Authorization
                 PermissionNames.PagesUsers_Certificate_DeleteAll,
                 PermissionNames.PagesUsers_Certificate_GetAll
             });
+
+            var article = CreatePermission(pageUser, PermissionNames.PagesUsers_Article);
+            CreateManyPermissions(article, new []
+            {
+                PermissionNames.PagesUsers_Article_Create,
+                PermissionNames.PagesUsers_Article_Delete,
+                PermissionNames.PagesUsers_Article_Update
+            });
         }
 
         private static ILocalizableString L(string name)

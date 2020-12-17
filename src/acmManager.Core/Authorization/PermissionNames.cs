@@ -31,5 +31,11 @@
         public const string PagesUsers_Certificate_DeleteAll = "Pages.Users.Certificate.DeleteAll";
         // 获取任意证书的权限
         public const string PagesUsers_Certificate_GetAll = "Pages.Users.Certificate.GetAll";
+
+        // 文章权限
+        public const string PagesUsers_Article = "Pages.Users.Article";
+        public const string PagesUsers_Article_Create = "Pages.Users.Article.Create";
+        public const string PagesUsers_Article_Delete = "Pages.Users.Article.Delete";
+        public const string PagesUsers_Article_Update = "Pages.Users.Article.Update";
     }
 }

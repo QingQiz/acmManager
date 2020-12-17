@@ -133,22 +133,38 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
             }
             
             // Extra Roles
+            // For team leader
             CreateExtraRoles(StaticRoleNames.Tenants.TeamLeader, false, new List<string>()
             {
+                PermissionNames.PagesUsers_Article,
+                PermissionNames.PagesUsers_Article_Create,
+                PermissionNames.PagesUsers_Article_Delete,
+                PermissionNames.PagesUsers_Article_Update,
+                
+                PermissionNames.PagesUsers_Admin,
+                
+                PermissionNames.PagesUsers_Certificate,
+                PermissionNames.PagesUsers_Certificate_Upload,
+                
+                PermissionNames.PagesUsers_GetAll,
                 PermissionNames.PagesUsers_Promote,
                 PermissionNames.PagesUsers_Relegate,
-                PermissionNames.PagesUsers_Admin,
-                PermissionNames.PagesUsers_GetAll,
-                PermissionNames.PagesUsers_Certificate,
-                PermissionNames.PagesUsers_Certificate_Upload,
             });
+            // for member
             CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>()
             {
+                PermissionNames.PagesUsers_Article,
+                
                 PermissionNames.PagesUsers_Relegate,
+                
                 PermissionNames.PagesUsers_Certificate,
                 PermissionNames.PagesUsers_Certificate_Upload,
             });
-            CreateExtraRoles(StaticRoleNames.Tenants.Default, isDefault: true, new List<string>());
+            // for temp user
+            CreateExtraRoles(StaticRoleNames.Tenants.Default, isDefault: true, new List<string>()
+            {
+                PermissionNames.PagesUsers_Article,
+            });
         }
     }
 }
