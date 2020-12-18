@@ -1,0 +1,42 @@
+﻿@model acmManager.Web.Models.Contest.ContestListViewModel
+
+@section styles
+{
+    <link rel="stylesheet" href="~/view-resources/Views/Contest/Index.css"/>
+}
+@section scripts
+{
+    <script src="~/view-resources/Views/Contest/Index.js"></script>
+}
+
+<div class="content-container">
+    <table class="table table-hover" id="certificate-table">
+        <thead><tr>
+            <th scope="col">@L("Contest.Name")</th>
+            <th scope="col">@L("Contest.SignUpStartTime")</th>
+            <th scope="col">@L("Contest.SignUpEndTime")</th>
+            <th scope="col" style="text-align: center;">详细</th>
+        </tr></thead>
+        <tbody>
+            @foreach (var contest in Model.Contests)
+            {
+                <tr>
+                    <th scope="row">@contest.Name</th>
+                    <td>@contest.SignUpStartTime.ToString("yyyy-MM-dd")</td>
+                    <td>@contest.SignUpEndTime.ToString("yyyy-MM-dd")</td>
+                    <td><button class="btn btn-block" onclick="location.href = '@Url.Action("GetContest")?contestId=@contest.Id'">
+                        <img src="~/img/more.svg" alt="" style="max-width: 18px"/>
+                    </button></td>
+                </tr>
+            }
+            <tr>
+                <th/> <td/> <td/>
+                <td>
+                    <button class="btn btn-success" style="padding: 4px 10px" onclick="location.href='@Url.Action("CreateContestView")'">
+                        <img src="~/img/add.svg" class="icon-add" alt="" style="padding-top: 6px; width: 13px"/>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

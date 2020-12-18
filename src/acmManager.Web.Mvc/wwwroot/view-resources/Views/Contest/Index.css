@@ -1,0 +1,18 @@
+﻿.icon-add {
+    filter: brightness(0) invert(1);
+    vertical-align: unset;
+}
+
+.custom-file-label:after {
+    content: '上传附件';
+}
+
+.table img {
+    width: 20px;
+}
+
+.table td, .table th {
+    vertical-align: unset;
+    text-align: center;
+}
+

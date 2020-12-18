@@ -48,6 +48,10 @@
         <text name="Certificate.Attachment" value="附件"/>
         <text name="Certificate.Delete" value="删除"/>
 
+        <text name="Contest.Name" value="比赛名称"/>
+        <text name="Contest.SignUpStartTime" value="比赛注册开始时间"/>
+        <text name="Contest.SignUpEndTime" value="比赛注册结束时间"/>
+
         <text name="MaxResultCount" value="分页大小" />
 
         <text name="Submit" value="提交" />
