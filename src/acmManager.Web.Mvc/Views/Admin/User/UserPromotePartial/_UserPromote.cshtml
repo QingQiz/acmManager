@@ -14,7 +14,7 @@
         </tr></thead>
         <tbody>
 
-        @foreach (var userInfo in Model.Users ?? new List<UserDto>())
+        @foreach (var userInfo in Model.Users.Users ?? new List<UserDto>())
         {
             <tr>
                 <td><input type="checkbox" class="user-promote-checkbox" id="user-promote-user-@userInfo.UserId"></td>

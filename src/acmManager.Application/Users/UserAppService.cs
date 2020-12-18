@@ -122,6 +122,24 @@ namespace acmManager.Users
         {
             return ObjectMapper.Map<UserInfoDto>(user.UserInfo) ?? new UserInfoDto();
         }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="skip"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
+        [RemoteService(false)]
+        public GetAllUserOutput MakePage(IEnumerable<User> query, int skip, int take)
+        {
+            var q = query.ToList();
+            return new GetAllUserOutput
+            {
+                Users = q.Skip(skip).Take(take).Select(UserToDto),
+                AllResultCount = q.Count
+            };
+        }
         
         #endregion
 
@@ -214,43 +232,47 @@ namespace acmManager.Users
         /// <param name="input"></param>
         /// <returns></returns>
         [AbpAuthorize(PermissionNames.PagesUsers_GetAll)]
-        public async Task<IEnumerable<UserDto>> GetAllUserAsync(GetAllUserInput input)
+        public async Task<GetAllUserOutput> GetAllUserAsync(GetAllUserInput input)
         {
+            IEnumerable<User> q;
+            
             if (input.Filter == null)
             {
-                return await Task.Run(() =>
-                    _userManager.Query().Skip(input.SkipCount).Take(input.MaxResultCount).ToList().Select(UserToDto));
+                q = _userManager.Query().ToList();
+            }
+            else
+            {
+                var empty = new Func<string, bool>(string.IsNullOrEmpty);
+                var substr = new Func<string, string, bool>((s1, s2) => s1 != null && s1.Contains(s2));
+
+                q = _userManager
+                    .Query()
+                    .Where(u => u.UserInfo != null)
+                    .WhereIf(!empty(input.Filter.StudentNumber),
+                        u => substr(u.UserInfo.StudentNumber, input.Filter.StudentNumber))
+                    .WhereIf(!empty(input.Filter.Org),
+                        u => substr(u.UserInfo.Org, input.Filter.Org))
+                    .WhereIf(!empty(input.Filter.Mobile),
+                        u => substr(u.UserInfo.Mobile, input.Filter.Mobile))
+                    .WhereIf(!empty(input.Filter.Major),
+                        u => substr(u.UserInfo.Major, input.Filter.Major))
+                    .WhereIf(!empty(input.Filter.ClassId),
+                        u => substr(u.UserInfo.ClassId, input.Filter.ClassId))
+                    .WhereIf(!empty(input.Filter.Location),
+                        u => substr(u.UserInfo.Location, input.Filter.Location))
+                    .WhereIf(!empty(input.Filter.StudentType),
+                        u => substr(u.UserInfo.StudentType, input.Filter.StudentType))
+                    .WhereIf(!empty(input.Filter.Email),
+                        u => substr(u.UserInfo.Email, input.Filter.Email))
+                    .WhereIf(!empty(input.Filter.Name),
+                        u => substr(u.UserInfo.Name, input.Filter.Name))
+                    .WhereIf(input.Filter.Gender != null,
+                        u => u.UserInfo.Gender == input.Filter.Gender)
+                    .WhereIf(input.Filter.Type != null,
+                        u => u.UserInfo.Type == input.Filter.Type);
             }
 
-            var empty = new Func<string, bool>(string.IsNullOrEmpty);
-            var substr = new Func<string, string, bool>((s1, s2) => s1 != null && s1.Contains(s2));
-
-            return await Task.Run(() => _userManager
-                .Query()
-                .Where(u => u.UserInfo != null)
-                .WhereIf(!empty(input.Filter.StudentNumber),
-                    u => substr(u.UserInfo.StudentNumber, input.Filter.StudentNumber))
-                .WhereIf(!empty(input.Filter.Org), 
-                    u => substr(u.UserInfo.Org, input.Filter.Org))
-                .WhereIf(!empty(input.Filter.Mobile),
-                    u => substr(u.UserInfo.Mobile, input.Filter.Mobile))
-                .WhereIf(!empty(input.Filter.Major), 
-                    u => substr(u.UserInfo.Major, input.Filter.Major))
-                .WhereIf(!empty(input.Filter.ClassId),
-                    u => substr(u.UserInfo.ClassId, input.Filter.ClassId))
-                .WhereIf(!empty(input.Filter.Location),
-                    u => substr(u.UserInfo.Location, input.Filter.Location))
-                .WhereIf(!empty(input.Filter.StudentType),
-                    u => substr(u.UserInfo.StudentType, input.Filter.StudentType))
-                .WhereIf(!empty(input.Filter.Email), 
-                    u => substr(u.UserInfo.Email, input.Filter.Email))
-                .WhereIf(!empty(input.Filter.Name), 
-                    u => substr(u.UserInfo.Name, input.Filter.Name))
-                .WhereIf(input.Filter.Gender != null, 
-                    u => u.UserInfo.Gender == input.Filter.Gender)
-                .WhereIf(input.Filter.Type != null, 
-                    u => u.UserInfo.Type == input.Filter.Type)
-                .Skip(input.SkipCount).Take(input.MaxResultCount).ToList().Select(UserToDto));
+            return await Task.Run(() => MakePage(q, input.SkipCount, input.MaxResultCount));
         }
         
         #endregion

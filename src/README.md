@@ -28,6 +28,7 @@
             - 使用 Visual Studio 的 publish 功能发布到新建的网站的文件夹里
             - 将 `crawler.py` 复制到部署目录下
             - 重启 IIS
+            - 可能需要修改 `appsettings.json` 中的数据库验证信息
         
 备注
 --

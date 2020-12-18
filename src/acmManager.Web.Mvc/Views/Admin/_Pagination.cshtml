@@ -6,15 +6,21 @@
         var filter = Model.CurrentUserFilter ?? new GetAllUserWithFilterViewModel();
         var index = filter.SkipCount / filter.MaxResultCount + 1;
         var indexStart = Math.Max(1, index - 3);
+        var indexEnd = (Model.Users.AllResultCount + filter.MaxResultCount - 1) / filter.MaxResultCount;
     }
     <ul class="pagination justify-content-end mt-3 mr-0">
         <div class="text-right mr-3" style="color: #8c8c8c; margin: auto">
-            Result Count: @(Model.Users?.Count() ?? 0)
+            Result Count: @(Model.Users.AllResultCount)
         </div>
         <li class="page-item"><a class="page-link page-first" href="#">First</a></li>
         <li class="page-item @(index == 1 ? "disabled" : "")"><a class="page-link page-previous" href="#">Previous</a></li>
         @foreach (var i in Enumerable.Range(indexStart, 7))
         {
+            @if (i > indexEnd)
+            {
+                break;
+            }
+
             @if (i == index)
             {
                 <li class="page-item active"><a class="page-link" href="#">@i</a></li>
@@ -24,7 +30,7 @@
                 <li class="page-item"><a class="page-link page-index" href="#">@i</a></li>
             }
         }
-        <li class="page-item"><a class="page-link page-next" href="#">Next</a></li>
+        <li class="page-item @(index == indexEnd ? "disabled" : "")"><a class="page-link page-next" href="#">Next</a></li>
     </ul>
 </nav>
 

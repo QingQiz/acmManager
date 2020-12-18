@@ -13,7 +13,7 @@
         </tr></thead>
         <tbody>
 
-        @foreach (var userInfo in Model.Users ?? new List<UserDto>())
+        @foreach (var userInfo in Model.Users.Users ?? new List<UserDto>())
         {
             <tr onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
                 <th scope="row">@(userInfo.StudentNumber ?? "null")</th>

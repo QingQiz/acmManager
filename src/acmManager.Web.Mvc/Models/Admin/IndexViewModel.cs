@@ -1,11 +1,10 @@
-﻿using JetBrains.Annotations;
-using GetAllUserViewModel = System.Collections.Generic.IEnumerable<acmManager.Users.Dto.UserDto>;
+﻿using acmManager.Users.Dto;
 
 namespace acmManager.Web.Models.Admin
 {
     public class IndexViewModel
     {
-        [CanBeNull] public GetAllUserViewModel Users;
-        [CanBeNull] public GetAllUserWithFilterViewModel CurrentUserFilter;
+        public GetAllUserOutput Users;
+        public GetAllUserWithFilterViewModel CurrentUserFilter;
     }
 }
