@@ -53,14 +53,14 @@ namespace acmManager.Web.Controllers
 
         [HttpPost]
         [UnitOfWork]
-        public virtual async Task<JsonResult> Login(LoginViewModel loginModel, string returnUrl = "")
+        public virtual async Task<JsonResult> Login(LoginViewModel loginModel)
         {
             var loginResult = await GetLoginResultAsync(loginModel.Username, loginModel.Password, GetTenancyNameOrNull());
 
             await _signInManager.SignInAsync(loginResult.Identity, loginModel.RememberMe);
             await UnitOfWorkManager.Current.SaveChangesAsync();
 
-            return Json(new AjaxResponse { TargetUrl = NormalizeReturnUrl(returnUrl) });
+            return Json(new AjaxResponse { TargetUrl = NormalizeReturnUrl(loginModel.ReturnUrl) });
         }
 
         public async Task<ActionResult> Logout()

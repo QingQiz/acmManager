@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Abp.AspNetCore.Mvc.Authorization;
+using acmManager.Authorization;
 using acmManager.Contest;
 using acmManager.Controllers;
 using acmManager.Web.Models.Contest;
@@ -29,6 +31,7 @@ namespace acmManager.Web.Controllers
         }
 
         [HttpGet, Route("/Contest/Create")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
         public ActionResult CreateContestView()
         {
             return View("CreateContest");

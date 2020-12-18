@@ -1,4 +1,5 @@
-﻿@model acmManager.Web.Models.Contest.ContestListViewModel
+﻿@using acmManager.Authorization
+@model acmManager.Web.Models.Contest.ContestListViewModel
 
 @section styles
 {
@@ -29,14 +30,17 @@
                     </button></td>
                 </tr>
             }
-            <tr>
-                <th/> <td/> <td/>
-                <td>
-                    <button class="btn btn-success" style="padding: 4px 10px" onclick="location.href='@Url.Action("CreateContestView")'">
-                        <img src="~/img/add.svg" class="icon-add" alt="" style="padding-top: 6px; width: 13px"/>
-                    </button>
-                </td>
-            </tr>
+            @if (AbpSession.UserId != null && IsGranted(PermissionNames.PagesUsers_Contest))
+            {
+                <tr>
+                    <th/> <td/> <td/>
+                    <td>
+                        <button class="btn btn-success" style="padding: 4px 10px" onclick="location.href='@Url.Action("CreateContestView")'">
+                            <img src="~/img/add.svg" class="icon-add" alt="" style="padding-top: 6px; width: 13px"/>
+                        </button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

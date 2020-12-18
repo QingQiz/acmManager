@@ -70,7 +70,7 @@
 else
 {
     <div class="row">
-        @foreach (var descriptor in TypeDescriptor.GetProperties(Model).Cast<PropertyDescriptor>())
+        @foreach (var descriptor in TypeDescriptor.GetProperties(Model).Cast<PropertyDescriptor>().Where(d => d.Name != "Certificate"))
         {
             if (descriptor.GetValue(Model) == default || descriptor.Name == "UserId")
             {

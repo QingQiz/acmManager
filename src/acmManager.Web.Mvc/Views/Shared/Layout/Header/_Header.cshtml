@@ -1,12 +1,8 @@
-﻿@using Abp.Runtime.Session
-@using acmManager.File
-@using acmManager.Web.Controllers
-@inject FileAppService FileAppService
-@{
-    ViewBag.UserPhoto = (await FileAppService.GetUserPhotoAsync(AbpSession.GetUserId()))?.FilePath ?? UserController.DefaultUserPhoto;
-}
-<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+﻿<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
     <h5 class="my-0 mr-md-auto font-weight-normal" onclick="location.href = '/'">acmManager</h5>
     @await Html.PartialAsync("Layout/Header/_NavItems")
-    @await Html.PartialAsync("Layout/Header/_UserMenu")
+    @if (AbpSession.UserId != null)
+    {
+        @await Html.PartialAsync("Layout/Header/_UserMenu")
+    }
 </div>

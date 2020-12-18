@@ -5,9 +5,19 @@
 <nav class="my-2 my-md-0 mr-md-3">
     <a class="p-2 text-dark underlineHover" href="#">公告</a> <span>|</span>
     <a class="p-2 text-dark underlineHover" href="@Url.Action("Index", "Contest")">比赛列表</a> <span>|</span>
-    <a class="p-2 text-dark underlineHover" href="#">博客</a> <span>|</span>
-    @if (IsGranted(PermissionNames.PagesUsers_Admin))
+    @if (AbpSession.UserId != null)
     {
-        <a class="p-2 text-dark underlineHover" href="@Url.Action("Index", "Admin")">Administrator</a> <span>|</span>
+        <a class="p-2 text-dark underlineHover" href="#">博客</a> <span>|</span>
+        @if (IsGranted(PermissionNames.PagesUsers_Admin))
+        {
+            <a class="p-2 text-dark underlineHover" href="@Url.Action("Index", "Admin")">Administrator</a> <span>|</span>
+        }
+    }
+    else
+    {
+        <a class="p-2 text-dark underlineHover user-login" href="#"
+           onclick="location.href='@Url.Action("Login", "Account")?returnUrl=' + location.pathname">
+            登录
+        </a>
     }
 </nav>
