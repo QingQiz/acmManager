@@ -64,21 +64,23 @@ namespace acmManager.Web.Controllers
         [UnitOfWork]
         public async Task<ActionResult> GetUserProfile(long userId)
         {
+            UserProfileViewModel model;
             if (await IsGrantedAsync(PermissionNames.PagesUsers_GetOne))
             {
-                var model = ObjectMapper.Map<UserProfileViewModel>(await _userAppService.GetAsync(userId));
-                model.Certificate = await _certificateAppService.GetByUserAsync(userId);
-                
-                return View("User/ProfilePartial/Profile", model);
+                model = ObjectMapper.Map<UserProfileViewModel>(await _userAppService.GetAsync(userId));
             }
             else
             {
-                var model = ObjectMapper.Map<UserProfileViewModel>(await _userAppService.GetUserInfoAsync(userId));
+                model = ObjectMapper.Map<UserProfileViewModel>(await _userAppService.GetUserInfoAsync(userId));
                 model.UserId = userId;
-                model.Certificate = await _certificateAppService.GetByUserAsync(userId);
-
-                return View("User/ProfilePartial/Profile", model);
             }
+
+            if (await IsGrantedAsync(PermissionNames.PagesUsers_Certificate_GetAll))
+            {
+                model.Certificate = await _certificateAppService.GetByUserAsync(userId);
+            }
+
+            return View("User/ProfilePartial/Profile", model);
         }
 
 

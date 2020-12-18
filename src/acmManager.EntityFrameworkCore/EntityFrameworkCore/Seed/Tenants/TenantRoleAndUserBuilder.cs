@@ -147,7 +147,6 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.PagesUsers_Admin,
                 
                 PermissionNames.PagesUsers_Certificate,
-                PermissionNames.PagesUsers_Certificate_GetAll,
                 PermissionNames.PagesUsers_Certificate_Upload,
                 
                 PermissionNames.PagesUsers_GetAll,
