@@ -1,5 +1,4 @@
 ﻿@using acmManager.Certificate
-@model acmManager.Web.Models.Admin.IndexViewModel
 
 @{
     var timeStart = (DateTime.Now - new TimeSpan(365, 0, 0, 0)).ToString("yyyy-MM-dd");
@@ -64,16 +63,16 @@
                 </div>
             </div>
         </div>
-        @* <div class="col-12"> *@
-        @*     <div class="input-group input-group mb-3"> *@
-        @*         <input type="text" name="MaxResultCount" class="form-control get-all-certificate-filter-MaxResultCount" value="200"> *@
-        @*         <div class="input-group-append"> *@
-        @*             <span class="input-group-text">@L("MaxResultCount")</span> *@
-        @*         </div> *@
-        @*     </div> *@
-        @* </div> *@
-        <input type="hidden" name="MaxResultCount" value="@int.MaxValue">
-        <input type="hidden" name="SkipCount" value="0">
+        <div class="col-12">
+            <div class="input-group input-group mb-3">
+                <input type="text" name="MaxResultCount" class="form-control certificate-filter-MaxResultCount" value="30">
+                <div class="input-group-append">
+                    <span class="input-group-text">@L("MaxResultCount")</span>
+                </div>
+            </div>
+        </div>
+        @* <input type="hidden" name="MaxResultCount" value="30" class="certificate-filter-MaxResultCount"/> *@
+        <input type="hidden" name="SkipCount" value="0" class="certificate-filter-SkipCount">
         <div class="col-12 text-right">
             <input type="button" class="btn btn-primary get-all-certificate-filter-submit-btn" value="@L("Submit")">
         </div>

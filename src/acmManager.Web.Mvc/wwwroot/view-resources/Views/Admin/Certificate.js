@@ -31,6 +31,36 @@ let DeleteCertificateEvent = function () {
     })
 }
 
+// GetAllCertificate Pagination
+let getAllCertificateEvent = function () {
+    let pageSize = parseInt($('#certificate-management .certificate-filter-MaxResultCount').val());
+    let skipCount = parseInt($('#certificate-management .certificate-filter-SkipCount').val());
+    let pageIndex = Math.floor(skipCount / pageSize) + 1;
+
+    let gotoPage = function (n) {
+        $('#certificate-management .certificate-filter-SkipCount').val((n - 1) * pageSize);
+        $('#certificate-management .get-all-certificate-filter-submit-btn').click();
+    }
+
+    $('#certificate-table .page-index').click(function () {
+        let page = parseInt($(this).text());
+        gotoPage(page);
+    });
+
+    $('#certificate-table .page-next').click(function () {
+        gotoPage(pageIndex + 1);
+    });
+
+    $('#certificate-table .page-previous').click(function () {
+        gotoPage(pageIndex - 1);
+    });
+
+    $('#certificate-table .page-first').click(function () {
+        gotoPage(1);
+    });
+}
+
+
 $('#certificate-management .get-all-certificate-filter-submit-btn').click(function () {
     let form = $('#get-all-certificate-filter-form');
     
@@ -41,6 +71,7 @@ $('#certificate-management .get-all-certificate-filter-submit-btn').click(functi
         success: function (data) {
             $('#certificate-table').html(data);
             DeleteCertificateEvent();
+            getAllCertificateEvent();
         },
         error: function (xhr, a, b) {
             alert('error: ' + a + ' ' + b);

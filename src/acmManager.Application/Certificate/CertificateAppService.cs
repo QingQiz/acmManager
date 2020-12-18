@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
@@ -24,6 +25,21 @@ namespace acmManager.Certificate
             _certificateManager = certificateManager;
             _fileManager = fileManager;
         }
+
+        #region NotMapToRemote
+
+        [RemoteService(false)]
+        public GetAllCertificateOutput MakePage(IEnumerable<Certificate> query, int skip, int take)
+        {
+            var q = query.ToList();
+            return new GetAllCertificateOutput
+            {
+                Certificates = q.Skip(skip).Take(take).Select(c => ObjectMapper.Map<GetCertificateOutput>(c)),
+                AllResultCount = q.Count
+            };
+        }
+
+        #endregion
 
         #region NormalApis
 
@@ -93,19 +109,19 @@ namespace acmManager.Certificate
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate_GetAll)]
-        public virtual async Task<IEnumerable<GetCertificateOutput>> GetWithFilter(GetAllCertificateWithFilterInput filterInput)
+        public virtual async Task<GetAllCertificateOutput> GetWithFilter(GetAllCertificateWithFilterInput filterInput)
         {
             var emptyStr = new Func<string, bool>(string.IsNullOrEmpty);
 
-            return await Task.Run(() => _certificateManager.Certificates.Include(c => c.File)
+            var query = _certificateManager.Certificates.Include(c => c.File)
                 .WhereIf(!emptyStr(filterInput.Name), c => c.Name.Contains(filterInput.Name))
-                .WhereIf(filterInput.Levels != null && filterInput.Levels.Any(), c => filterInput.Levels.Contains(c.Level))
-                .Where(c 
+                .WhereIf(filterInput.Levels != null && filterInput.Levels.Any(),
+                    c => filterInput.Levels.Contains(c.Level))
+                .Where(c
                     => c.AwardDate >= (filterInput.TimeStart ?? DateTime.MinValue)
-                       && c.AwardDate <= (filterInput.TimeEnd ?? DateTime.MaxValue))
-                .Skip(filterInput.SkipCount)
-                .Take(filterInput.MaxResultCount).ToList().Select(c => ObjectMapper.Map<GetCertificateOutput>(c))
-            );
+                       && c.AwardDate <= (filterInput.TimeEnd ?? DateTime.MaxValue));
+
+            return await Task.Run(() => MakePage(query, filterInput.SkipCount, filterInput.MaxResultCount));
         }
 
         #endregion
