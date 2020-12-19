@@ -46,6 +46,13 @@ namespace acmManager.Web.Controllers
             await _contestAppService.CreateContestAsync(input);
             return Json(new AjaxResponse());
         }
-        
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
+        public async Task<ActionResult> DeleteContest(long contestId)
+        {
+            await _contestAppService.DeleteContestAsync(contestId);
+            return RedirectToAction("Index");
+        }
     }
 }

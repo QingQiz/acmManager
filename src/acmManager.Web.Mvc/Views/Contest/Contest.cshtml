@@ -36,9 +36,18 @@
     
     @if (AbpSession.UserId != null && IsGranted(PermissionNames.PagesUsers_Contest))
     {
-        <div class="mt-3 text-right">
+        <div class="mt-3 text-right noSelect">
+            @await Html.PartialAsync("_DeleteContest")
             <button class="btn btn-primary mr-2" style="letter-spacing: 2px"> 编辑比赛 </button>
-            <button class="btn btn-success" style="letter-spacing: 2px"> 提交比赛结果 </button>
+
+            @if (Model.Result == null)
+            {
+                <button class="btn btn-success" style="letter-spacing: 2px"> 提交比赛结果 </button>
+            }
+            else
+            {
+                <button class="btn btn-primary" style="letter-spacing: 2px"> 编辑比赛结果 </button>
+            }
         </div>
     }
 </div>

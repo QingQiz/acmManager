@@ -11,7 +11,7 @@
 }
 
 <div class="content-container">
-    <table class="table table-hover" id="certificate-table">
+    <table class="table table-hover mt-3" id="certificate-table">
         <thead><tr>
             <th scope="col">@L("Contest.Name")</th>
             <th scope="col">@L("Contest.SignUpStartTime")</th>
@@ -19,28 +19,28 @@
             <th scope="col" style="text-align: center;">详细</th>
         </tr></thead>
         <tbody>
-            @foreach (var contest in Model.Contests)
-            {
-                <tr style="@(DateTime.Now > contest.SignUpEndTime || DateTime.Now < contest.SignUpStartTime ? "color: gray" : "")">
-                    <th scope="row">@contest.Name</th>
-                    <td>@contest.SignUpStartTime.ToString("yyyy-MM-dd")</td>
-                    <td>@contest.SignUpEndTime.ToString("yyyy-MM-dd")</td>
-                    <td><button class="btn btn-block" onclick="location.href = '/Contest/@contest.Id'">
+        @foreach (var contest in Model.Contests)
+        {
+            <tr style="@(DateTime.Now > contest.SignUpEndTime || DateTime.Now < contest.SignUpStartTime ? "color: gray" : "")">
+                <th scope="row">@contest.Name</th>
+                <td>@contest.SignUpStartTime.ToString("yyyy-MM-dd")</td>
+                <td>@contest.SignUpEndTime.ToString("yyyy-MM-dd")</td>
+                <td><button class="btn btn-block" onclick="location.href = '/Contest/@contest.Id'">
                         <img src="~/img/more.svg" alt="" style="max-width: 18px"/>
                     </button></td>
-                </tr>
-            }
-            @if (AbpSession.UserId != null && IsGranted(PermissionNames.PagesUsers_Contest))
-            {
-                <tr>
-                    <th/> <td/> <td/>
-                    <td>
-                        <button class="btn btn-success" style="padding: 4px 10px" onclick="location.href='@Url.Action("CreateContestView")'">
-                            <img src="~/img/add.svg" class="icon-add" alt="" style="padding-top: 6px; width: 13px"/>
-                        </button>
-                    </td>
-                </tr>
-            }
+            </tr>
+        }
+        @if (AbpSession.UserId != null && IsGranted(PermissionNames.PagesUsers_Contest))
+        {
+            <tr>
+                <th/> <td/> <td/>
+                <td>
+                    <button class="btn btn-success" style="padding: 4px 10px" onclick="location.href='@Url.Action("CreateContestView")'">
+                        <img src="~/img/add.svg" class="icon-add" alt="" style="padding-top: 6px; width: 13px"/>
+                    </button>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 </div>

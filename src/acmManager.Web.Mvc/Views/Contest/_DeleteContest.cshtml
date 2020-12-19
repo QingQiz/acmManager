@@ -1,0 +1,26 @@
+﻿@model acmManager.Contest.Dto.GetContestOutput
+
+<button class="btn btn-danger mr-2" style="letter-spacing: 2px" data-toggle="modal" data-target="#delete-contest"> 删除比赛 </button>
+
+<div class="modal fade" id="delete-contest">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <strong style="letter-spacing: 2px">
+                        你确定吗
+                    </strong>
+                </h5>
+            </div>
+            <div class="modal-body"> 此操作不可逆 ！！ </div>
+            <form asp-action="DeleteContest" method="post">
+                <input type="hidden" name="ContestId" value="@Model.Id">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="letter-spacing: 2px">取消</button>
+                    <button type="submit" class="btn btn-danger btn-ok" style="letter-spacing: 2px">确认</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
