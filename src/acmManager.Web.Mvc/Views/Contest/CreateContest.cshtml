@@ -1,1 +1,72 @@
-﻿
+﻿@section styles
+{
+    <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
+    <link rel="stylesheet" href="~/view-resources/Views/Contest/CreateContest.css">
+    <link rel="stylesheet" href="~/css/editor.css">
+}
+@section scripts
+{
+    <script src="~/editor.md/editormd.min.js"></script>
+    <script src="~/js/editor.js"></script>
+    <script src="~/view-resources/Views/Contest/CreateContest.js"></script>
+}
+
+<div class="content-container">
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header noSelect" id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                        比赛介绍
+                    </button>
+                </h5>
+            </div>
+    
+            <div id="collapseTwo" class="collapse show" data-parent="#accordion">
+                <div class="card-body">
+                    <div id="contest-description">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header noSelect" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        比赛设置
+                    </button>
+                </h5>
+            </div>
+    
+            <div id="collapseOne" class="collapse " data-parent="#accordion">
+                <div class="card-body">
+                    @await Html.PartialAsync("_CreateContestSetting")
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header noSelect" id="headingThree">
+                <h5 class="mb-0">
+                    <button class="btn" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                        确认
+                    </button>
+                </h5>
+            </div>
+    
+            <div id="collapseThree" class="collapse" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="text-right col pr-0 mt-3">
+                        <form asp-action="CreateContest" method="post" id="create-contest-form">
+                            <input type="hidden" name="Name"/>
+                            <input type="hidden" name="DescriptionTitle"/>
+                            <input type="hidden" name="DescriptionContent"/>
+                            <input type="hidden" name="SignUpStartTime"/>
+                            <input type="hidden" name="SignUpEndTime"/>
+                            <input type="button" class="btn btn-primary" id="create-contest-submit-btn" value="@L("Submit")">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

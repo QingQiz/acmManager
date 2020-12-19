@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
+using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Contest;
+using acmManager.Contest.Dto;
 using acmManager.Controllers;
 using acmManager.Web.Models.Contest;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +37,14 @@ namespace acmManager.Web.Controllers
         public ActionResult CreateContestView()
         {
             return View("CreateContest");
+        }
+
+        [HttpPost, Route("/Contest/Create/Post")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
+        public async Task<JsonResult> CreateContest(CreateContestInput input)
+        {
+            await _contestAppService.CreateContestAsync(input);
+            return Json(new AjaxResponse());
         }
         
     }

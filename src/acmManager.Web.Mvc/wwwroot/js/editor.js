@@ -1,7 +1,7 @@
-﻿let createEditor = function(id) {
-    editormd(id, {
+﻿let createEditor = function(id, height) {
+    return editormd(id, {
         path: "/editor.md/lib/",
-        height: '640',
+        height: height,
         placeholder: "",
         watch: false,
         imageUpload: true,
@@ -177,6 +177,6 @@
                 });
             }
         },
-        onLoad: function () { }
+        onload: function () { }
     });
 }
