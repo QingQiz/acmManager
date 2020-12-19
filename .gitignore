@@ -254,3 +254,4 @@ paket-files/
 /src/acmManager.Web.Host/App_Data/Uploads/
 /src/acmManager.Web.Mvc/App_Data/Logs/Logs.txt.1
 /src/acmManager.Web.Mvc/App_Data/Logs/Logs.txt.2
+/src/acmManager.EntityFrameworkCore/Migrations/*
