@@ -1,0 +1,35 @@
+﻿@model acmManager.Contest.Dto.GetContestOutput
+
+@{
+    var canSignUp = Model.SignUpStartTime < DateTime.Now && DateTime.Now < Model.SignUpEndTime;
+}
+
+@if (Model.SignUpInfo == null)
+{
+    @if (canSignUp && Model.Result == null)
+    {
+        <div class="alert alert-warning">
+            比赛当前可报名，您未报名
+            <a href="#" class="alert-link">
+                报名
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary">
+            比赛当前不可报名
+        </div>
+        
+    }
+}
+else
+{
+    <div class="alert alert-success">
+        您已报名
+        <a href="#" class="alert-link">
+            查看报名信息
+        </a>
+    </div>
+}
+

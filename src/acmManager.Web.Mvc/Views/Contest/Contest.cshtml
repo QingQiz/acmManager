@@ -1,0 +1,44 @@
+@using acmManager.Authorization
+@model acmManager.Contest.Dto.GetContestOutput
+
+@section styles
+{
+    <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
+    <link rel="stylesheet" href="~/css/editor.css">
+}
+
+@section scripts
+{
+    <script src="~/editor.md/editormd.min.js"></script>
+    <script src="~/editor.md/lib/marked.min.js"></script>
+    <script src="~/editor.md/lib/prettify.min.js"></script>
+    <script src="~/editor.md/lib/raphael.min.js"></script>
+    <script src="~/editor.md/lib/underscore.min.js"></script>
+    <script src="~/editor.md/lib/sequence-diagram.min.js"></script>
+    <script src="~/editor.md/lib/flowchart.min.js"></script>
+    <script src="~/js/editor.js"></script>
+    <script src="~/view-resources/Views/Contest/Contest.js"></script>
+}
+
+<div class="content-container" style="max-width: 1060px">
+    <h1 class="text-center"> @Model.Name </h1>
+    <div class="text-center mb-lg-3" style="color: gray; font-style: italic">
+        SignUp: @Model.SignUpStartTime.ToString("yyyy-MM-dd HH:mm") ~ @Model.SignUpEndTime.ToString("yyyy-MM-dd HH:mm")
+    </div>
+
+    @await Html.PartialAsync("_SignUpAlert")
+    @await Html.PartialAsync("_ContestDescription")
+
+    @if (Model.Result != null)
+    {
+        @await Html.PartialAsync("_ContestResult")
+    }
+    
+    @if (AbpSession.UserId != null && IsGranted(PermissionNames.PagesUsers_Contest))
+    {
+        <div class="mt-3 text-right">
+            <button class="btn btn-primary mr-2" style="letter-spacing: 2px"> 编辑比赛 </button>
+            <button class="btn btn-success" style="letter-spacing: 2px"> 提交比赛结果 </button>
+        </div>
+    }
+</div>

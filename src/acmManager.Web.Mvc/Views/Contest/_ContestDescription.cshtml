@@ -1,0 +1,18 @@
+﻿@model acmManager.Contest.Dto.GetContestOutput
+
+<div class="card">
+    <div class="card-header noSelect">
+        <h5 class="mb-0">
+            <button class="btn collapsed" data-target="#contest-description" data-toggle="collapse">
+                比赛介绍
+            </button>
+        </h5>
+    </div>
+    <div class="collapse @(Model.Result == null ? "show" : "")" id="contest-description">
+        <div class="card-body">
+            <div id="contest-description-content">
+                <textarea hidden>@Model.Description.Content</textarea>
+            </div>
+        </div>
+    </div>
+</div>

@@ -21,11 +21,11 @@
         <tbody>
             @foreach (var contest in Model.Contests)
             {
-                <tr>
+                <tr style="@(DateTime.Now > contest.SignUpEndTime || DateTime.Now < contest.SignUpStartTime ? "color: gray" : "")">
                     <th scope="row">@contest.Name</th>
                     <td>@contest.SignUpStartTime.ToString("yyyy-MM-dd")</td>
                     <td>@contest.SignUpEndTime.ToString("yyyy-MM-dd")</td>
-                    <td><button class="btn btn-block" onclick="location.href = '@Url.Action("GetContest")?contestId=@contest.Id'">
+                    <td><button class="btn btn-block" onclick="location.href = '/Contest/@contest.Id'">
                         <img src="~/img/more.svg" alt="" style="max-width: 18px"/>
                     </button></td>
                 </tr>

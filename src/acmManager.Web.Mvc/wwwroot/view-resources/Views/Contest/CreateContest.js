@@ -1,9 +1,4 @@
-﻿let editor = createEditor("contest-description", '640px')
-
-$('.card-header').click(function (event) {
-    let target = $(this).find('button').attr('data-target');
-    $(target).collapse('toggle');
-});
+﻿let editor = createEditor("contest-description", false)
 
 $('#create-contest-submit-btn').click(function () {
     let form = $('#create-contest-form');

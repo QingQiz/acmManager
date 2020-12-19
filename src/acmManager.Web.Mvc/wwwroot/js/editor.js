@@ -1,7 +1,8 @@
-﻿let createEditor = function(id, height) {
+﻿let createEditor = function(id, readonly=false) {
     return editormd(id, {
+        autoHeight: true,
+        readOnly: readonly,
         path: "/editor.md/lib/",
-        height: height,
         placeholder: "",
         watch: false,
         imageUpload: true,
