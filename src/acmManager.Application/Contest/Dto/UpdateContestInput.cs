@@ -2,11 +2,8 @@
 
 namespace acmManager.Contest.Dto
 {
-    public class UpdateContestInput
+    public class UpdateContestInput : CreateContestInput
     {
         public long Id { get; set; }
-        public string Name { get; set; }
-        public DateTime SignUpStartTime { get; set; }
-        public DateTime SignUpEndTime { get; set; }
     }
 }

@@ -32,18 +32,34 @@ namespace acmManager.Web.Controllers
             return View("Contest", contest);
         }
 
-        [HttpGet, Route("/Contest/Create")]
+        [HttpGet, Route("/Contest/Edit")]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
-        public ActionResult CreateContestView()
+        public async Task<ActionResult> EditContest(long contestId)
         {
-            return View("CreateContest");
+            if (contestId != 0)
+            {
+                var contest = await _contestAppService.GetContestAsync(contestId);
+                return View("EditContest", contest);
+            }
+            else
+            {
+                return View("EditContest", null);
+            }
         }
 
-        [HttpPost, Route("/Contest/Create/Post")]
+        [HttpPost, Route("/Contest/Create")]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
         public async Task<JsonResult> CreateContest(CreateContestInput input)
         {
             await _contestAppService.CreateContestAsync(input);
+            return Json(new AjaxResponse());
+        }
+
+        [HttpPost, Route("/Contest/Update")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
+        public async Task<JsonResult> UpdateContest(UpdateContestInput input)
+        {
+            await _contestAppService.UpdateContestAsync(input);
             return Json(new AjaxResponse());
         }
 

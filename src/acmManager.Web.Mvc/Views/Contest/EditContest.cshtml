@@ -1,4 +1,6 @@
-﻿@section styles
+﻿@model acmManager.Contest.Dto.GetContestOutput
+
+@section styles
 {
     <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
     <link rel="stylesheet" href="~/view-resources/Views/Contest/CreateContest.css">
@@ -33,11 +35,17 @@
             </h5>
         </div>
         <div class="card-body">
-            <div id="contest-description"></div>
+            <div id="contest-description">
+                <textarea hidden>@(Model?.Description.Content ?? "\n\n\n\n\n")</textarea>
+            </div>
         </div>
     </div>
     <div class="text-right col pr-0 mt-3">
-        <form asp-action="CreateContest" method="post" id="create-contest-form">
+        <form asp-action=@(Model == null ? "CreateContest" : "UpdateContest") method="post" id="create-contest-form">
+            @if (Model != null)
+            {
+                <input type="hidden" name="Id" value="@Model.Id"/>
+            }
             <input type="hidden" name="Name"/>
             <input type="hidden" name="DescriptionTitle"/>
             <input type="hidden" name="DescriptionContent"/>

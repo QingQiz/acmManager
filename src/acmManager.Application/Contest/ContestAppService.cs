@@ -62,6 +62,8 @@ namespace acmManager.Contest
             contest.Name = input.Name;
             contest.SignUpEndTime = input.SignUpEndTime;
             contest.SignUpStartTime = input.SignUpStartTime;
+            contest.Description.Title = input.DescriptionTitle;
+            contest.Description.Content = input.DescriptionContent;
         }
 
         [UnitOfWork]

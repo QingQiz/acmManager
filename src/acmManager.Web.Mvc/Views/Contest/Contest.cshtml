@@ -26,7 +26,7 @@
         SignUp: @Model.SignUpStartTime.ToString("yyyy-MM-dd HH:mm") ~ @Model.SignUpEndTime.ToString("yyyy-MM-dd HH:mm")
     </div>
 
-    @await Html.PartialAsync("_SignUpAlert")
+    @await Html.PartialAsync("_ContestSignUpAlert")
     @await Html.PartialAsync("_ContestDescription")
 
     @if (Model.Result != null)
@@ -38,7 +38,7 @@
     {
         <div class="mt-3 text-right noSelect">
             @await Html.PartialAsync("_DeleteContest")
-            <button class="btn btn-primary mr-2" style="letter-spacing: 2px"> 编辑比赛 </button>
+            <button class="btn btn-primary mr-2" style="letter-spacing: 2px" onclick="location.href = '/Contest/Edit?contestId=@Model.Id'"> 编辑比赛 </button>
 
             @if (Model.Result == null)
             {

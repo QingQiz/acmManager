@@ -1,17 +1,23 @@
-﻿<div class="input-group mb-3">
-    <input type="text" id="contest-name" class="form-control" value="">
+﻿@model acmManager.Contest.Dto.GetContestOutput
+
+@{
+    static string ToStr(DateTime x) => x.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz").Substring(0, 16);
+}
+
+<div class="input-group mb-3">
+    <input type="text" id="contest-name" class="form-control" value="@(Model?.Name ?? "")">
     <div class="input-group-append">
         <span class="input-group-text" style="width: 154px">@L("Contest.Name")</span>
     </div>
 </div>
 <div class="input-group mb-3">
-    <input type="datetime-local" id="contest-sign-up-start-time" class="form-control">
+    <input type="datetime-local" id="contest-sign-up-start-time" class="form-control" @(Model == null ? "" : $"value={ToStr(Model.SignUpStartTime)}")>
     <div class="input-group-append">
         <span class="input-group-text">@L("Contest.SignUpStartTime")</span>
     </div>
 </div>
 <div class="input-group mb-3">
-    <input type="datetime-local" id="contest-sign-up-end-time" class="form-control">
+    <input type="datetime-local" id="contest-sign-up-end-time" class="form-control" @(Model == null ? "" : $"value={ToStr(Model.SignUpEndTime)}")>
     <div class="input-group-append">
         <span class="input-group-text">@L("Contest.SignUpEndTime")</span>
     </div>
