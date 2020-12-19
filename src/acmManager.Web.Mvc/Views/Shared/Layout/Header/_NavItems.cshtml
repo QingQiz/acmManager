@@ -2,9 +2,9 @@
 @using acmManager.Authorization
 @inject UserController UserController
 
-<nav class="my-2 my-md-0 mr-md-3">
-    <a class="p-2 text-dark underlineHover" href="#">公告</a> <span>|</span>
-    <a class="p-2 text-dark underlineHover" href="@Url.Action("Index", "Contest")">比赛列表</a> <span>|</span>
+<nav class="my-2 my-md-0 mr-md-3 noSelect">
+    <a class="p-2 text-dark underlineHover noSelect" href="#">公告</a> <span>|</span>
+    <a class="p-2 text-dark underlineHover noSelect" href="@Url.Action("Index", "Contest")">比赛列表</a> <span>|</span>
     @if (AbpSession.UserId != null)
     {
 @*         <a class="p-2 text-dark underlineHover" href="#">博客</a> <span>|</span> *@
