@@ -6,20 +6,6 @@
     $(selector).html(errorMessage).css('opacity', 0).show().animate({opacity: 1}, 500);
 }
 
-$('.delete-certificate-submit').click(function () {
-    let form = $(this).closest("form");
-    
-    $.ajax({
-        url: form.attr('action'),
-        method: 'post',
-        data: form.serialize(),
-        success: function () {
-            form.find('.delete-certificate-dismiss').click();
-            location.reload();
-        }
-    });
-});
-
 $('#upload-certificate-submit-btn').click(function () {
     let form = $('#upload-certificate-form').closest("form");
     let formData = new FormData(form[0]);

@@ -39,10 +39,10 @@ namespace acmManager.Web.Controllers
 
         [HttpPost]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate)]
-        public async Task<JsonResult> Delete(long id)
+        public async Task<ActionResult> Delete(long id)
         {
             await _certificateAppService.DeleteCertificateAsync(id);
-            return Json(new AjaxResponse());
+            return RedirectToAction("Index");
         }
     }
 }
