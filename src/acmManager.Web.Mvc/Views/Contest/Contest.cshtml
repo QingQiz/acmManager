@@ -40,14 +40,9 @@
             @await Html.PartialAsync("_DeleteContest")
             <button class="btn btn-primary mr-2" style="letter-spacing: 2px" onclick="location.href = '/Contest/Edit?contestId=@Model.Id'"> 编辑比赛 </button>
 
-            @if (Model.Result == null)
-            {
-                <button class="btn btn-success" style="letter-spacing: 2px"> 提交比赛结果 </button>
-            }
-            else
-            {
-                <button class="btn btn-primary" style="letter-spacing: 2px"> 编辑比赛结果 </button>
-            }
+            <button class="btn btn-success" style="letter-spacing: 2px" onclick="location.href = '/Contest/EditResult/' + @Model.Id">
+                @(Model.Result == null ? "提交比赛结果" : "编辑比赛结果")
+            </button>
         </div>
     }
 </div>

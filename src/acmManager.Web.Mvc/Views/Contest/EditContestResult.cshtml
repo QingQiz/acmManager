@@ -1,0 +1,29 @@
+﻿@model acmManager.Contest.Dto.GetContestOutput
+
+
+@section styles
+{
+    <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
+    <link rel="stylesheet" href="~/css/editor.css">
+}
+@section scripts
+{
+    <script src="~/editor.md/editormd.min.js"></script>
+    <script src="~/js/editor.js"></script>
+    <script src="~/view-resources/Views/Contest/EditContestResult.js"></script>
+}
+
+<form asp-action="EditContestResultPost" method="post" id="create-contest-form">
+    <input type="hidden" name="Id" value="@Model.Id"/>
+    <input type="hidden" name="Title" value="@Model.Name"/>
+    
+    <div class="content-container">
+        <div id="contest-result" class="mt-3">
+            <textarea hidden name="Content">@(Model.Result?.Content ?? "删除所有内容以删除比赛结果\n\n\n\n\n")</textarea>
+        </div>
+
+        <div class="text-right col pr-0 mt-3">
+            <input type="submit" class="btn btn-primary" value="@L("Submit")" style="letter-spacing: 2px">
+        </div>
+    </div>
+</form>

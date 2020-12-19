@@ -134,7 +134,9 @@ namespace acmManager.Contest
 
             if (contest.Result != null)
             {
-                throw new UserFriendlyException("Contest DOES have a result");
+                contest.Result.Content = input.Content;
+                contest.Result.Title = input.Title;
+                return;
             }
             
             contest.Result = new Article.Article
@@ -142,6 +144,17 @@ namespace acmManager.Contest
                 Title = input.Title,
                 Content = input.Content
             };
+        }
+
+        [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Contest)]
+        public virtual async Task RemoveContestResultAsync(long contestId)
+        {
+            var contest = await _contestManager.Get(contestId);
+
+            await _articleManager.Delete(contest.Result.Id);
+
+            contest.Result = null;
         }
 
         [UnitOfWork]

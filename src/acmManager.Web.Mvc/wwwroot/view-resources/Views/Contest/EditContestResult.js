@@ -1,0 +1,1 @@
+﻿createEditor("contest-result", false)

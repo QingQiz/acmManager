@@ -70,5 +70,31 @@ namespace acmManager.Web.Controllers
             await _contestAppService.DeleteContestAsync(contestId);
             return RedirectToAction("Index");
         }
+
+        [HttpGet, Route("/Contest/EditResult/{contestId}")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
+        public async Task<ActionResult> EditContestResult(long contestId)
+        {
+            var contest = await _contestAppService.GetContestAsync(contestId);
+            return View("EditContestResult", contest);
+        }
+
+        [HttpPost, Route("/Contest/EditResult/Post")]
+        public async Task<ActionResult> EditContestResultPost(SetContestResultInput input)
+        {
+            if (input.Content == null)
+            {
+                await _contestAppService.RemoveContestResultAsync(input.Id);
+            }
+            else
+            {
+                await _contestAppService.SetContestResultAsync(input);
+            }
+           
+            return RedirectToAction("GetContest",new
+            {
+                contestId = input.Id
+            });
+        }
     }
 }
