@@ -13,3 +13,4 @@ $('.card-header').click(function (event) {
     $(target).collapse('toggle');
 });
 
+$('[data-toggle="tooltip"]').tooltip();

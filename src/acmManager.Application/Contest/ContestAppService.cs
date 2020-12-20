@@ -219,5 +219,18 @@ namespace acmManager.Contest
                     return suInfo;
                 }).ToList();
         }
+
+        [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Contest)]
+        public virtual async Task<string> ExportContestSignUpList(long contestId)
+        {
+            var suList = await GetContestSignUpList(contestId);
+            const string header = "Name\tGender\tStudentNumber\tOrg\tPassword";
+            
+            var body = suList.Select(info => string.Join("\t", 
+                info.Name, info.Gender.ToString(), info.StudentNumber, info.Org, info.Password));
+
+            return header + "\n" + string.Join("\n", body);
+        }
     }
 }

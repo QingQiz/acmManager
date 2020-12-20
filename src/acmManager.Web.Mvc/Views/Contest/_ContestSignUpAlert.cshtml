@@ -50,9 +50,15 @@ else
                         </div>
 
                         <div class="modal-body" style="letter-spacing: 2px">
-                            <span class="noSelect">您的账号：</span>@Model.SignUpInfo.Name
+                            <span class="noSelect">您的账号：</span>
+                            <span data-toggle="tooltip" title="这是登录比赛系统的账户号">
+                                @Model.SignUpInfo.Name
+                            </span>
                             <br/>
-                            <span class="noSelect">您的密码：</span>@Model.SignUpInfo.Password
+                            <span class="noSelect">您的密码：</span>
+                            <span data-toggle="tooltip" title="这是登录比赛系统的密码">
+                                @Model.SignUpInfo.Password
+                            </span>
                         </div>
 
                         <div class="modal-footer noSelect">

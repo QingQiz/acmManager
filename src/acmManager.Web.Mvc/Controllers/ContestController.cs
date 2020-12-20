@@ -116,7 +116,19 @@ namespace acmManager.Web.Controllers
         public async Task<ActionResult> ContestSignUpList(long contestId)
         {
             var suList = await _contestAppService.GetContestSignUpList(contestId);
-            return View(new ContestSignUpListViewModel {SignUps = suList});
+            return View(new ContestSignUpListViewModel
+            {
+                ContestId = contestId,
+                SignUps = suList
+            });
+        }
+        
+        [HttpGet, Route("/Contest/{contestId}/SignUp/List/Export")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
+        public async Task<JsonResult> ContestSignUpListExport(long contestId)
+        {
+            var res = await _contestAppService.ExportContestSignUpList(contestId);
+            return Json(new {result = res});
         }
     }
 }

@@ -15,13 +15,13 @@
         <button class="dropdown-item" onclick="window.location.href = '@Url.Action("UserProfile", "User")'">
             <img src="~/img/profile.svg" alt=""> 我的资料
         </button>
-        <button class="dropdown-item">
+        <button class="dropdown-item disabled">
             <img src="~/img/home.svg" alt=""> 我的主页
         </button>
-        <button class="dropdown-item">
+        <button class="dropdown-item disabled">
             <img src="~/img/blog.svg" alt=""> 我的博客
         </button>
-        <button class="dropdown-item">
+        <button class="dropdown-item disabled">
             <img src="~/img/contest.svg" alt=""> 我的比赛
         </button>
         @if (IsGranted(PermissionNames.PagesUsers_Certificate))
