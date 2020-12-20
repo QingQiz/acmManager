@@ -1,7 +1,7 @@
 ﻿@using acmManager.Authorization
 @model acmManager.Web.Models.Admin.UserProfileViewModel
 
-@if (IsGranted(PermissionNames.PagesUsers_Delete))
+@if (IsGranted(PermissionNames.PagesUsers_Delete) && Model.UserId > 2)
 {
     <div class="alert alert-danger">
         <h4 class="alert-heading"> 删除用户 </h4>

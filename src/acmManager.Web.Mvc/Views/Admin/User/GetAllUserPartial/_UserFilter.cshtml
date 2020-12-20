@@ -6,7 +6,7 @@
 @model acmManager.Web.Models.Admin.IndexViewModel
 
 @{
-    var filter = Model.CurrentUserFilter ?? new GetAllUserWithFilterViewModel();
+    var filter = Model.CurrentUserFilter ?? new GetAllUserWithFilterViewModel { StudentNumber = "20" };
 }
 
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#user-filter" aria-expanded="false" aria-controls="user-filter" id="get-all-user-filter-btn">
