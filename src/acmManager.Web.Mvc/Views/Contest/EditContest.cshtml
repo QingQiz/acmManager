@@ -15,28 +15,32 @@
 
 <div class="content-container">
     <div class="card">
-        <div class="card-header noSelect" id="headingOne">
+        <div class="card-header noSelect">
             <h5 class="mb-0">
-                <button class="btn" aria-expanded="true" aria-controls="collapseOne">
+                <button class="btn" data-toggle="collapse" data-target="#contest-setting">
                     比赛设置
                 </button>
             </h5>
         </div>
-        <div class="card-body">
-            @await Html.PartialAsync("_CreateContestSetting")
+        <div class="collapse show" id="contest-setting">
+            <div class="card-body">
+                @await Html.PartialAsync("_CreateContestSetting")
+            </div>
         </div>
     </div>
     <div class="card mt-3">
         <div class="card-header noSelect">
             <h5 class="mb-0">
-                <button class="btn" aria-expanded="true" aria-controls="collapseOne">
+                <button class="btn" data-toggle="collapse" data-target="#contest-description-card">
                     比赛介绍
                 </button>
             </h5>
         </div>
-        <div class="card-body">
-            <div id="contest-description">
-                <textarea hidden>@(Model?.Description.Content ?? "\n\n\n\n\n")</textarea>
+        <div class="collapse show" id="contest-description-card">
+            <div class="card-body">
+                <div id="contest-description">
+                    <textarea hidden>@(Model?.Description.Content ?? "\n\n\n\n\n")</textarea>
+                </div>
             </div>
         </div>
     </div>

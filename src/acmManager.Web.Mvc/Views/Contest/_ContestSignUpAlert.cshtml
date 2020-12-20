@@ -4,31 +4,69 @@
     var canSignUp = Model.SignUpStartTime < DateTime.Now && DateTime.Now < Model.SignUpEndTime;
 }
 
-@if (Model.SignUpInfo == null)
+@if (Model.Result != null)
 {
-    @if (canSignUp && Model.Result == null)
-    {
-        <div class="alert alert-warning">
-            比赛当前可报名，您未报名
-            <a href="#" class="alert-link">
-                报名
-            </a>
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-secondary" style="color: gray">
-            比赛当前不可报名
-        </div>
-    }
+    <div class="alert alert-secondary" style="color: gray">
+        比赛已结束
+    </div>
 }
 else
 {
-    <div class="alert alert-success">
-        您已报名
-        <a href="#" class="alert-link">
-            查看报名信息
-        </a>
-    </div>
+    @if (Model.SignUpInfo == null)
+    {
+        @if (canSignUp && Model.Result == null)
+        {
+            <div class="alert alert-warning">
+                比赛当前可报名，您未报名
+                <a href="/Contest/@Model.Id/SignUp" class="alert-link">
+                    报名
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-secondary" style="color: gray">
+                比赛当前不可报名
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-success">
+            您已报名
+            <a href="#" class="alert-link" data-toggle="modal" data-target="#contest-sign-up-info">
+                查看报名信息
+            </a>
+
+            <div class="modal fade" id="contest-sign-up-info">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header noSelect">
+                            <h5 class="modal-title">
+                                <strong style="letter-spacing: 2px">
+                                    您的报名信息
+                                </strong>
+                            </h5>
+                        </div>
+
+                        <div class="modal-body" style="letter-spacing: 2px">
+                            <span class="noSelect">您的账号：</span>@Model.SignUpInfo.Name
+                            <br/>
+                            <span class="noSelect">您的密码：</span>@Model.SignUpInfo.Password
+                        </div>
+
+                        <div class="modal-footer noSelect">
+                            @if (Model.SignUpEndTime > DateTime.Now)
+                            {
+                                <button type="submit" class="btn btn-danger" style="letter-spacing: 2px"
+                                        onclick="location.href = '/Contest/@Model.Id/SignUp/Cancel'"> 取消报名 </button>
+                            }
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" style="letter-spacing: 2px">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 }
 

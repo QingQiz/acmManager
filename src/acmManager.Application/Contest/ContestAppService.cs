@@ -101,7 +101,11 @@ namespace acmManager.Contest
             if (!await query.AnyAsync()) return res;
             
             var user = await _userManager.GetUserByIdAsync(AbpSession.GetUserId());
-            var password = user.UserInfo.StudentNumber + user.UserInfo.Name + user.UserInfo.ClassId;
+            var password = user.UserInfo.StudentNumber +
+                           user.UserInfo.Name +
+                           user.UserInfo.ClassId +
+                           contest.Name +
+                           contest.Id;
             
             res.SignUpInfo = new ContestSignUpInfo
             {
@@ -152,9 +156,11 @@ namespace acmManager.Contest
         {
             var contest = await _contestManager.Get(contestId);
 
-            await _articleManager.Delete(contest.Result.Id);
-
-            contest.Result = null;
+            if (contest.Result != null)
+            {
+                await _articleManager.Delete(contest.Result.Id);
+                contest.Result = null;
+            }
         }
 
         [UnitOfWork]
@@ -176,6 +182,22 @@ namespace acmManager.Contest
             {
                 Contest = contest
             });
+        }
+
+        [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Contest_SignUp)]
+        public virtual async Task ContestSignUpCancelAsync(long contestId)
+        {
+            var contest = await _contestManager.Get(contestId);
+            if (contest.SignUpEndTime < DateTime.Now)
+            {
+                throw new UserFriendlyException("Can not cancel sign up now");
+            }
+            
+            var query = _contestSignUpManager.MakeQuery(AbpSession.GetUserId(), contestId).ToList();
+
+            // will throw exception
+            await _contestSignUpManager.Delete(query.First().Id);
         }
     }
 }

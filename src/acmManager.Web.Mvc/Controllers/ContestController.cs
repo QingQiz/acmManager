@@ -91,10 +91,24 @@ namespace acmManager.Web.Controllers
                 await _contestAppService.SetContestResultAsync(input);
             }
            
-            return RedirectToAction("GetContest",new
-            {
-                contestId = input.Id
-            });
+            return RedirectToAction("GetContest",new { contestId = input.Id });
+        }
+
+        [HttpGet, Route("/Contest/{contestId}/SignUp")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest_SignUp)]
+        public async Task<ActionResult> ContestSignUp(long contestId)
+        {
+            await _contestAppService.ContestSignUpAsync(contestId);
+
+            return RedirectToAction("GetContest", new {contestId});
+        }
+
+        [HttpGet, Route("/Contest/{contestId}/SignUp/Cancel")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest_SignUp)]
+        public async Task<ActionResult> ContestSignUpCancel(long contestId)
+        {
+            await _contestAppService.ContestSignUpCancelAsync(contestId);
+            return RedirectToAction("GetContest", new {contestId});
         }
     }
 }
