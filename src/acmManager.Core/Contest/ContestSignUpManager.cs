@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -32,6 +33,14 @@ namespace acmManager.Contest
             await Repository.GetAllIncluding(s => s.Contest)
                 .Where(expr)
                 .ForEachAsync(s => s.IsDeleted = true);
+        }
+
+        public new async Task<List<ContestSignUp>> GetAll(Expression<Func<ContestSignUp, bool>> expr)
+        {
+            return await Repository
+                .GetAllIncluding(s => s.Contest)
+                .Where(expr)
+                .ToListAsync();
         }
     }
 }

@@ -110,5 +110,13 @@ namespace acmManager.Web.Controllers
             await _contestAppService.ContestSignUpCancelAsync(contestId);
             return RedirectToAction("GetContest", new {contestId});
         }
+
+        [HttpGet, Route("/Contest/{contestId}/SignUp/List")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Contest)]
+        public async Task<ActionResult> ContestSignUpList(long contestId)
+        {
+            var suList = await _contestAppService.GetContestSignUpList(contestId);
+            return View(new ContestSignUpListViewModel {SignUps = suList});
+        }
     }
 }

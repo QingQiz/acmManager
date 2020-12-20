@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
@@ -30,6 +31,18 @@ namespace acmManager.Contest
             _articleManager = articleManager;
             _contestSignUpManager = contestSignUpManager;
             _userManager = userManager;
+        }
+
+        [RemoteService(false)]
+        private string GetSignUpPassword(UserInfo ui, Contest contest)
+        {
+            var password = ui.StudentNumber + ui.Name + ui.ClassId + contest.Name + contest.Id;
+            return BitConverter
+                .ToString(SHA1
+                    .Create()
+                    .ComputeHash(Encoding.UTF8.GetBytes(password)))
+                .Replace("-", "")
+                .Substring(0, 8);
         }
 
         [UnitOfWork]
@@ -101,21 +114,11 @@ namespace acmManager.Contest
             if (!await query.AnyAsync()) return res;
             
             var user = await _userManager.GetUserByIdAsync(AbpSession.GetUserId());
-            var password = user.UserInfo.StudentNumber +
-                           user.UserInfo.Name +
-                           user.UserInfo.ClassId +
-                           contest.Name +
-                           contest.Id;
             
             res.SignUpInfo = new ContestSignUpInfo
             {
                 Name = user.UserInfo.StudentNumber,
-                Password = BitConverter
-                    .ToString(SHA1
-                        .Create()
-                        .ComputeHash(Encoding.UTF8.GetBytes(password)))
-                    .Replace("-", "")
-                    .Substring(0, 8)
+                Password = GetSignUpPassword(user.UserInfo, contest)
             };
 
             return res;
@@ -198,6 +201,23 @@ namespace acmManager.Contest
 
             // will throw exception
             await _contestSignUpManager.Delete(query.First().Id);
+        }
+
+        [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Contest)]
+        public virtual async Task<List<GetContestSignUpListOutput>> GetContestSignUpList(long contestId)
+        {
+            var contest = await _contestManager.Get(contestId);
+
+            return (await _contestSignUpManager.GetAll(s => s.Contest.Id == contestId))
+                .Select(s =>
+                {
+                    var userInfo = _userManager.GetUserByIdAsync(s.CreatorUserId ?? 0).Result.UserInfo;
+                    var suInfo = ObjectMapper.Map<GetContestSignUpListOutput>(userInfo);
+                    suInfo.Id = s.Id;
+                    suInfo.Password = GetSignUpPassword(userInfo, contest);
+                    return suInfo;
+                }).ToList();
         }
     }
 }

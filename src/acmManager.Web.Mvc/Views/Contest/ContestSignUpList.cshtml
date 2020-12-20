@@ -1,0 +1,29 @@
+﻿@model acmManager.Web.Models.Contest.ContestSignUpListViewModel
+
+<div class="content-container">
+    <table class="table table-hover mt-3 text-center" id="certificate-table">
+        <thead><tr>
+            <th scope="col">@L("UserInfo.Name")</th>
+            <th scope="col">@L("UserInfo.Gender")</th>
+            <th scope="col">@L("UserInfo.StudentNumber")</th>
+            <th scope="col">@L("UserInfo.Org")</th>
+            <th scope="col">@L("Password")</th>
+        </tr></thead>
+        <tbody>
+        @foreach (var su in Model.SignUps)
+        {
+            <tr class="">
+                <th scope="row">@su.Name </th>
+                <td>@L(su.Gender.ToString())</td>
+                <td style="letter-spacing: 1px">@su.StudentNumber</td>
+                <td>@su.Org</td>
+                <td style="letter-spacing: 2px">@su.Password</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="text-right" style="color: #8c8c8c; margin: auto; font-family: Consolas, Monaco, 'Andale Mono', monospace">
+        Result Count: @(Model.SignUps.Count())
+    </div>
+</div>
+
