@@ -5,8 +5,6 @@
         path: "/editor.md/lib/",
         placeholder: "",
         watch: false,
-        imageUpload: true,
-        imageUploadURL: "/Image/Upload",
         toolbarIcons: function () {
             return [
                 "undo", "redo", "|",
@@ -15,7 +13,7 @@
                 "list-ul", "list-ol", "hr", "|",
                 "link", "uploadImage", "uploadFile", "|",
                 "code", "preformatted-text", "code-block", "table", "|",
-                "watch", "preview", "fullscreen", "search", "|",
+                "watch", "fullscreen", "|",
                 "help"
             ]
         },
