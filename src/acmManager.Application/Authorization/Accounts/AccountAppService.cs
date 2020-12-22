@@ -61,8 +61,14 @@ namespace acmManager.Authorization.Accounts
             var userInfoDto = await _userAppService.GetUserInfoFromAoxiangAsync(input.Username, input.Password);
             
             // true means: Assumed email address is always confirmed.
-            var user = await _userRegistrationManager.RegisterAsync(userInfoDto.Name, "", userInfoDto.Email, userInfoDto.StudentNumber,
-                input.Password, true);
+            var email = userInfoDto.StudentNumber + "@temp.mail.com";
+            var user = await _userRegistrationManager.RegisterAsync(
+                userInfoDto.Name,
+                "", 
+                email, 
+                userInfoDto.StudentNumber,
+                input.Password, 
+                true);
             
             // Create UserInfo
             var userInfo = ObjectMapper.Map<UserInfo>(userInfoDto);
