@@ -66,7 +66,7 @@ namespace acmManager.Authorization.Accounts
                 userInfoDto.Name,
                 "", 
                 email, 
-                userInfoDto.StudentNumber,
+                input.Username,
                 input.Password, 
                 true);
             
