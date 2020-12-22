@@ -24,6 +24,7 @@ namespace acmManager.Web.Controllers
 {
     public class AccountController : acmManagerControllerBase
     {
+        private readonly UserManager _userManager;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
         private readonly LogInManager _logInManager;
         private readonly SignInManager _signInManager;
@@ -31,7 +32,7 @@ namespace acmManager.Web.Controllers
         private readonly INotificationPublisher _notificationPublisher;
         private readonly IAccountAppService _accountAppService;
 
-        public AccountController(AbpLoginResultTypeHelper abpLoginResultTypeHelper, LogInManager logInManager, SignInManager signInManager, ITenantCache tenantCache, INotificationPublisher notificationPublisher, IAccountAppService accountAppService)
+        public AccountController(AbpLoginResultTypeHelper abpLoginResultTypeHelper, LogInManager logInManager, SignInManager signInManager, ITenantCache tenantCache, INotificationPublisher notificationPublisher, IAccountAppService accountAppService, UserManager userManager)
         {
             _abpLoginResultTypeHelper = abpLoginResultTypeHelper;
             _logInManager = logInManager;
@@ -39,6 +40,7 @@ namespace acmManager.Web.Controllers
             _tenantCache = tenantCache;
             _notificationPublisher = notificationPublisher;
             _accountAppService = accountAppService;
+            _userManager = userManager;
         }
 
         #region Login / Logout / Register
@@ -71,7 +73,8 @@ namespace acmManager.Web.Controllers
 
         private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string username, string password, string tenancyName)
         {
-            var loginResult = await _logInManager.LoginAsync(username, password, tenancyName);
+            var u = await _userManager.GetUserByStudentNumber(username);
+            var loginResult = await _logInManager.LoginAsync(u.UserName, password, tenancyName);
 
             switch (loginResult.Result)
             {

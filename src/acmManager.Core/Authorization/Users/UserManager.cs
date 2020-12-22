@@ -96,5 +96,19 @@ namespace acmManager.Authorization.Users
                 .ThenInclude(info => info.Photo)
                 .FirstAsync();
         }
+
+        public async Task<User> GetUserByStudentNumber(string sid)
+        {
+            var query = await Users
+                .Include(u => u.UserInfo)
+                .Where(u => u.UserInfo.StudentNumber == sid)
+                .ToListAsync();
+            
+            if (query.Any())
+            {
+                return query.First();
+            }
+            throw new UserFriendlyException("No such user");
+        }
     }
 }
