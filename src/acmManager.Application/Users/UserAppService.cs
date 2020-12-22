@@ -80,21 +80,21 @@ namespace acmManager.Users
                 throw new UserFriendlyException(stderr[^1]);
             }
 
-            // 0    1      2      3       4      5     6       7        8        9
-            // id, org, mobile, gender, email, name, class, location, major, studentType
+            //  0     1       2     3    4      5      6          7       8     9
+            // org, mobile, email, id, gender, name, class, location, major, type
             var result = (await process.StandardOutput.ReadToEndAsync()).Split(Environment.NewLine);
 
             return new UserInfoDto()
             {
-                StudentNumber = result[0],
-                Org = result[1],
-                Mobile = result[2],
-                Gender = result[3] == "男" ? UserGender.Male : UserGender.Female,
+                StudentNumber = result[3],
+                Org = result[0],
+                Mobile = result[1],
+                Gender = result[4] == "男" ? UserGender.Male : UserGender.Female,
                 Major = result[8],
                 ClassId = result[6],
                 Location = result[7],
                 StudentType = result[9],
-                Email = result[4],
+                Email = result[2],
                 Name = result[5]
             };
         }

@@ -14,8 +14,8 @@ def me(**kwargs):
     password = kwargs['password']
 
     res = Aoxiang(username=username, password=password).userInfo
-    x = ['id', 'org', 'mobile', 'gender', 'email', 'name']
-    y = ['所属班级', '所属校区', '专业', '学生类别' ]
+    x = ['org', 'mobile', 'email']
+    y = ['学号', '性别','姓名', '所属班级', '所属校区', '专业', '学生类别']
 
     for i in x:
         print(res['basicInformation'][i])
