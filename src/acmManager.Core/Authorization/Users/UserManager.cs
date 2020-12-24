@@ -108,7 +108,7 @@ namespace acmManager.Authorization.Users
             {
                 return query.First();
             }
-            throw new UserFriendlyException("No such user");
+            throw new UserFriendlyException("No such user: " + sid);
         }
     }
 }

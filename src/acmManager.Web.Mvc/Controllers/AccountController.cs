@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abp;
@@ -57,6 +58,7 @@ namespace acmManager.Web.Controllers
         [UnitOfWork]
         public virtual async Task<JsonResult> Login(LoginViewModel loginModel)
         {
+            Logger.Info($"{loginModel.Username} is logging in...");
             var loginResult = await GetLoginResultAsync(loginModel.Username, loginModel.Password, GetTenancyNameOrNull());
 
             await _signInManager.SignInAsync(loginResult.Identity, loginModel.RememberMe);
@@ -89,6 +91,7 @@ namespace acmManager.Web.Controllers
         [UnitOfWork]
         public async Task<JsonResult> Register(RegisterViewModel model)
         {
+            Logger.Info($"{model.AoxiangUsername} is registering");
             var res = await _accountAppService.Register(new RegisterInput()
                 {Username = model.AoxiangUsername, Password = model.AoxiangPassword});
             return Json(new AjaxResponse(res));

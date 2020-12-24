@@ -76,8 +76,12 @@ namespace acmManager.Users
             // 爬虫执行失败
             if (process.ExitCode != 0)
             {
-                var stderr = (await process.StandardError.ReadToEndAsync()).Trim().Split(Environment.NewLine);
-                throw new UserFriendlyException(stderr[^1]);
+                var stderr = (await process.StandardError.ReadToEndAsync()).Trim();
+                
+                Logger.Warn($"use {username} to login to uis.nwpu.edu.cn error");
+                Logger.Warn(stderr);
+
+                throw new UserFriendlyException(stderr.Split(Environment.NewLine)[^1]);
             }
 
             //  0     1       2     3    4      5      6          7       8     9
