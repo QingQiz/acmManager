@@ -162,6 +162,8 @@ namespace acmManager.Users
             
             var userInfo = ObjectMapper.Map<UserInfo>(input);
             user.UserInfo = userInfo;
+            // disable lock
+            user.IsLockoutEnabled = false;
 
             // change user role and user type
             await _userTypeAppService.ChangeUserTypeAsync(user, userInfo.Type);

@@ -74,6 +74,8 @@ namespace acmManager.Authorization.Accounts
             var userInfo = ObjectMapper.Map<UserInfo>(userInfoDto);
             await _userInfoManager.Create(userInfo);
             
+            // disable lock
+            user.IsLockoutEnabled = false;
             // update userinfo
             user.UserInfo = userInfo;
             await _userManager.UpdateAsync(user);
