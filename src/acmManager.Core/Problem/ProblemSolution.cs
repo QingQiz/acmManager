@@ -4,14 +4,14 @@ using Abp.Domain.Entities.Auditing;
 
 namespace acmManager.Problem
 {
-    [Table("acmMgr.ProblemRecommend")]
-    public class ProblemRecommend: FullAuditedEntity<long>
+    [Table("acmMgr.ProblemSolution")]
+    public class ProblemSolution: FullAuditedEntity<long>
     {
         // [ForeignKey("Problem")]
         // public long ProblemId { get; set; }
         public Problem Problem { get; set; }
 
-        public string Description { get; set; }
+        public Article.Article Solution { get; set; }
         
         public ICollection<RecommendVote> RecommendVotes { get; set; }
     }

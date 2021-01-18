@@ -1,6 +1,6 @@
 ﻿namespace acmManager.Problem
 {
-    public enum ProblemVoteType
+    public enum VoteType
     {
         Good, Bad
     }

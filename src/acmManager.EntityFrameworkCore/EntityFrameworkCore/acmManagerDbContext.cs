@@ -25,7 +25,7 @@ namespace acmManager.EntityFrameworkCore
         
         // Problem
         public DbSet<Problem.Problem> Problems { get; set; }
-        public DbSet<ProblemRecommend> ProblemRecommends { get; set; }
+        public DbSet<ProblemSolution> ProblemSolutions { get; set; }
         public DbSet<ProblemType> ProblemTypes { get; set; }
         public DbSet<RecommendVote> RecommendVotes { get; set; }
         
