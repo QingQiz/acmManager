@@ -54,6 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\Users\_EditModal.cshtml" />
+    <Content Update="wwwroot\view-resources\Views\Contest\Contest.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.css" />
