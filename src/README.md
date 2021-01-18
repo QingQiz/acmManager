@@ -57,4 +57,13 @@
     - 修改 `crawler.py`
     - 修改 `Application/Users/UserAppService.cs` 中的 `CreateAsync`
     - 修改 `Application/Authorization/Accounts/AccountAppService.cs` 中的 `Register`
- - MVC 依赖注入(`inject`) 时使用的方法必须是 `[UnitOfWord]` 和 `virtual` 的
+  
+- MVC 依赖注入(`inject`) 时使用的方法必须是 `[UnitOfWord]` 和 `virtual` 的
+
+- 当 Migration 和 数据库不匹配时（比如，在 A 机器上的所有 migration 都没有提交，而 B 机器上重新生产了 Migration，此时 A 机器和 B 机器的 Migration 记录不同步，当代码合并以后，无法进行数据库迁移）
+    - 将 B 机器上的 Migration 记录全部删除（`src\acmManager.EntityFrameworkCore\Migrations`）
+    - 清除 `__EFMigrationsHistory` 表的内容
+    - 将 A 机器的 Migration 记录复制到 B 机器上 (当然也可以手动修改这个表，让 EF 认为你已经应用了迁移)
+    - 将 A 机器上的 `__EFMigrationsHistory` 中的内容复制到 B 机器的数据库中
+    - 重新生成 B 机器上的 migration
+    - 应用迁移，更新数据库
