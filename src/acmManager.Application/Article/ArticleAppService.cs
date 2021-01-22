@@ -96,10 +96,9 @@ namespace acmManager.Article
         /// <exception cref="UserFriendlyException"></exception>
         [UnitOfWork]
         [AbpAuthorize]
-        public virtual async Task DeleteComment(DeleteCommentInput input)
+        public virtual async Task DeleteComment(long commentId)
         {
-            var comment = await _commentManager.Get(input.CommentId);
-            var article = await _articleManager.Get(input.ArticleId);
+            var comment = await _commentManager.Get(commentId);
             
             // TODO administrator can delete everything
             if (AbpSession.GetUserId() != comment.CreatorUserId)
@@ -107,12 +106,6 @@ namespace acmManager.Article
                 throw new UserFriendlyException("Permission Denied");
             }
 
-            // remove from article
-            if (!article.Comments.Remove(comment))
-            {
-                throw new UserFriendlyException("No such comment");
-            }
-            
             // remove from database
             await _commentManager.Delete(comment.Id);
         }
