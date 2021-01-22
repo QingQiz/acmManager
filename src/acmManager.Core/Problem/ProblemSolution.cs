@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Abp.Domain.Entities.Auditing;
 
 namespace acmManager.Problem
@@ -12,7 +11,5 @@ namespace acmManager.Problem
         public Problem Problem { get; set; }
 
         public Article.Article Solution { get; set; }
-        
-        public ICollection<RecommendVote> RecommendVotes { get; set; }
     }
 }
