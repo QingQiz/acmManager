@@ -11,10 +11,12 @@ namespace acmManager.Article
     public class ArticleAppService : acmManagerAppServiceBase
     {
         private readonly ArticleManager _articleManager;
+        private readonly CommentManager _commentManager;
 
-        public ArticleAppService(ArticleManager articleManager)
+        public ArticleAppService(ArticleManager articleManager, CommentManager commentManager)
         {
             _articleManager = articleManager;
+            _commentManager = commentManager;
         }
 
         [UnitOfWork]
@@ -55,7 +57,67 @@ namespace acmManager.Article
                 throw new UserFriendlyException("Permission Denied");
             }
 
+            // delete all comment
+            foreach (var comment in article.Comments)
+            {
+                await _commentManager.Delete(comment.Id);
+            }
+
             await _articleManager.Delete(articleId);
         }
+
+        #region comment
+
+        /// <summary>
+        /// Comment to an article
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        [AbpAuthorize]
+        public virtual async Task CommentToArticle(CommentToArticleInput input)
+        {
+            var article = await _articleManager.Get(input.ArticleId);
+            // comment will be created automatically
+            article.Comments.Add(new Comment
+            {
+                Content = input.Content,
+                // its no need to check if the comment exists
+                // wrong id won't be displayed
+                ReplyToCommentId = input.ReplyToCommentId
+            });
+        }
+
+        /// <summary>
+        /// Delete a comment
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="UserFriendlyException"></exception>
+        [UnitOfWork]
+        [AbpAuthorize]
+        public virtual async Task DeleteComment(DeleteCommentInput input)
+        {
+            var comment = await _commentManager.Get(input.CommentId);
+            var article = await _articleManager.Get(input.ArticleId);
+            
+            // TODO administrator can delete everything
+            if (AbpSession.GetUserId() != comment.CreatorUserId)
+            {
+                throw new UserFriendlyException("Permission Denied");
+            }
+
+            // remove from article
+            if (!article.Comments.Remove(comment))
+            {
+                throw new UserFriendlyException("No such comment");
+            }
+            
+            // remove from database
+            await _commentManager.Delete(comment.Id);
+        }
+        
+
+        #endregion
     }
 }
