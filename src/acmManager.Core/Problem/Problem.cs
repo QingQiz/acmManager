@@ -12,8 +12,9 @@ namespace acmManager.Problem
         [Required]
         public string Name { get; set; }
         // 题目链接
-        [Required]
         public string Url { get; set; }
+        
+        public string Description { get; set; }
 
         public ICollection<ProblemType> Types { get; set; }
     }

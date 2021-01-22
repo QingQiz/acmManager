@@ -1,15 +1,24 @@
 using System.Collections.Generic;
+using acmManager.Article.Dto;
 
 namespace acmManager.Problem.Dto
 {
     public class GetSolutionOutput
     {
-        public string Name { get; set; }
-        public string Url { get; set; }
-        public IEnumerable<ProblemTypeDto> Types { get; set; }
+        // ProblemSolutionId
+        public long Id { get; set; }
         
-        public string Content { get; set; }
+        public long ProblemId { get; set; }
+        public string ProblemName { get; set; }
+        public string ProblemUrl { get; set; }
+        public string ProblemDescription { get; set; }
+        public IEnumerable<ProblemTypeDto> ProblemTypes { get; set; }
         
-        public long GoodVoteCnt { get; set; }
+        // Solution Article Id
+        public long SolutionId { get; set; }
+        public string SolutionTitle { get; set; }
+        public string SolutionContent { get; set; }
+        
+        public IEnumerable<CommentDto> Comments { get; set; }
     }
 }

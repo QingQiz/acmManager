@@ -19,7 +19,10 @@ namespace acmManager.Problem
         public IQueryable<ProblemSolution> MakeQuery()
         {
             return Repository
-                .GetAllIncluding(s => s.Problem, s => s.Solution, s => s.RecommendVotes);
+                .GetAll()
+                .Include(s => s.Solution)
+                .Include(s => s.Problem)
+                .ThenInclude(p => p.Types);
         }
 
         public new async Task<List<ProblemSolution>> GetAll(Expression<Func<ProblemSolution, bool>> expression)
@@ -29,7 +32,10 @@ namespace acmManager.Problem
 
         public new async Task<ProblemSolution> Get(long id)
         {
-            var query = MakeQuery().Where(s => s.Id == id);
+            var query = MakeQuery()
+                .Include(s => s.Solution)
+                .ThenInclude(a => a.Comments)
+                .Where(s => s.Id == id);
 
             if (!await query.AnyAsync())
             {

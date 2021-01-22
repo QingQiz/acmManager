@@ -5,6 +5,7 @@ using Abp.Application.Services;
 using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
 using acmManager.Article;
+using acmManager.Article.Dto;
 using acmManager.Problem.Dto;
 
 namespace acmManager.Problem
@@ -12,21 +13,25 @@ namespace acmManager.Problem
     // TODO permissions
     public class ProblemAppService : acmManagerAppServiceBase
     {
+        #region init
+
         private readonly ProblemManager _problemManager;
         private readonly ProblemSolutionManager _problemSolutionManager;
         private readonly ProblemTypeManager _problemTypeManager;
-        private readonly RecommendVoteManager _recommendVoteManager;
-        private readonly ArticleManager _articleManager;
+        private readonly ArticleAppService _articleAppService;
         
 
-        public ProblemAppService(ProblemManager problemManager, ProblemSolutionManager problemSolutionManager, ProblemTypeManager problemTypeManager, RecommendVoteManager recommendVoteManager, ArticleManager articleManager)
+        public ProblemAppService(ProblemManager problemManager, ProblemSolutionManager problemSolutionManager, ProblemTypeManager problemTypeManager, ArticleAppService articleAppService)
         {
             _problemManager = problemManager;
             _problemSolutionManager = problemSolutionManager;
             _problemTypeManager = problemTypeManager;
-            _recommendVoteManager = recommendVoteManager;
-            _articleManager = articleManager;
+            _articleAppService = articleAppService;
         }
+
+        #endregion
+
+        #region not map to remote
 
         [RemoteService(false)]
         private GetAllProblemSolutionList SolutionToDto(ProblemSolution solution)
@@ -34,20 +39,40 @@ namespace acmManager.Problem
             return new GetAllProblemSolutionList
             {
                 Id = solution.Id,
-                Name = solution.Problem.Name,
-                Url = solution.Problem.Url,
+                ProblemName = solution.Problem.Name,
+                ProblemUrl = solution.Problem.Url,
+                ArticleTitle = solution.Solution.Title,
                 CreatorUserId = solution.CreatorUserId ?? 0,
                 ProblemTypes = ObjectMapper.Map<List<ProblemTypeDto>>(solution.Problem.Types),
-                GoodVoteCnt = solution.RecommendVotes.Count(v => v.Type == VoteType.Good)
             };
         }
+        
+
+        #endregion
+
+        #region problem type
 
         [UnitOfWork]
         public virtual async Task<long> CreateProblemType(ProblemTypeDto input)
         {
             return await _problemTypeManager.Create(ObjectMapper.Map<ProblemType>(input));
         }
+        
+        [UnitOfWork]
+        public virtual async Task<IEnumerable<ProblemTypeDto>> GetAllProblemTypes(string keyword)
+        {
+            keyword ??= "";
+            var res = await _problemTypeManager
+                .GetAll(pt =>
+                    pt.Name.Contains(keyword) ||
+                    pt.Description.Contains(keyword));
+            return res.Select(ObjectMapper.Map<ProblemTypeDto>);
+        }
 
+        #endregion
+
+        #region CRUD for solution
+        
         [UnitOfWork]
         public virtual async Task CreateProblemSolution(CreateSolutionInput input)
         {
@@ -58,13 +83,11 @@ namespace acmManager.Problem
             {
                 problem.Types.Add(await _problemTypeManager.Get(tid));
             }
-            article.Title = problem.Name;
             
             var solution = new ProblemSolution
             {
                 Problem = problem,
                 Solution = article,
-                RecommendVotes = new List<RecommendVote>()
             };
 
             await _problemSolutionManager.Create(solution);
@@ -75,11 +98,12 @@ namespace acmManager.Problem
         {
             filter.KeyWords ??= "";
             var query = _problemSolutionManager.MakeQuery().AsEnumerable()
-                .WhereIf(filter.KeyWords != "", s => s.Problem.Name.Contains(filter.KeyWords)
-                                                     || s.Problem.Url.Contains(filter.KeyWords)
-                                                     || s.Solution.Title.Contains(filter.KeyWords)
-                                                     || s.Solution.Content.Contains(filter.KeyWords))
-                .WhereIf(filter.TimeAfter != null, s => s.CreationTime > filter.TimeAfter)
+                .WhereIf(filter.KeyWords != "", s =>
+                    s.Problem.Name.Contains(filter.KeyWords) ||
+                    s.Problem.Url.Contains(filter.KeyWords) ||
+                    s.Problem.Description.Contains(filter.KeyWords) ||
+                    s.Solution.Title.Contains(filter.KeyWords) ||
+                    s.Solution.Content.Contains(filter.KeyWords))
                 .WhereIf(filter.TypeIds.Any(), s => s.Problem.Types.Any(t => filter.TypeIds.Contains(t.Id)));
             
             return await Task.Run(() =>
@@ -90,6 +114,7 @@ namespace acmManager.Problem
                     Solutions = problemSolutions
                         .Skip(filter.SkipCount)
                         .Take(filter.MaxResultCount)
+                        .OrderByDescending(s => s.CreationTime)
                         .Select(SolutionToDto),
                     AllResultCount = problemSolutions.Count(),
                 };
@@ -103,7 +128,7 @@ namespace acmManager.Problem
                 () => _problemSolutionManager
                     .MakeQuery()
                     .Where(s => s.CreatorUserId == userId)
-                    .AsEnumerable()
+                    .OrderByDescending(s => s.CreationTime)
                     .Select(SolutionToDto));
         }
 
@@ -113,11 +138,19 @@ namespace acmManager.Problem
             var res = await _problemSolutionManager.Get(id);
             return new GetSolutionOutput
             {
-                Name = res.Problem.Name,
-                Url = res.Problem.Url,
-                Content = res.Solution.Content,
-                GoodVoteCnt = res.RecommendVotes.Count(v => v.Type == VoteType.Good),
-                Types = res.Problem.Types.Select(ObjectMapper.Map<ProblemTypeDto>)
+                Id = res.Id,
+                
+                ProblemId = res.Problem.Id,
+                ProblemName = res.Problem.Name,
+                ProblemUrl = res.Problem.Url,
+                ProblemDescription = res.Problem.Description,
+                ProblemTypes = res.Problem.Types.Select(ObjectMapper.Map<ProblemTypeDto>),
+                
+                SolutionId = res.Solution.Id,
+                SolutionTitle = res.Solution.Title,
+                SolutionContent = res.Solution.Content,
+                
+                Comments = ObjectMapper.Map<IEnumerable<CommentDto>>(res.Solution.Comments)
             };
         }
 
@@ -127,6 +160,7 @@ namespace acmManager.Problem
             var res = await _problemSolutionManager.Get(input.Id);
             res.Problem.Name = input.Name;
             res.Problem.Url = input.Url;
+            res.Problem.Description = input.Description;
             res.Problem.Types.Clear();
             foreach (var tid in input.TypeIds)
             {
@@ -136,16 +170,6 @@ namespace acmManager.Problem
             res.Solution.Content = input.Content;
             res.Solution.Content = input.Name;
         }
-        
-        [UnitOfWork]
-        public virtual async Task<IEnumerable<ProblemTypeDto>> GetAllProblemTypes(string keyword)
-        {
-            keyword ??= "";
-            var res = await _problemTypeManager
-                .GetAll(pt => pt.Name.Contains(keyword)
-                              || pt.Description.Contains(keyword));
-            return res.Select(ObjectMapper.Map<ProblemTypeDto>);
-        }
 
         [UnitOfWork]
         public virtual async Task DeleteSolution(long id)
@@ -153,15 +177,12 @@ namespace acmManager.Problem
             var res = await _problemSolutionManager.Get(id);
 
             await _problemManager.Delete(res.Problem.Id);
-            await _articleManager.Delete(res.Solution.Id);
+            await _articleAppService.DeleteArticleAsync(res.Solution.Id);
             await _problemSolutionManager.Delete(res.Id);
         }
-
-        /*
-        [UnitOfWork]
-        TODO public virtual async Task VoteSolution(VoteType voteType)
-        TODO public virtual async Task Comment(long SolutionId, Comment comment)
-        TODO public virtual async Task DeleteComment(long CommentId)
-        */
+        
+        #endregion
+        
+        //TODO Permission Checker
     }
 }
