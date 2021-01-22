@@ -16,6 +16,6 @@ namespace acmManager.Problem
         
         public string Description { get; set; }
 
-        public ICollection<ProblemType> Types { get; set; }
+        public ICollection<ProblemToType> Types { get; set; }
     }
 }

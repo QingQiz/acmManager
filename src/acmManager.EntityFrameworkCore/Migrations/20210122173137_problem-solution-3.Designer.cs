@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using acmManager.EntityFrameworkCore;
 
 namespace acmManager.Migrations
 {
     [DbContext(typeof(acmManagerDbContext))]
-    partial class acmManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210122173137_problem-solution-3")]
+    partial class problemsolution3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

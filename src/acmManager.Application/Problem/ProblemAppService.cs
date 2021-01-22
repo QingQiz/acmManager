@@ -18,15 +18,17 @@ namespace acmManager.Problem
         private readonly ProblemManager _problemManager;
         private readonly ProblemSolutionManager _problemSolutionManager;
         private readonly ProblemTypeManager _problemTypeManager;
+        private readonly ProblemToTypeManager _problemToTypeManager;
         private readonly ArticleAppService _articleAppService;
         
 
-        public ProblemAppService(ProblemManager problemManager, ProblemSolutionManager problemSolutionManager, ProblemTypeManager problemTypeManager, ArticleAppService articleAppService)
+        public ProblemAppService(ProblemManager problemManager, ProblemSolutionManager problemSolutionManager, ProblemTypeManager problemTypeManager, ArticleAppService articleAppService, ProblemToTypeManager problemToTypeManager)
         {
             _problemManager = problemManager;
             _problemSolutionManager = problemSolutionManager;
             _problemTypeManager = problemTypeManager;
             _articleAppService = articleAppService;
+            _problemToTypeManager = problemToTypeManager;
         }
 
         #endregion
@@ -79,18 +81,22 @@ namespace acmManager.Problem
             var problem = ObjectMapper.Map<Problem>(input);
             var article = ObjectMapper.Map<Article.Article>(input);
 
-            foreach (var tid in input.TypeIds)
-            {
-                problem.Types.Add(await _problemTypeManager.Get(tid));
-            }
-            
             var solution = new ProblemSolution
             {
                 Problem = problem,
                 Solution = article,
             };
 
-            await _problemSolutionManager.Create(solution);
+            var pId = await _problemSolutionManager.Create(solution);
+            
+            foreach (var tid in input.TypeIds)
+            {
+                problem.Types.Add(new ProblemToType
+                {
+                    ProblemId = pId,
+                    ProblemTypeId = tid,
+                });
+            }
         }
 
         [UnitOfWork]
@@ -144,7 +150,9 @@ namespace acmManager.Problem
                 ProblemName = res.Problem.Name,
                 ProblemUrl = res.Problem.Url,
                 ProblemDescription = res.Problem.Description,
-                ProblemTypes = res.Problem.Types.Select(ObjectMapper.Map<ProblemTypeDto>),
+                ProblemTypes = res.Problem.Types.Select(a 
+                    => ObjectMapper.Map<ProblemTypeDto>(
+                        _problemTypeManager.Get(a.ProblemTypeId).Result)),
                 
                 SolutionId = res.Solution.Id,
                 SolutionTitle = res.Solution.Title,
@@ -161,10 +169,21 @@ namespace acmManager.Problem
             res.Problem.Name = input.Name;
             res.Problem.Url = input.Url;
             res.Problem.Description = input.Description;
+            
+            // i don't know if weather this necessary
+            foreach (var t in res.Problem.Types)
+            {
+                await _problemToTypeManager.Delete(t.Id);
+            }
             res.Problem.Types.Clear();
+            
             foreach (var tid in input.TypeIds)
             {
-                res.Problem.Types.Add(await _problemTypeManager.Get(tid));
+                res.Problem.Types.Add(new ProblemToType
+                {
+                    ProblemId = res.Problem.Id,
+                    ProblemTypeId = tid
+                });
             }
 
             res.Solution.Content = input.Content;
