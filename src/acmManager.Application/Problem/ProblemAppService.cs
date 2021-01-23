@@ -48,7 +48,9 @@ namespace acmManager.Problem
                 ProblemUrl = solution.Problem.Url,
                 ArticleTitle = solution.Solution.Title,
                 CreatorUserId = solution.CreatorUserId ?? 0,
-                ProblemTypes = ObjectMapper.Map<List<ProblemTypeDto>>(solution.Problem.Types),
+                ProblemTypes = solution.Problem.Types.Select(t =>
+                    ObjectMapper.Map<ProblemTypeDto>(
+                        _problemTypeManager.Get(t.ProblemTypeId).Result))
             };
         }
         

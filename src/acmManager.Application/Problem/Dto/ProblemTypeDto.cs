@@ -6,6 +6,7 @@ namespace acmManager.Problem.Dto
     [AutoMapFrom(typeof(ProblemType))]
     public class ProblemTypeDto
     {
+        public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }
