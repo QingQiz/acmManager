@@ -39,6 +39,8 @@ namespace acmManager.Web.Controllers
             if (contestId != 0)
             {
                 var contest = await _contestAppService.GetContestAsync(contestId);
+                // everyone who has permission to update contest can update every contest
+                // so it is no need to check creator
                 return View("EditContest", contest);
             }
             else

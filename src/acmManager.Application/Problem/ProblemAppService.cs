@@ -14,7 +14,6 @@ using acmManager.Problem.Dto;
 
 namespace acmManager.Problem
 {
-    // TODO permissions
     public class ProblemAppService : acmManagerAppServiceBase
     {
         #region init
@@ -164,6 +163,8 @@ namespace acmManager.Problem
                 SolutionTitle = res.Solution.Title,
                 SolutionContent = res.Solution.Content,
                 
+                CreatorId = res.CreatorUserId ?? 0,
+                
                 Comments = ObjectMapper.Map<IEnumerable<CommentDto>>(res.Solution.Comments)
             };
         }
@@ -221,7 +222,5 @@ namespace acmManager.Problem
         }
         
         #endregion
-        
-        //TODO Permission Checker
     }
 }

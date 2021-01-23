@@ -19,6 +19,9 @@ namespace acmManager.Problem.Dto
         public string SolutionTitle { get; set; }
         public string SolutionContent { get; set; }
         
+        // creator Id
+        public long CreatorId { get; set; }
+        
         public IEnumerable<CommentDto> Comments { get; set; }
     }
 }
