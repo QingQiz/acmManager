@@ -1,4 +1,5 @@
 ﻿@using acmManager.Users
+@using Abp.UI
 @model acmManager.Web.Models.Admin.GetAllCertificateViewModel
 @inject UserAppService UserAppService
 
@@ -19,7 +20,17 @@
                 <th scope="row">
                     <button class="btn btn-block" onclick="location.href = '@Url.Action("GetUserProfile")?userId=@cer.CreatorUserId'">
                         <strong>
-                            @((await UserAppService.GetUserInfoAsync(cer.CreatorUserId)).Name)
+                            @try
+                            {
+                                @((await UserAppService.GetUserInfoAsync(cer.CreatorUserId)).Name)
+                            }
+                            catch (UserFriendlyException e)
+                            {
+                                if (e.Message.Contains("User"))
+                                {
+                                    <p style="color: gray">DELETEDUSER</p>
+                                }
+                            }
                         </strong>
                     </button>
                 </th>
