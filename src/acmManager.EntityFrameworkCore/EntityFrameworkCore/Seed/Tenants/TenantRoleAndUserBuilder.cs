@@ -152,6 +152,9 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.PagesUsers_GetAll,
                 PermissionNames.PagesUsers_Promote,
                 PermissionNames.PagesUsers_Relegate,
+                
+                PermissionNames.PagesUsers_Problem,
+                PermissionNames.PagesUsers_Problem_Delete
             });
             // for member
             CreateExtraRoles(StaticRoleNames.Tenants.Member, isDefault: false, new List<string>()
@@ -164,6 +167,8 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
                 
                 PermissionNames.PagesUsers_Certificate,
                 PermissionNames.PagesUsers_Certificate_Upload,
+                
+                PermissionNames.PagesUsers_Problem,
             });
             // for temp user
             CreateExtraRoles(StaticRoleNames.Tenants.Default, isDefault: true, new List<string>()
@@ -171,6 +176,8 @@ namespace acmManager.EntityFrameworkCore.Seed.Tenants
                 PermissionNames.PagesUsers_Contest_SignUp,
                 
                 PermissionNames.PagesUsers_Article,
+                
+                PermissionNames.PagesUsers_Problem,
             });
         }
     }

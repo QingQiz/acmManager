@@ -53,6 +53,12 @@ namespace acmManager.Authorization
             {
                 PermissionNames.PagesUsers_Contest_SignUp
             });
+
+            var problem = CreatePermission(pageUser, PermissionNames.PagesUsers_Problem);
+            CreateManyPermissions(problem, new []
+            {
+                PermissionNames.PagesUsers_Problem_Delete
+            });
         }
 
         private static ILocalizableString L(string name)

@@ -2,10 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
+using Abp.Runtime.Session;
+using Abp.UI;
 using acmManager.Article;
 using acmManager.Article.Dto;
+using acmManager.Authorization;
 using acmManager.Problem.Dto;
 
 namespace acmManager.Problem
@@ -55,6 +59,7 @@ namespace acmManager.Problem
         #region problem type
 
         [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Problem)]
         public virtual async Task<long> CreateProblemType(ProblemTypeDto input)
         {
             return await _problemTypeManager.Create(ObjectMapper.Map<ProblemType>(input));
@@ -76,6 +81,7 @@ namespace acmManager.Problem
         #region CRUD for solution
         
         [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Problem)]
         public virtual async Task CreateProblemSolution(CreateSolutionInput input)
         {
             var problem = ObjectMapper.Map<Problem>(input);
@@ -163,9 +169,16 @@ namespace acmManager.Problem
         }
 
         [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Problem)]
         public virtual async Task UpdateSolution(UpdateSolutionInput input)
         {
             var res = await _problemSolutionManager.Get(input.Id);
+
+            if (AbpSession.GetUserId() != res.CreatorUserId)
+            {
+                throw new UserFriendlyException("Permission Denied");
+            }
+            
             res.Problem.Name = input.Name;
             res.Problem.Url = input.Url;
             res.Problem.Description = input.Description;
@@ -191,9 +204,16 @@ namespace acmManager.Problem
         }
 
         [UnitOfWork]
+        [AbpAuthorize(PermissionNames.PagesUsers_Problem)]
         public virtual async Task DeleteSolution(long id)
         {
             var res = await _problemSolutionManager.Get(id);
+
+            if (AbpSession.GetUserId() != res.CreatorUserId ||
+                !await IsGrantedAsync(PermissionNames.PagesUsers_Problem_Delete))
+            {
+                throw new UserFriendlyException("Permission Denied");
+            }
 
             await _problemManager.Delete(res.Problem.Id);
             await _articleAppService.DeleteArticleAsync(res.Solution.Id);

@@ -41,5 +41,9 @@
         // 比赛
         public const string PagesUsers_Contest = "Pages.Users.Contest";
         public const string PagesUsers_Contest_SignUp = "Pages.User.Contest.SignUp";
+        
+        // 题解
+        public const string PagesUsers_Problem = "Pages.Users.Problem";
+        public const string PagesUsers_Problem_Delete = "Pages.Users.Problem.Delete";
     }
 }
