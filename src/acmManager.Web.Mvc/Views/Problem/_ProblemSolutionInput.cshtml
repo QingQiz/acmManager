@@ -1,0 +1,9 @@
+﻿@model acmManager.Problem.Dto.GetSolutionOutput
+
+<div class="input-group mb-3">
+    <input type="text" id="solution-title" class="form-control" value="@(Model?.ProblemName ?? "")" placeholder="@L("Article.Title")">
+</div>
+
+<div id="problem-solution-content">
+    <textarea hidden>@(Model?.SolutionContent ?? L("Solution.Content") + "\n\n\n\n\n")</textarea>
+</div>
