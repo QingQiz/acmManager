@@ -11,55 +11,50 @@
 {
     <script src="~/editor.md/editormd.min.js"></script>
     <script src="~/js/editor.js"></script>
-    <script src="~/view-resources/Views/Problem/Edit.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <script src="~/view-resources/Views/Problem/Edit.js"></script>
 }
 
 <div class="content-container">
-    <div class="card">
-        <div class="card-header noSelect">
-            <h5 class="mb-0">
-                <button class="btn" data-toggle="collapse" data-target="#problem-problem-card">
-                    <strong style="font-size: 25px">
-                        题目信息
-                    </strong>
-                </button>
-            </h5>
-        </div>
-        <div class="collapse show" id="problem-problem-card">
-            <div class="card-body">
-                @await Html.PartialAsync("_ProblemInfoInput")
+    <form asp-action=@(Model == null ? "Create" : "Update") method="post" id="edit-problem-solution-form">
+        <div class="card">
+            <div class="card-header noSelect">
+                <h5 class="mb-0">
+                    <button class="btn" data-toggle="collapse" data-target="#problem-problem-card">
+                        <strong style="font-size: 25px">
+                            题目信息
+                        </strong>
+                    </button>
+                </h5>
+            </div>
+            <div class="collapse show" id="problem-problem-card">
+                <div class="card-body">
+                    @await Html.PartialAsync("_ProblemInfoInput")
+                </div>
             </div>
         </div>
-    </div>
-    <div class="card mt-3">
-        <div class="card-header noSelect">
-            <h5 class="mb-0">
-                <button class="btn" data-toggle="collapse" data-target="#problem-solution-card">
-                    <strong style="font-size: 25px">
-                        题解
-                    </strong>
-                </button>
-            </h5>
-        </div>
-        <div class="collapse show" id="problem-solution-card">
-            <div class="card-body">
-                @await Html.PartialAsync("_ProblemSolutionInput")
+        <div class="card mt-3">
+            <div class="card-header noSelect">
+                <h5 class="mb-0">
+                    <button class="btn" data-toggle="collapse" data-target="#problem-solution-card">
+                        <strong style="font-size: 25px">
+                            题解
+                        </strong>
+                    </button>
+                </h5>
+            </div>
+            <div class="collapse show" id="problem-solution-card">
+                <div class="card-body">
+                    @await Html.PartialAsync("_ProblemSolutionInput")
+                </div>
             </div>
         </div>
-    </div>
-    <div class="text-right col pr-0 mt-3">
-        <form asp-action=@(Model == null ? "Create" : "Update") method="post" id="edit-problem-solution-form">
+        <div class="text-right col pr-0 mt-3">
             @if (Model != null)
             {
                 <input type="hidden" name="Id" value="@Model.Id"/>
             }
-            <input type="hidden" name="Title"/>
-            <input type="hidden" name="Content"/>
-            <input type="hidden" name="Name"/>
-            <input type="hidden" name="Url"/>
-            <input type="hidden" name="Description"/>
             <input type="button" class="btn btn-primary" id="edit-problem-solution-submit-btn" value="@L("Submit")">
-        </form>
-    </div>
+        </div>
+    </form>
 </div>

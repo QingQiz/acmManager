@@ -8,18 +8,31 @@
 
 
 <div class="input-group mb-3">
-    <input type="text" id="problem-name" class="form-control" value="@(Model?.ProblemName ?? "")" placeholder="@L("Problem.Name")">
+    <input type="text"
+           name="Name" id="problem-name" class="form-control"
+           value="@(Model?.ProblemName ?? "")" placeholder="@L("Problem.Name")">
+</div>
+
+<div class="input-group mb-3">
+    <input type="text"
+           name="Url" id="problem-url" class="form-control"
+           value="@(Model?.ProblemUrl ?? "")" placeholder="@L("Problem.Url")">
 </div>
 
 <div class="input-group input-group mb-3">
-    <select class="selectpicker" multiple data-live-search="true" data-width="100%" data-selected-text-format="count > 5" title="@L("Problem.Type")" data-style="multi-selector">
+    <select multiple name="TypeIds"
+            data-live-search="true"
+            data-width="100%"
+            data-selected-text-format="count > 5"
+            title="@L("Problem.Type")"
+            data-style="multi-selector">
         @foreach (var t in allTypes)
         {
-            <option value="@t.Id" data-subtext="@t.Description"> @t.Name </option>
+            <option value="@t.Id" data-subtext="@t.Description"> @L(t.Name) </option>
         }
     </select>
 </div>
 
 <div id="problem-description-content">
-    <textarea hidden>@(Model?.ProblemDescription ?? L("Problem.Description") + "\n\n\n\n\n")</textarea>
+    <textarea hidden name="Description">@(Model?.ProblemDescription ?? L("Problem.Description") + "\n\n\n\n\n")</textarea>
 </div>

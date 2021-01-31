@@ -51,6 +51,15 @@
         <text name="Contest.Name" value="比赛名称"/>
         <text name="Contest.SignUpStartTime" value="比赛注册开始时间"/>
         <text name="Contest.SignUpEndTime" value="比赛注册结束时间"/>
+        
+        <text name="Problem.Name" value="题目名"/>
+        <text name="Problem.Type" value="题目类型"/>
+        <text name="Problem.Description" value="题面"/>
+        <text name="Problem.Url" value="题目链接"/>
+        
+        <text name="Article.Title" value="文章标题"/>
+        
+        <text name="Solution.Content" value="题解内容"/>
 
         <text name="MaxResultCount" value="分页大小" />
 
