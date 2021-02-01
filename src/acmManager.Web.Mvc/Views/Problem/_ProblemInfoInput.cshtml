@@ -28,7 +28,14 @@
             data-style="multi-selector">
         @foreach (var t in allTypes)
         {
-            <option value="@t.Id" data-subtext="@t.Description"> @L(t.Name) </option>
+            @if (Model != null && Model.ProblemTypes.Any(pt => pt.Name == t.Name))
+            {
+                <option value="@t.Id" data-subtext="@t.Description" selected> @L(t.Name) </option>
+            }
+            else
+            {
+                <option value="@t.Id" data-subtext="@t.Description"> @L(t.Name) </option>
+            }
         }
     </select>
 </div>

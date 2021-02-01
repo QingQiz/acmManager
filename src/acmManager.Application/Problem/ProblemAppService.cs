@@ -86,6 +86,7 @@ namespace acmManager.Problem
         public virtual async Task CreateProblemSolution(CreateSolutionInput input)
         {
             var problem = ObjectMapper.Map<Problem>(input);
+            problem.Types = new List<ProblemToType>();
             var article = ObjectMapper.Map<Article.Article>(input);
 
             var solution = new ProblemSolution
@@ -186,8 +187,8 @@ namespace acmManager.Problem
             res.Problem.Url = input.Url;
             res.Problem.Description = input.Description;
             
-            // i don't know if weather this necessary
-            foreach (var t in res.Problem.Types)
+            var types = new List<ProblemToType>(res.Problem.Types);
+            foreach (var t in types)
             {
                 await _problemToTypeManager.Delete(t.Id);
             }

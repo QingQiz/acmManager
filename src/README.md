@@ -36,14 +36,18 @@
 - AbpSetting
     - 设置项应在 `Core/Configuration/AppSettingProvider.cs` 中注册，并设置默认值
     - 数据库 `AbpSettings` 中的值会覆盖默认值
+
 - 数据库默认值
     - `EF/Seed/**/*.cs` 中
+
 - 加表
     - 在 `Core/` 中加表
     - 在 `EF/acmManagerDbContext` 中注册
+ 
 - 添加 Role
     - 在 `Core/Authorization/Roles/StaticRoleNames.cs` 中添加 RoleName
     - 在 `EF/Seed/Tenants/TenantRoleAndUserBuilder` 中为 Role 添加权限
+ 
 - 添加权限
     - 在 `Core/Authorization/PermissionNames.cs` 中添加权限名
     - 在 `Core/Authorization/acmManagerAuthorizationProvider` 中注册权限
@@ -67,3 +71,20 @@
     - 将 A 机器上的 `__EFMigrationsHistory` 中的内容复制到 B 机器的数据库中
     - 重新生成 B 机器上的 migration
     - 应用迁移，更新数据库
+    
+- 从 ICollection 删除数据时，Manager 的 Delete 动作会顺便移除 ICollection 中的数据，因此不能直接用 foreach 删除
+    - 错误的示范：
+      ```c#
+      foreach (var i in entity.icollection)
+      {
+          await _manager.Delete(i);
+      }
+      ```
+    - 正确的示范：
+      ```c#
+      var collection = new List<T>(entity.icollection);
+      foreach (var i in collection)
+      {
+          await _manager.Delete(i);
+      }
+      ```
