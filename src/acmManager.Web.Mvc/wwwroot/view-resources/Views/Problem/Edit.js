@@ -25,8 +25,8 @@ let formSubmitEvent = function () {
         url: form.attr('action'),
         method: 'post',
         data: form.serialize(),
-        success: function (data) {
-            console.log(data);
+        success: function (json) {
+            location.replace(json.result['redirectUrl']);
         },
         error: function (xhr, a, b) {
             putErrorMessage(xhr);

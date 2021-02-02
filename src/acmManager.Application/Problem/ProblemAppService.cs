@@ -83,7 +83,7 @@ namespace acmManager.Problem
         
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Problem)]
-        public virtual async Task CreateProblemSolution(CreateSolutionInput input)
+        public virtual async Task<long> CreateProblemSolution(CreateSolutionInput input)
         {
             var problem = ObjectMapper.Map<Problem>(input);
             problem.Types = new List<ProblemToType>();
@@ -105,6 +105,8 @@ namespace acmManager.Problem
                     ProblemTypeId = tid,
                 });
             }
+
+            return pId;
         }
 
         [UnitOfWork]

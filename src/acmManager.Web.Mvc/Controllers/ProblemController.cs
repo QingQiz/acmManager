@@ -22,6 +22,8 @@ namespace acmManager.Web.Controllers
             _problemAppService = problemAppService;
         }
 
+        #region Pages
+        
         [HttpGet, Route("/Problem/Solution")]
         public async Task<ActionResult> Index()
         {
@@ -41,28 +43,45 @@ namespace acmManager.Web.Controllers
             });
         }
 
-        [HttpGet, Route("/Problem/Solution/Edit")]
+        [HttpGet, Route("/Problem/Solution/Edit/{solutionId}")]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Problem)]
         public async Task<ActionResult> Edit(long solutionId)
         {
-            if (solutionId == 0) return View(null);
-            
             var solution = await _problemAppService.GetSolution(solutionId);
-                
+
             if (solution.CreatorId != AbpSession.GetUserId())
             {
                 throw new AbpAuthorizationException("Permission Denied");
             }
 
             return View(solution);
-
         }
+
+        [HttpGet, Route("/Problem/Solution/Edit")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Problem)]
+        public ViewResult Edit()
+        {
+            return View(null);
+        }
+
+        [HttpGet, Route("/Problem/Solution/{solutionId}")]
+        public async Task<ViewResult> GetSolution(long solutionId)
+        {
+            var solution = await _problemAppService.GetSolution(solutionId);
+
+            return View(solution);
+        }
+
+        #endregion
+
+
+        #region Apis
 
         [HttpPost, Route("/Problem/Solution/Create")]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Problem)]
         public async Task<JsonResult> Create(string name, string url, string description, string title, string  content, List<long> typeIds)
         {
-            await _problemAppService.CreateProblemSolution(new CreateSolutionInput
+            var id = await _problemAppService.CreateProblemSolution(new CreateSolutionInput
             {
                 Name = name,
                 Url = url,
@@ -71,7 +90,8 @@ namespace acmManager.Web.Controllers
                 Title = title,
                 Content = content
             });
-            return Json(new AjaxResponse());
+
+            return Json(new {RedirectUrl = Url.Action("GetSolution", new {solutionId = id})});
         }
         
         [HttpPost, Route("/Problem/Solution/Update")]
@@ -88,7 +108,8 @@ namespace acmManager.Web.Controllers
                 Title = title,
                 Content = content
             });
-            return Json(new AjaxResponse());
+            
+            return Json(new {RedirectUrl = Url.Action("GetSolution", new {solutionId = id})});
         }
 
         [HttpGet, Route("/Problem/Types/GetAll")]
@@ -97,5 +118,7 @@ namespace acmManager.Web.Controllers
             var res = await _problemAppService.GetAllProblemTypes("");
             return new JsonResult(res);
         }
+        
+        #endregion
     }
 }
