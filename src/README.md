@@ -88,3 +88,5 @@
           await _manager.Delete(i);
       }
       ```
+      
+- 前端 `form` 中的 `button` 会自动提交表单，解决方法是添加 `type=button`

@@ -49,12 +49,45 @@
                 </div>
             </div>
         </div>
-        <div class="text-right col pr-0 mt-3">
-            @if (Model != null)
-            {
-                <input type="hidden" name="Id" value="@Model.Id"/>
-            }
-            <input type="button" class="btn btn-primary" id="edit-problem-solution-submit-btn" value="@L("Submit")">
+        <div class="row mt-3">
+            <div class="text-right col">
+                @if (Model != null)
+                {
+                    <button class="btn btn-danger mr-2"
+                            type="button"
+                            style="letter-spacing: 2px"
+                            data-toggle="modal"
+                            data-target="#delete-solution"> 删除 </button>
+                    <input type="hidden" name="Id" value="@Model.Id"/>
+                }
+                <input type="button" class="btn btn-primary" id="edit-problem-solution-submit-btn" value="@L("Submit")">
+            </div>
         </div>
     </form>
 </div>
+
+@if (Model != null)
+{
+    <!-- Delete Solution Modal -->
+    <div class="modal fade" id="delete-solution">
+        <div class="modal-dialog">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <strong style="letter-spacing: 2px">
+                            你确定吗
+                        </strong>
+                    </h5>
+                </div>
+                <div class="modal-body"> 此操作不可逆 ！！ </div>
+                <form asp-action="DeleteSolution" method="post">
+                    <input type="hidden" name="Id" value="@Model.Id">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="letter-spacing: 2px">取消</button>
+                        <button type="submit" class="btn btn-danger btn-ok" style="letter-spacing: 2px">确认</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

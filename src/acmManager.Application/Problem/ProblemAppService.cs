@@ -221,6 +221,12 @@ namespace acmManager.Problem
                 throw new UserFriendlyException("Permission Denied");
             }
 
+            var types = new List<ProblemToType>(res.Problem.Types);
+            foreach (var t in types)
+            {
+                await _problemToTypeManager.Delete(t.Id);
+            }
+
             await _problemManager.Delete(res.Problem.Id);
             await _articleAppService.DeleteArticleAsync(res.Solution.Id);
             await _problemSolutionManager.Delete(res.Id);

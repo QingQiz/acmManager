@@ -118,6 +118,14 @@ namespace acmManager.Web.Controllers
             var res = await _problemAppService.GetAllProblemTypes("");
             return new JsonResult(res);
         }
+
+        [HttpPost, Route("/Problem/Solution/Delete")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Problem)]
+        public async Task<RedirectToActionResult> DeleteSolution(long id)
+        {
+            await _problemAppService.DeleteSolution(id);
+            return RedirectToAction("Index");
+        }
         
         #endregion
     }
