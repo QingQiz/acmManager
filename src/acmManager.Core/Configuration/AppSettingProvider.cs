@@ -12,8 +12,6 @@ namespace acmManager.Configuration
             return new[]
             {
                 new SettingDefinition(AppSettingNames.UiTheme, "red", scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, isVisibleToClients: true),
-                new SettingDefinition(AppSettingNames.CrawlerPath, crawlerPath, scopes: SettingScopes.All, isVisibleToClients: true),
-                new SettingDefinition(AppSettingNames.PythonPath, defaultValue: "python", scopes: SettingScopes.All, isVisibleToClients: true), 
             };
         }
     }

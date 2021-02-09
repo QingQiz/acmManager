@@ -17,8 +17,8 @@ namespace acmManager.Web.Views
         protected override string L(string r)
         {
             var res = base.L(r);
-            
-            if (res[0] == '[' && res[^1] == ']')
+
+            if (res.Length > 2 && res[0] == '[' && res[^1] == ']')
             {
                 return res[1..^1];
             }

@@ -13,9 +13,9 @@ using acmManager.Authorization;
 using acmManager.Authorization.Accounts;
 using acmManager.Authorization.Accounts.Dto;
 using acmManager.Authorization.Users;
-using acmManager.Configuration;
 using acmManager.Users.Dto;
 using acmManager.Users.Type;
+using acmManager.Utils;
 using Microsoft.AspNetCore.Identity;
 
 namespace acmManager.Users
@@ -45,63 +45,56 @@ namespace acmManager.Users
 
         #region NotRemoteToService
 
-        /// <summary>
-        /// 执行爬虫，从翱翔门户获取信息
-        /// </summary>
-        /// <param name="username">账户名</param>
-        /// <param name="password">密码</param>
-        /// <returns>see `UserInfoDto</returns>
-        /// <exception cref="UserFriendlyException"></exception>
-        [RemoteService(false)]
-        public async Task<UserInfoDto> GetUserInfoFromAoxiangAsync(string username, string password)
-        {
-            // use crawler to get user information
-            var crawlerPath = await _settingManager.GetSettingValueAsync(AppSettingNames.CrawlerPath);
-            var pythonPath = await _settingManager.GetSettingValueAsync(AppSettingNames.PythonPath);
-
-            var process = new System.Diagnostics.Process
-            {
-                StartInfo =
-                {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c \"\"{pythonPath}\" \"{crawlerPath}\" -u {username} -p {password}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                }
-            };
-            process.Start();
-            process.WaitForExit();
-
-            // 爬虫执行失败
-            if (process.ExitCode != 0)
-            {
-                var stderr = (await process.StandardError.ReadToEndAsync()).Trim();
-                
-                Logger.Warn($"use {username} to login to uis.nwpu.edu.cn error");
-                Logger.Warn(stderr);
-
-                throw new UserFriendlyException(stderr.Split(Environment.NewLine)[^1]);
-            }
-
-            //  0     1       2     3    4      5      6          7       8     9
-            // org, mobile, email, id, gender, name, class, location, major, type
-            var result = (await process.StandardOutput.ReadToEndAsync()).Split(Environment.NewLine);
-
-            return new UserInfoDto()
-            {
-                StudentNumber = result[3],
-                Org = result[0],
-                Mobile = result[1],
-                Gender = result[4] == "男" ? UserGender.Male : UserGender.Female,
-                Major = result[8],
-                ClassId = result[6],
-                Location = result[7],
-                StudentType = result[9],
-                Email = result[2],
-                Name = result[5]
-            };
-        }
+        // [RemoteService(false)]
+        // public async Task<UserInfoDto> GetUserInfoFromAoxiangAsync(string username, string password)
+        // {
+        //     // use crawler to get user information
+        //     // var crawlerPath = await _settingManager.GetSettingValueAsync(AppSettingNames.CrawlerPath);
+        //     var pythonPath = await _settingManager.GetSettingValueAsync(AppSettingNames.PythonPath);
+        //
+        //     var process = new System.Diagnostics.Process
+        //     {
+        //         StartInfo =
+        //         {
+        //             FileName = "cmd.exe",
+        //             Arguments = $"/c \"\"{pythonPath}\" \"{crawlerPath}\" -u {username} -p {password}\"",
+        //             UseShellExecute = false,
+        //             RedirectStandardOutput = true,
+        //             RedirectStandardError = true
+        //         }
+        //     };
+        //     process.Start();
+        //     process.WaitForExit();
+        //
+        //     // 爬虫执行失败
+        //     if (process.ExitCode != 0)
+        //     {
+        //         var stderr = (await process.StandardError.ReadToEndAsync()).Trim();
+        //         
+        //         Logger.Warn($"use {username} to login to uis.nwpu.edu.cn error");
+        //         Logger.Warn(stderr);
+        //
+        //         throw new UserFriendlyException(stderr.Split(Environment.NewLine)[^1]);
+        //     }
+        //
+        //     //  0     1       2     3    4      5      6          7       8     9
+        //     // org, mobile, email, id, gender, name, class, location, major, type
+        //     var result = (await process.StandardOutput.ReadToEndAsync()).Split(Environment.NewLine);
+        //
+        //     return new UserInfoDto()
+        //     {
+        //         StudentNumber = result[3],
+        //         Org = result[0],
+        //         Mobile = result[1],
+        //         Gender = result[4] == "男" ? UserGender.Male : UserGender.Female,
+        //         Major = result[8],
+        //         ClassId = result[6],
+        //         Location = result[7],
+        //         StudentType = result[9],
+        //         Email = result[2],
+        //         Name = result[5]
+        //     };
+        // }
 
         /// <summary>
         /// 将 User 转化为 UserDto
@@ -305,7 +298,7 @@ namespace acmManager.Users
 
             // get user info from aoxiang
             var userType = user.UserInfo.Type;
-            var userInfoDto = await GetUserInfoFromAoxiangAsync(user.UserName, input.Password);
+            var userInfoDto = await new Crawler(user.UserName, input.Password).GetUserInfo();
 
             // map new info to old info
             ObjectMapper.Map(userInfoDto, user.UserInfo);
@@ -339,9 +332,12 @@ namespace acmManager.Users
             {
                 throw new UserFriendlyException("Invalid mobile: " + input.Mobile);
             }
-  
+
+            user.UserInfo.ClassId = input.ClassId;
+            user.UserInfo.Major = input.Major;
             user.UserInfo.Email = input.Email;
             user.UserInfo.Mobile = input.Mobile;
+            user.UserInfo.Location = input.Location;
 
             return ObjectMapper.Map<UserInfoDto>(user.UserInfo);
         }

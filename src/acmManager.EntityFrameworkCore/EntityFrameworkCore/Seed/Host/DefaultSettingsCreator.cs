@@ -35,50 +35,6 @@ namespace acmManager.EntityFrameworkCore.Seed.Host
 
             // Languages
             AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "zh-Hans", tenantId);
-            
-            // Crawler
-            if (!SettingExists(AppSettingNames.CrawlerPath, tenantId))
-            {
-                AddSettingIfNotExists(AppSettingNames.CrawlerPath, new Func<string>(() =>
-                {
-                    var crawlerPathProb = Directory.GetCurrentDirectory();
-
-                    try
-                    {
-                        return SearchFile(crawlerPathProb, "crawler.py");
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        crawlerPathProb = Directory.GetParent(crawlerPathProb).ToString();
-                        return SearchFile(crawlerPathProb, "crawler.py");
-                    }
-                })(), tenantId);
-            }
-            
-            // Python path
-            if (!SettingExists(AppSettingNames.PythonPath, tenantId))
-            {
-                AddSettingIfNotExists(AppSettingNames.PythonPath, new Func<string>(() =>
-                {
-                    var pythonPathProb = new List<string>()
-                    {
-                        @"C:\Users",
-                        @"C:\Program Files (x86)",
-                        @"C:\Program Files",
-                    };
-                    foreach (var prob in pythonPathProb)
-                    {
-                        try
-                        {
-                            return SearchFile(prob, "python.exe");
-                        }
-                        catch (FileNotFoundException)
-                        {
-                        }
-                    }
-                    return "python";
-                })(), tenantId);
-            }
         }
 
         private bool SettingExists(string name, int? tenantId)

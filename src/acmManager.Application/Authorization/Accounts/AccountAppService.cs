@@ -5,6 +5,7 @@ using acmManager.Authorization.Accounts.Dto;
 using acmManager.Authorization.Users;
 using acmManager.Users;
 using acmManager.Users.Dto;
+using acmManager.Utils;
 
 namespace acmManager.Authorization.Accounts
 {
@@ -58,7 +59,7 @@ namespace acmManager.Authorization.Accounts
                 throw new UserFriendlyException("User Exists");
             }
 
-            var userInfoDto = await _userAppService.GetUserInfoFromAoxiangAsync(input.Username, input.Password);
+            var userInfoDto = await new Crawler(input.Username, input.Password).GetUserInfo();
             
             // true means: Assumed email address is always confirmed.
             var email = userInfoDto.StudentNumber + "@temp.mail.com";

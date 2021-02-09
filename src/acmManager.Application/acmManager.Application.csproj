@@ -13,4 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\acmManager.Core\acmManager.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="3.0.1" />
+  </ItemGroup>
 </Project>
