@@ -19,6 +19,7 @@ using Abp.Dependency;
 using Abp.Json;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 
 
@@ -35,6 +36,13 @@ namespace acmManager.Web.Startup
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            // configure swagger
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "AcmManager", Version = "V1"});
+                options.DocInclusionPredicate((docName, description) => true);
+            });
+
             // MVC
             services.AddControllersWithViews(
                     options =>
@@ -71,6 +79,14 @@ namespace acmManager.Web.Startup
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(); // Initializes ABP framework.
+            
+            // use swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "AcmManager API V1");
+            });
+
 
             if (env.IsDevelopment())
             {
