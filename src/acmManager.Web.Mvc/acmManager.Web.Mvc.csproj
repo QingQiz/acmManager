@@ -16,9 +16,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Update="Dockerfile">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -73,5 +70,12 @@
     <_ContentIncludedByDefault Remove="Views\Users\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Users\_CreateModal.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Users\_EditModal.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Roles\Index.AdvancedSearch.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Roles\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Roles\_CreateModal.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Roles\_EditModal.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Roles\Index.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Roles\Index.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Roles\_EditModal.js" />
   </ItemGroup>
 </Project>
