@@ -43,5 +43,41 @@
     "inputFiles": [
       "wwwroot/view-resources/Views/Certificate/Certificate.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/editor.min.js",
+    "inputFiles": [
+      "wwwroot/js/editor.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/contest.signup.export.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Contest/ContestSignUpExport.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/contest.create.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Contest/CreateContest.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/problem.edit.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Problem/Edit.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/user.profile.min.css",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Users/Profile.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/user.profile.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Users/Profile.js"
+    ]
   }
 ]

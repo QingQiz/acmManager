@@ -1,16 +1,14 @@
-﻿<environment include="Development">
-    @section styles
-    {
+﻿@section styles
+{
+    <environment include="Development">
         <link href="~/view-resources/Views/Account/Login.css" rel="stylesheet"/>
-    }
-</environment>
-
-<environment exclude="Development">
-    @section styles
-    {
+    </environment>
+    
+    <environment exclude="Development">
         <link href="~/view-resources/Views/_Bundles/login.min.css" rel="stylesheet"/>
-    }
-</environment>
+    </environment>
+}
+
 
 @section scripts
 {

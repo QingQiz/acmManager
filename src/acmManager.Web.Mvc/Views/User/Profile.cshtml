@@ -1,13 +1,28 @@
 ﻿@model acmManager.Web.Models.Users.UserProfileViewModel
 @section styles
 {
-    <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
+    <environment include="Development">
+        <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
+    </environment>
+    
+    <environment exclude="Development">
+        <link href="~/view-resources/Views/_Bundles/user.profile.min.css" rel="stylesheet"/>
+    </environment>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css" integrity="sha512-w+u2vZqMNUVngx+0GVZYM21Qm093kAexjueWOv9e9nIeYJb1iEfiHC7Y+VvmP/tviQyA5IR32mwN/5hTEJx6Ng==" crossorigin="anonymous" />
 }
 @section scripts
 {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js" integrity="sha512-9pGiHYK23sqK5Zm0oF45sNBAX/JqbZEP7bSDHyt+nT3GddF+VFIcYNqREt0GDpmFVZI3LZ17Zu9nMMc9iktkCw==" crossorigin="anonymous"></script>
-    <script src="~/view-resources/Views/Users/Profile.js" type="application/javascript"></script>
+
+    <environment include="Development">
+        <script src="~/view-resources/Views/Users/Profile.js" type="application/javascript"></script>
+    </environment>
+    
+    <environment exclude="Development">
+        <script src="~/view-resources/Views/_Bundles/user.profile.min.js"></script>
+    </environment>
+
     <script type="application/javascript">
         updateProfileEvent();
         selectFileEvent();

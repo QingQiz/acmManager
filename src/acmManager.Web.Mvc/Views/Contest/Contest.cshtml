@@ -1,30 +1,37 @@
 @using acmManager.Authorization
 @model acmManager.Contest.Dto.GetContestOutput
 
-<environment include="Development">
-    @section styles
-    {
-        <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
+@section styles
+{
+    <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
+
+    <environment include="Development">
         <link rel="stylesheet" href="~/css/editor.css">
-        @* <link rel="stylesheet" href="~/view-resources/Views/Contest/Contest.css"/> *@
-    }
-
-    @section scripts
-    {
-        <script src="~/editor.md/editormd.min.js"></script>
-        <script src="~/editor.md/lib/marked.min.js"></script>
-        <script src="~/editor.md/lib/prettify.min.js"></script>
-        <script src="~/editor.md/lib/raphael.min.js"></script>
-        <script src="~/editor.md/lib/underscore.min.js"></script>
-        <script src="~/editor.md/lib/sequence-diagram.min.js"></script>
-        <script src="~/editor.md/lib/flowchart.min.js"></script>
+    </environment>
+    
+    <environment exclude="Development">
+    </environment>
+}
+@section scripts
+{
+    <script src="~/editor.md/editormd.min.js"></script>
+    <script src="~/editor.md/lib/marked.min.js"></script>
+    <script src="~/editor.md/lib/prettify.min.js"></script>
+    <script src="~/editor.md/lib/raphael.min.js"></script>
+    <script src="~/editor.md/lib/underscore.min.js"></script>
+    <script src="~/editor.md/lib/sequence-diagram.min.js"></script>
+    <script src="~/editor.md/lib/flowchart.min.js"></script>
+    
+    <environment include="Development">
         <script src="~/js/editor.js"></script>
-        <script src="~/view-resources/Views/Contest/Contest.js"></script>
-    }
-</environment>
-
-<environment exclude="Development">
-</environment>
+    </environment>
+    
+    <environment exclude="Development">
+        <script src="~/view-resources/Views/_Bundles/editor.min.js"></script>
+    </environment>
+    
+    <script src="~/view-resources/Views/Contest/Contest.js"></script>
+}
 
 <div class="content-container" style="max-width: 1060px">
     <h1 class="text-center"> @Model.Name </h1>
