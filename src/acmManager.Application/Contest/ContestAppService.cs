@@ -212,12 +212,19 @@ namespace acmManager.Contest
             return (await _contestSignUpManager.GetAll(s => s.Contest.Id == contestId))
                 .Select(s =>
                 {
-                    var userInfo = _userManager.GetUserByIdAsync(s.CreatorUserId ?? 0).Result.UserInfo;
-                    var suInfo = ObjectMapper.Map<GetContestSignUpListOutput>(userInfo);
-                    suInfo.Id = s.Id;
-                    suInfo.Password = GetSignUpPassword(userInfo, contest);
-                    return suInfo;
-                }).ToList();
+                    try
+                    {
+                        var userInfo = _userManager.GetUserByIdAsync(s.CreatorUserId ?? 0).Result.UserInfo;
+                        var suInfo = ObjectMapper.Map<GetContestSignUpListOutput>(userInfo);
+                        suInfo.Id = s.Id;
+                        suInfo.Password = GetSignUpPassword(userInfo, contest);
+                        return suInfo;
+                    }
+                    catch (AggregateException)
+                    {
+                        return null;
+                    }
+                }).Where(x => x != null).ToList();
         }
 
         [UnitOfWork]

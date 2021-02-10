@@ -84,7 +84,7 @@ namespace acmManager.Web.Controllers
         [HttpPost, Route("/Contest/EditResult/Post")]
         public async Task<ActionResult> EditContestResultPost(SetContestResultInput input)
         {
-            if (input.Content == null)
+            if (input.Content == null || input.Content.Trim() == "")
             {
                 await _contestAppService.RemoveContestResultAsync(input.Id);
             }
