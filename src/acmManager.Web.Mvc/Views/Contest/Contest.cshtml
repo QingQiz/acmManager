@@ -3,17 +3,11 @@
 
 @section styles
 {
-    <environment include="Development">
-        <link rel="stylesheet" href="~/css/editor.css">
-    </environment>
-    
-    <environment exclude="Development">
-    </environment>
-    @await Html.PartialAsync("_MdPreviewHeader")
+    @await Html.PartialAsync("Template/_MdPreviewHeader")
 }
 @section scripts
 {
-    @await Html.PartialAsync("_MdPreviewFooter")
+    @await Html.PartialAsync("Template/_MdPreviewFooter")
     
     <environment include="Development">
         <script src="~/js/editor.js"></script>

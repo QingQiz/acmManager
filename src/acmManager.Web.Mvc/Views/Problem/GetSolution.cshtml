@@ -1,2 +1,46 @@
-﻿@model acmManager.Problem.Dto.GetSolutionOutput
+﻿@using acmManager.Web.Models.Shared
+@using Abp.Runtime.Session
+@model acmManager.Problem.Dto.GetSolutionOutput
 
+@section styles
+{
+    @await Html.PartialAsync("Template/_MdPreviewHeader")
+    <link href="~/view-resources/Views/Problem/Solution.css" rel="stylesheet">
+}
+
+@section scripts
+{
+    @await Html.PartialAsync("Template/_MdPreviewFooter")
+    <environment include="Development">
+        <script src="~/view-resources/Views/Problem/Solution.js"></script>
+        <script src="~/js/editor.js"></script>
+    </environment>
+
+    <environment exclude="Development">
+        <script src="~/view-resources/Views/_Bundles/solution.min.js"></script>
+        <script src="~/view-resources/Views/_Bundles/editor.min.js"></script>
+    </environment>
+}
+
+<div class="content-container" style="max-height: 1060px">
+    <div style="margin: 0 10px;">
+        <h1> @Model.SolutionTitle </h1>
+        <hr class="mt-3"/>
+
+        @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel {CreatorId = Model.CreatorId})
+        
+    </div>
+    <hr class="mt-3"/>
+    
+    @await Html.PartialAsync("_ProblemDescription")
+    @await Html.PartialAsync("_SolutionContent")
+    
+    @if (AbpSession.UserId != null && AbpSession.GetUserId() == Model.CreatorId)
+    {
+        <div class="text-right mt-3 noSelect" style="margin: inherit">
+                <button class="btn btn-primary" style="letter-spacing: 2px"
+                        onclick="location.href = '@Url.ActionLink("Edit", "Problem", new {solutionId = Model.Id})'">@L("Edit")</button>
+
+        </div>
+    }
+</div>

@@ -1,0 +1,27 @@
+﻿@model acmManager.Problem.Dto.GetSolutionOutput
+
+<div class="card mt-3">
+    <div class="card-header noSelect" style="padding: 2px; background-color: unset">
+        <h5 class="mb-0">
+            <button class="btn collapsed" data-target="#problem-card" data-toggle="collapse">
+                @L("Problem.Info")
+            </button>
+        </h5>
+    </div>
+    
+    <div class="collapse" id="problem-card">
+        <div class="card-body">
+            <a href="@Model.ProblemUrl" class="title">@Model.ProblemName</a>
+            
+            @foreach (var t in Model.ProblemTypes)
+            {
+                <span class="sub-text" data-toggle="tooltip" data-placement="bottom" title="@t.Description">&nbsp;@t.Name</span>
+            }
+            
+            <hr/>
+            
+            <div id="problem-description"> <textarea hidden>@Model.ProblemDescription</textarea> </div>
+        </div>
+    </div>
+</div>
+

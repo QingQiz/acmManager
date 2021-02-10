@@ -2,5 +2,11 @@
 
 
 <div class="content-container">
-    @Html.ActionLink("Create", "Edit", new { SolutionId = 0 })
+    @Html.ActionLink("Create", "Edit")
+    
+    @foreach (var x in Model.Solutions.Solutions)
+    {
+        <br>
+        <a href="@Url.Action("GetSolution", "Problem", new {SolutionId=x.Id})"> @x.Id --- @x.ArticleTitle</a>
+    }
 </div>
