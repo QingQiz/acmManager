@@ -43,51 +43,11 @@
     <Folder Include="App_Data\Uploads" />
     <Folder Include="wwwroot\view-resources\Views\Home" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles" />
-    <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Models\Users\EditUserModalViewModel.cs" />
-    <Compile Remove="Controllers\UsersController.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Views\Users\_EditModal.cshtml" />
     <Content Update="wwwroot\view-resources\Views\Contest\Contest.css">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap-theme.min.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.min.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\bootstrap\css\bootstrap.min.css.map" />
-    <_ContentIncludedByDefault Remove="Views\Users\ChangePassword.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Users\Index.AdvancedSearch.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Users\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Users\_CreateModal.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Users\_EditModal.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Roles\Index.AdvancedSearch.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Roles\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Roles\_CreateModal.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Roles\_EditModal.cshtml" />
-    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Roles\Index.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Roles\Index.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Roles\_EditModal.js" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Components\AccountLanguages\Default.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Components\RightNavbarLanguageSwitch\Default.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Components\RightNavbarUserArea\Default.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Components\SideBarMenu\Default.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Components\SideBarMenu\_MenuItem.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Components\SideBarUserArea\Default.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Modals\_ModalFooterWithSaveAndCancel.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\Modals\_ModalHeader.cshtml" />
-    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Shared\Components\TenantChange\Default.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Shared\Components\TenantChange\Default.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Shared\Components\TenantChange\_ChangeModal.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Shared\Components\TenantChange\_ChangeModal.min.js" />
   </ItemGroup>
 </Project>
