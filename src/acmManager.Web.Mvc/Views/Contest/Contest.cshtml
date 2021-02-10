@@ -3,24 +3,17 @@
 
 @section styles
 {
-    <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
-
     <environment include="Development">
         <link rel="stylesheet" href="~/css/editor.css">
     </environment>
     
     <environment exclude="Development">
     </environment>
+    @await Html.PartialAsync("_MdPreviewHeader")
 }
 @section scripts
 {
-    <script src="~/editor.md/editormd.min.js"></script>
-    <script src="~/editor.md/lib/marked.min.js"></script>
-    <script src="~/editor.md/lib/prettify.min.js"></script>
-    <script src="~/editor.md/lib/raphael.min.js"></script>
-    <script src="~/editor.md/lib/underscore.min.js"></script>
-    <script src="~/editor.md/lib/sequence-diagram.min.js"></script>
-    <script src="~/editor.md/lib/flowchart.min.js"></script>
+    @await Html.PartialAsync("_MdPreviewFooter")
     
     <environment include="Development">
         <script src="~/js/editor.js"></script>

@@ -1,11 +1,7 @@
-﻿editormd.markdownToHTML('contest-description-content', {
-    markdown: $('#contest-content > textarea').text()
-});
+﻿previewMd('contest-description-content', $('#contest-content > textarea').text())
 
 if ($.find('#contest-result')) {
-    editormd.markdownToHTML('contest-result-content', {
-        markdown: $('#contest-result > textarea').text()
-    });
+    previewMd('contest-result-content', $('#contest-result > textarea').text());
 }
 
 $('.card-header').click(function (event) {

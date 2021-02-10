@@ -4,6 +4,15 @@
         readOnly: readonly,
         path: "/editor.md/lib/",
         placeholder: "",
+        tex: true,
+        tocm: true,
+        //flowChart: true,
+        taskList: true,
+        sequenceDiagram: true,
+        katexURL: {
+            js: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js',
+            css: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css'
+        },
         watch: false,
         toolbarIcons: function () {
             return [
@@ -177,5 +186,17 @@
             }
         },
         onload: function () { }
+    });
+}
+
+
+let previewMd = function (id, md) {
+    editormd.markdownToHTML(id, {
+        markdown: md,
+        tex: true,
+        tocm: true,
+//        flowChart: true,
+        taskList: true,
+        sequenceDiagram: true,
     });
 }
