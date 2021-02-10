@@ -384,7 +384,7 @@ namespace acmManager.Users
         /// <param name="userId"></param>
         /// <returns><see cref="GetUserInfoDto"/></returns>
         [UnitOfWork]
-        [AbpAuthorize]
+        [RemoteService(false)]
         public virtual async Task<GetUserInfoDto> GetUserInfoAsync(long userId)
         {
             var user = await UserManager.GetUserByIdAsync(userId);

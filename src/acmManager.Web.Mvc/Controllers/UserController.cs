@@ -36,17 +36,9 @@ namespace acmManager.Web.Controllers
 
         #region GET
 
-        public async Task<ActionResult> UserProfile(long userId = 0)
+        public async Task<ActionResult> UserProfile()
         {
-            if (userId != 0 && userId != AbpSession.GetUserId())
-            {
-                if (!await IsGrantedAsync(PermissionNames.PagesUsers_GetAll))
-                    throw new UserFriendlyException("PermissionDenied");
-            }
-            else
-            {
-                userId = AbpSession.GetUserId();
-            }
+            var userId = AbpSession.GetUserId();
 
             var userInfo = await _userAppService.GetAsync(userId);
 
