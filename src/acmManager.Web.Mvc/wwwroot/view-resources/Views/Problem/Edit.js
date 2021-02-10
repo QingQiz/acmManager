@@ -38,11 +38,6 @@ $(function () {
     createEditor("problem-description-content", false);
     createEditor("problem-solution-content", false);
 
-    $('.card-header').click(function (event) {
-        let target = $(this).find('button').attr('data-target');
-        $(target).collapse('toggle');
-    });
-
     $('select[name=TypeIds]').selectpicker();
     
     // selectpicker won't create dropdown-item on init

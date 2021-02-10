@@ -6,6 +6,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/layout.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Shared/*.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/login.min.css",
     "inputFiles": [
       "wwwroot/view-resources/Views/Account/*.css"
