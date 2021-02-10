@@ -1,13 +1,4 @@
-﻿@using acmManager.Web.Startup
-@{
-    ViewBag.Title = L("HomePage");
-    ViewBag.CurrentPageName = PageNames.Home;
-}
-@section scripts
-{
-}
-
-<div class="row">
+﻿<div class="row">
     <div class="col">
         <div class="content-container">
             当前能用的大概有 @Html.ActionLink("证书统计", "Index", "Certificate")，@(Html.ActionLink("用户信息", "UserProfile", "User"))

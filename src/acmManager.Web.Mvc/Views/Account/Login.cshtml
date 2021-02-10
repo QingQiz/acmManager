@@ -1,10 +1,17 @@
-﻿@{
-    ViewBag.Title = "Account";
-}
-@section styles
-{
-    <link href="~/view-resources/Views/Account/Login.css" rel="stylesheet"/>
-}
+﻿<environment include="Development">
+    @section styles
+    {
+        <link href="~/view-resources/Views/Account/Login.css" rel="stylesheet"/>
+    }
+</environment>
+
+<environment exclude="Development">
+    @section styles
+    {
+        <link href="~/view-resources/Views/_Bundles/login.min.css" rel="stylesheet"/>
+    }
+</environment>
+
 @section scripts
 {
     <script type="application/javascript">

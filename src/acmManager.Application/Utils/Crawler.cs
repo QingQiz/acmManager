@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.UI;
 using acmManager.Authorization.Users;
 using acmManager.Users.Dto;
@@ -19,10 +20,10 @@ namespace acmManager.Utils
         private const string UserInfoApiUrl =
             "https://ecampus.nwpu.edu.cn/portal-web/api/rest/portalUser/selectUserInfoByCurrentUser";
 
-        private string _username;
-        private string _password;
-        private CookieSession _sessionLogin;
-        private CookieSession _sessionECampus;
+        private readonly string _username;
+        private readonly string _password;
+        private readonly CookieSession _sessionLogin;
+        private readonly CookieSession _sessionECampus;
 
         public Crawler(string username, string password)
         {
@@ -34,7 +35,7 @@ namespace acmManager.Utils
 
         }
 
-        public async Task LoginToUis()
+        private async Task LoginToUis()
         {
             await _sessionLogin.Request(LoginUrl).WithFakeAgent().GetAsync();
             try
@@ -55,7 +56,7 @@ namespace acmManager.Utils
             }
         }
 
-        public async Task LoginToECampus(int retry = 3)
+        private async Task LoginToECampus(int retry = 3)
         {
             try
             {
@@ -84,11 +85,12 @@ namespace acmManager.Utils
             }
         }
 
+        [RemoteService(false)]
         public async Task<UserInfoDto> GetUserInfo()
         {
             await LoginToUis();
             await LoginToECampus();
-            
+
             var info = await _sessionECampus
                 .Request(UserInfoApiUrl)
                 .WithFakeAgent()
@@ -107,13 +109,11 @@ namespace acmManager.Utils
                 Email = info.data.userInfo.email,
                 Gender = info.data.userInfo.gender == 1 ? UserGender.Male : UserGender.Female,
                 Name = info.data.userInfo.name,
-                StudentType= info.data.securityUserType.name
+                StudentType = info.data.securityUserType.name
             };
         }
-        
+    }
 
-}
-    
     public static class ExtendFlurl
     {
         private const string FakeUserAgent =

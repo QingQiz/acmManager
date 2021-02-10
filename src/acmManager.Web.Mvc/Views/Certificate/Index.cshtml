@@ -1,12 +1,24 @@
-﻿@section styles
-{
-    <link rel="stylesheet" href="~/view-resources/Views/Certificate/Certificate.css"/>
-}
-@section scripts
-{
-    <script src="~/view-resources/Views/Certificate/Certificate.js"></script>
-}
+﻿<environment include="Development">
+    @section styles
+    {
+        <link rel="stylesheet" href="~/view-resources/Views/Certificate/Certificate.css"/>
+    }
+    @section scripts
+    {
+        <script src="~/view-resources/Views/Certificate/Certificate.js"></script>
+    }
+</environment>
 
+<environment exclude="Development">
+    @section styles
+    {
+        <link href="~/view-resources/Views/_Bundles/certificate.min.css" rel="stylesheet"/>
+    }
+    @section scripts
+    {
+        <script src="~/view-resources/Views/Certificate/Certificate.js"></script>
+    }
+</environment>
 <div class="content-container">
     @await Html.PartialAsync("_CertificateTable")
 </div>

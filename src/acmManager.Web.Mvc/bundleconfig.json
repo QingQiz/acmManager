@@ -1,14 +1,47 @@
 [
   {
-    "outputFileName": "wwwroot/view-resources/Views/_Bundles/account-layout.min.css",
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/layout.bundle.min.css",
     "inputFiles": [
-      "wwwroot/libs/font-awesome/css/all.css",
-      "wwwroot/libs-ext/famfamfam-flags/dist/sprite/famfamfam-flags.css",
-      "wwwroot/libs/icheck-bootstrap/icheck-bootstrap.css",
-      "wwwroot/libs/toastr/toastr.css",
-      "wwwroot/libs/admin-lte/dist/css/adminlte.css",
-      "wwwroot/css/style.css",
-      "wwwroot/view-resources/Views/Account/_Layout.css"
+      "wwwroot/view-resources/Views/Shared/*.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/login.min.css",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Account/*.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/admin.profile.min.css",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Users/Profile.css",
+      "wwwroot/view-resources/Views/Admin/Admin.css",
+      "wwwroot/view-resources/Views/Certificate/Certificate.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/admin.profile.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Admin/Profile.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/admin.index.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Admin/Admin.js",
+      "wwwroot/view-resources/Views/Admin/Certificate.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/certificate.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Certificate/Certificate.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/certificate.min.css",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Certificate/Certificate.css"
     ]
   }
 ]

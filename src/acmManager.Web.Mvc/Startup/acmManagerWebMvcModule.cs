@@ -20,7 +20,6 @@ namespace acmManager.Web.Startup
 
         public override void PreInitialize()
         {
-            Configuration.Navigation.Providers.Add<acmManagerNavigationProvider>();
         }
 
         public override void Initialize()
