@@ -206,7 +206,7 @@ namespace acmManager.Problem
             }
 
             res.Solution.Content = input.Content;
-            res.Solution.Content = input.Name;
+            res.Solution.Title = input.Title;
         }
 
         [UnitOfWork]
