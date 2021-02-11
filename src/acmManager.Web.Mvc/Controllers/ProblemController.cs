@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
 using Abp.Runtime.Session;
-using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Controllers;
 using acmManager.Problem;
 using acmManager.Problem.Dto;
 using acmManager.Web.Models.Problem;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acmManager.Web.Controllers
@@ -22,17 +23,21 @@ namespace acmManager.Web.Controllers
             _problemAppService = problemAppService;
         }
 
+        private const int PageSize = 30;
+
         #region Pages
         
         [HttpGet, Route("/Problem/Solution")]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int page, string keyword, string type)
         {
+            var matchTypes = _problemAppService.GetAllProblemTypes(type);
+            
             var filter = new GetAllSolutionFilter
             {
-                KeyWords = "",
-                TypeIds = new List<long>(),
-                MaxResultCount = 30,
-                SkipCount = 0
+                KeyWords = keyword ?? "",
+                TypeIds = type.IsNullOrEmpty() ? null : (await matchTypes).Select(t => t.Id),
+                MaxResultCount = PageSize,
+                SkipCount = (page <= 1 ? 0 : page - 1) * PageSize 
             };
             var res = await _problemAppService.GetAllSolutionWithFilter(filter);
             

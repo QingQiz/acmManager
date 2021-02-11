@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,10 +71,11 @@ namespace acmManager.Problem
         public virtual async Task<IEnumerable<ProblemTypeDto>> GetAllProblemTypes(string keyword)
         {
             keyword ??= "";
+            keyword = keyword.ToLower();
             var res = await _problemTypeManager
                 .GetAll(pt =>
-                    pt.Name.Contains(keyword) ||
-                    pt.Description.Contains(keyword));
+                    pt.Name.ToLower().Contains(keyword) ||
+                    pt.Description.ToLower().Contains(keyword));
             return res.Select(ObjectMapper.Map<ProblemTypeDto>);
         }
 
@@ -113,14 +115,18 @@ namespace acmManager.Problem
         public virtual async Task<GetAllSolutionOutput> GetAllSolutionWithFilter(GetAllSolutionFilter filter)
         {
             filter.KeyWords ??= "";
+
+            var containsKw = new Func<string, bool>(a
+                => a.Contains(filter.KeyWords));
             var query = _problemSolutionManager.MakeQuery().AsEnumerable()
                 .WhereIf(filter.KeyWords != "", s =>
-                    s.Problem.Name.Contains(filter.KeyWords) ||
-                    s.Problem.Url.Contains(filter.KeyWords) ||
-                    s.Problem.Description.Contains(filter.KeyWords) ||
-                    s.Solution.Title.Contains(filter.KeyWords) ||
-                    s.Solution.Content.Contains(filter.KeyWords))
-                .WhereIf(filter.TypeIds.Any(), s => s.Problem.Types.Any(t => filter.TypeIds.Contains(t.Id)));
+                    containsKw(s.Problem.Name) ||
+                    containsKw(s.Problem.Url) ||
+                    containsKw(s.Problem.Description) ||
+                    containsKw(s.Solution.Title) ||
+                    containsKw(s.Solution.Content))
+                .WhereIf(filter.TypeIds != null, s =>
+                    s.Problem.Types.Any(t => filter.TypeIds.Contains(t.ProblemTypeId)));
             
             return await Task.Run(() =>
             {
