@@ -18,6 +18,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/solution.index.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Problem/Index.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/solution.min.css",
     "inputFiles": [
       "wwwroot/view-resources/Views/Problem/Solution.css"

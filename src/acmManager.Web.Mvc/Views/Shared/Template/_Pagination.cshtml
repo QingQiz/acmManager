@@ -10,8 +10,16 @@
         <div class="text-right mr-3" style="color: #8c8c8c; margin: auto">
             Result Count: @(Model.AllResultCount)
         </div>
-        <li class="page-item"><a class="page-link page-first" href="#">First</a></li>
-        <li class="page-item @(index == 1 ? "disabled" : "")"><a class="page-link page-previous" href="#">Previous</a></li>
+        @if (index == 1)
+        {
+            <li class="page-item disabled"><a class="page-link page-first" href="#">First</a></li>
+            <li class="page-item disabled"><a class="page-link page-previous" href="#">Previous</a></li>
+        }
+        else
+        {
+            <li class="page-item"><a class="page-link page-first" href="@Model.LinkGenerator(1)">First</a></li>
+            <li class="page-item"> <a class="page-link page-previous" href="@Model.LinkGenerator(index - 1)">Previous</a> </li>
+        }
         @foreach (var i in Enumerable.Range(indexStart, 7))
         {
             @if (i > indexEnd)
@@ -25,10 +33,17 @@
             }
             else
             {
-                <li class="page-item"><a class="page-link page-index" href="#">@i</a></li>
+                <li class="page-item"> <a class="page-link page-index" href="@Model.LinkGenerator(i)">@i</a> </li>
             }
         }
-        <li class="page-item @(index == indexEnd ? "disabled" : "")"><a class="page-link page-next" href="#">Next</a></li>
+        @if (index == indexEnd)
+        {
+            <li class="page-item disabled"><a class="page-link page-next" href="#">Next</a></li>
+        }
+        else
+        {
+            <li class="page-item"><a class="page-link page-next" href="@Model.LinkGenerator(index + 1)">Next</a></li>
+        }
     </ul>
 </nav>
 

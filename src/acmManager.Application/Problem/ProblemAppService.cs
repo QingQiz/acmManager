@@ -119,15 +119,18 @@ namespace acmManager.Problem
 
             var containsKw = new Func<string, bool>(a
                 => a.Contains(filter.KeyWords));
+
+            var contentCt = new Func<Problem, Article.Article, bool>((p, a) =>
+                containsKw(p.Url) ||
+                containsKw(p.Name) ||
+                containsKw(p.Description) ||
+                containsKw(a.Title) ||
+                containsKw(a.Content));
+            
             var query = _problemSolutionManager.MakeQuery().AsEnumerable()
                 .WhereIf(filter.KeyWords != "", s =>
-                    containsKw(s.Problem.Name) ||
-                    containsKw(s.Problem.Url) ||
-                    containsKw(s.Problem.Description) ||
-                    containsKw(s.Solution.Title) ||
-                    containsKw(s.Solution.Content))
-                .WhereIf(filter.TypeIds != null, s =>
-                    s.Problem.Types.Any(t => filter.TypeIds.Contains(t.ProblemTypeId)))
+                    contentCt(s.Problem, s.Solution) ||
+                    (filter.TypeIds != null && s.Problem.Types.Any(t => filter.TypeIds.Contains(t.ProblemTypeId))))
                 .ToList();
             
             return await Task.Run(() =>

@@ -23,6 +23,10 @@
     </environment>
 }
 
+@{
+    ViewBag.Title = "Edit Solution";
+}
+
 <div class="content-container">
     <form asp-action=@(Model == null ? "Create" : "Update") method="post" id="edit-problem-solution-form">
         <div class="card">

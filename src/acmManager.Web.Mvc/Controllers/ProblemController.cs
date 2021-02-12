@@ -23,19 +23,25 @@ namespace acmManager.Web.Controllers
             _problemAppService = problemAppService;
         }
 
-        private const int PageSize = 30;
+        public const int PageSize = 30;
 
         #region Pages
-        
+
         [HttpGet, Route("/Problem/Solution")]
-        public async Task<ActionResult> Index(int page, string keyword, string type)
+        public async Task<ActionResult> Index(string keyword)
+        {
+            return await Index(1, keyword);
+        }
+        
+        [HttpGet, Route("/Problem/Solution/P{page}")]
+        public async Task<ActionResult> Index(int page, string keyword)
         {
             var filter = new GetAllSolutionFilter
             {
                 KeyWords = keyword ?? "",
-                TypeIds = type.IsNullOrEmpty()
+                TypeIds = keyword.IsNullOrEmpty()
                     ? null
-                    : (await _problemAppService.GetAllProblemTypes(type)).Select(t => t.Id),
+                    : (await _problemAppService.GetAllProblemTypes(keyword)).Select(t => t.Id),
                 MaxResultCount = PageSize,
                 SkipCount = (page <= 1 ? 0 : page - 1) * PageSize 
             };
