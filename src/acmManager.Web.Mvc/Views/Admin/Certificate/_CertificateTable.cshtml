@@ -35,8 +35,12 @@
                     </button>
                 </th>
                 <th scope="row">@cer.Name</th>
-                <td>@L(cer.Level.ToString())</td>
-                <td>@cer.AwardDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <span class="text-overflow"> @L(cer.Level.ToString()) </span>
+                </td>
+                <td>
+                    <span class="text-overflow"> @cer.AwardDate.ToString("yyyy-MM-dd") </span>
+                </td>
                 <td>
                     <button class="btn btn-block" onclick="location.href = '@cer.File.FilePath'">
                         <img class="custom-icon" src="~/img/download.svg" alt=""/>

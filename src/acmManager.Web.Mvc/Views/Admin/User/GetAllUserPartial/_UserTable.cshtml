@@ -17,11 +17,19 @@
         {
             <tr onclick="location.href = '@Url.Action("GetUserProfile")?userId=@userInfo.UserId'">
                 <th scope="row">@(userInfo.StudentNumber ?? "null")</th>
-                <td>@(userInfo.Name ?? "null")</td>
-                <td>@L(userInfo.Gender.ToString())</td>
-                <td>@(userInfo.Org ?? "null")</td>
-                <td>@(userInfo.StudentType ?? "null")</td>
-                <td>@L(userInfo.Type.ToString())</td>
+                <td>
+                    <span class="text-overflow"> @(userInfo.Name ?? "null") </span>
+                </td>
+                <td> @L(userInfo.Gender.ToString()) </td>
+                <td>
+                    <span class="text-overflow"> @(userInfo.Org ?? "null") </span>
+                </td>
+                <td>
+                    <span class="text-overflow"> @(userInfo.StudentType ?? "null") </span>
+                </td>
+                <td>
+                    <span class="text-overflow"> @L(userInfo.Type.ToString()) </span>
+                </td>
             </tr>
         }
         </tbody>
