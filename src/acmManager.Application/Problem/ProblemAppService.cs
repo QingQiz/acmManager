@@ -128,6 +128,7 @@ namespace acmManager.Problem
                 containsKw(a.Content));
             
             var query = _problemSolutionManager.MakeQuery().AsEnumerable()
+                .WhereIf(filter.UserId != 0, s => s.CreatorUserId == filter.UserId)
                 .WhereIf(filter.KeyWords != "", s =>
                     contentCt(s.Problem, s.Solution) ||
                     (filter.TypeIds != null && s.Problem.Types.Any(t => filter.TypeIds.Contains(t.ProblemTypeId))))

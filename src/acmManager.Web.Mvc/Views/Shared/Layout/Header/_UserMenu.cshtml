@@ -13,13 +13,13 @@
     </button>
     <div class="dropdown-menu dropdown-menu-right noSelect" role="menu" aria-labelledby="menu1">
         <button class="dropdown-item" onclick="window.location.href = '@Url.Action("UserProfile", "User")'">
-            <img src="~/img/profile.svg" alt=""> 我的资料
+            <i class="fa fa-user"> </i> 我的资料
         </button>
         <button class="dropdown-item disabled">
-            <img src="~/img/home.svg" alt=""> 我的主页
+            <i class="fa fa-home"> </i> 我的主页
         </button>
-        <button class="dropdown-item disabled">
-            <img src="~/img/blog.svg" alt=""> 我的博客
+        <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Problem", new {user=AbpSession.GetUserId()})'">
+            <img src="~/img/blog.svg" alt=""> 我的题解
         </button>
         <button class="dropdown-item disabled">
             <img src="~/img/contest.svg" alt=""> 我的比赛
