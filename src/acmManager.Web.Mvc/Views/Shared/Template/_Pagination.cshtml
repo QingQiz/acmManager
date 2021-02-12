@@ -1,16 +1,14 @@
-﻿@using acmManager.Web.Models.Admin
-@model IndexViewModel
+﻿@model acmManager.Web.Models.Shared.PaginationViewModel
 
 <nav aria-label="Page navigation pagination" class="overflow-auto">
     @{
-        var filter = Model.CurrentUserFilter ?? new GetAllUserWithFilterViewModel();
-        var index = filter.SkipCount / filter.MaxResultCount + 1;
+        var index = Model.SkipCount / Model.MaxResultCount + 1;
         var indexStart = Math.Max(1, index - 3);
-        var indexEnd = (Model.Users.AllResultCount + filter.MaxResultCount - 1) / filter.MaxResultCount;
+        var indexEnd = (Model.AllResultCount + Model.MaxResultCount - 1) / Model.MaxResultCount;
     }
     <ul class="pagination justify-content-end mt-3 mr-0">
         <div class="text-right mr-3" style="color: #8c8c8c; margin: auto">
-            Result Count: @(Model.Users.AllResultCount)
+            Result Count: @(Model.AllResultCount)
         </div>
         <li class="page-item"><a class="page-link page-first" href="#">First</a></li>
         <li class="page-item @(index == 1 ? "disabled" : "")"><a class="page-link page-previous" href="#">Previous</a></li>
@@ -33,4 +31,5 @@
         <li class="page-item @(index == indexEnd ? "disabled" : "")"><a class="page-link page-next" href="#">Next</a></li>
     </ul>
 </nav>
+
 

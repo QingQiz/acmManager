@@ -1,4 +1,5 @@
 ﻿@using acmManager.Users.Dto
+@using acmManager.Web.Models.Shared
 @model acmManager.Web.Models.Admin.IndexViewModel
 
 <div class="overflow-auto mt-3">
@@ -36,4 +37,9 @@
     </table>
 </div>
 <hr/>
-@await Html.PartialAsync("_Pagination")
+@await Html.PartialAsync("Template/_Pagination", new PaginationViewModel
+{
+    MaxResultCount = Model.CurrentUserFilter?.MaxResultCount ?? 30,
+    SkipCount = Model.CurrentUserFilter?.SkipCount ?? 0,
+    AllResultCount = Model.Users.AllResultCount
+})

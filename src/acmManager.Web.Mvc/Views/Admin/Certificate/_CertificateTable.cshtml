@@ -1,5 +1,6 @@
 ﻿@using acmManager.Users
 @using Abp.UI
+@using acmManager.Web.Models.Shared
 @model acmManager.Web.Models.Admin.GetAllCertificateViewModel
 @inject UserAppService UserAppService
 
@@ -56,7 +57,12 @@
         </tbody>
     </table>
     <hr/>
-    @await Html.PartialAsync("Certificate/_Pagination")
+    @await Html.PartialAsync("Template/_Pagination", new PaginationViewModel
+    {
+        MaxResultCount = Model.CurrentFilter?.MaxResultCount ?? 30,
+        SkipCount = Model.CurrentFilter?.SkipCount ?? 0,
+        AllResultCount = Model.Certificates.AllResultCount
+    })
 </div>
 
 <div class="modal fade" id="delete-certificate-modal">
