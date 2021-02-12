@@ -1,0 +1,23 @@
+﻿@using acmManager.Web.Models.Shared
+@model acmManager.Problem.Dto.GetSolutionOutput
+
+<div class="content-container" style="max-width: 1060px">
+    <div class="card mt-3">
+        <div class="card-header noSelect" style="padding: 2px; background-color: unset">
+            <h5 class="mb-0">
+                <button class="btn collapsed" data-target="#comment-card" data-toggle="collapse">
+                    @L("Comment.List")
+                </button>
+            </h5>
+        </div>
+        
+        <div class="collapse show" id="comment-card">
+            <div class="card-body">
+                @await Html.PartialAsync("Template/_CommentList", new CommentViewModel
+                {
+                    Comments = Model.Comments
+                })
+            </div>
+        </div>
+    </div>
+</div>

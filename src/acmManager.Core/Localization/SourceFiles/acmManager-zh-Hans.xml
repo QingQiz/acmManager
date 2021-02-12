@@ -62,6 +62,8 @@
 
         <text name="Solution" value="题解"/>
         <text name="Solution.Content" value="题解内容"/>
+        
+        <text name="Comment.List" value="评论区"/>
 
         <text name="MaxResultCount" value="分页大小" />
 

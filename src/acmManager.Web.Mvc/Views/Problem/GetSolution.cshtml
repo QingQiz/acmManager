@@ -61,11 +61,6 @@
 
 @if (Model.Comments.Any())
 {
-    <div class="content-container" style="max-width: 1060px">
-        @Html.PartialAsync("Template/_CommentList", new CommentViewModel
-        {
-            Comments = Model.Comments
-        })
-    </div>
+    @await Html.PartialAsync("_Comments")
 }
 

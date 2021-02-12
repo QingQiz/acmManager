@@ -1,21 +1,22 @@
 ﻿@using acmManager.File
 @using acmManager.Web.Controllers
+@using acmManager.Web.Models.Shared
 @model acmManager.Web.Models.Shared.CommentViewModel;
 @inject FileAppService FileAppService
 
 @{
     var getUserPhoto = new Func<long, Task<string>>(async userId
         => (await FileAppService.GetUserPhotoAsync(userId))?.FilePath ?? UserController.DefaultUserPhoto);
-    var commentGroups = Model.Comments.GroupBy(c => c.ReplyToCommentId);
+    var commentGroups = Model.Comments.GroupBy(c => c.ReplyToCommentId).ToList();
+    var rootComments = commentGroups.First(g => g.Key == 0);
 }
 
 
-@foreach (var commentGroup in commentGroups)
+@foreach (var comment in rootComments)
 {
-    foreach (var comment in commentGroup.AsEnumerable())
-    {
-        <p>
-            @comment.Content
-        </p>
-    }
+    @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(comment.CreatorUserId, comment.CreationTime))
+    <div class="comments" id="comment-@comment.Id" style="margin-left: 24px; max-width: 99%;">
+        <textarea hidden>@comment.Content</textarea>
+    </div>
+    <hr/>
 }
