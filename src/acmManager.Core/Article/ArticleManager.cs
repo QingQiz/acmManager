@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using acmManager.Public;
@@ -26,7 +27,7 @@ namespace acmManager.Article
                 throw new UserFriendlyException("No such article");
             }
 
-            return await query.FirstAsync();
+            return await query.Where(a => a.Id == articleId).FirstAsync();
         }
     }
 }

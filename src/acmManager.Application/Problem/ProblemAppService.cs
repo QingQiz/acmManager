@@ -149,17 +149,6 @@ namespace acmManager.Problem
         }
 
         [UnitOfWork]
-        public virtual async Task<IEnumerable<GetAllProblemSolutionList>> GetAllSolutionByUser(long userId)
-        {
-            return await Task.Run(
-                () => _problemSolutionManager
-                    .MakeQuery()
-                    .Where(s => s.CreatorUserId == userId)
-                    .OrderByDescending(s => s.CreationTime)
-                    .Select(SolutionToDto));
-        }
-
-        [UnitOfWork]
         public virtual async Task<GetSolutionOutput> GetSolution(long id)
         {
             var res = await _problemSolutionManager.Get(id);
@@ -181,7 +170,7 @@ namespace acmManager.Problem
                 
                 CreatorId = res.CreatorUserId ?? 0,
                 
-                Comments = ObjectMapper.Map<IEnumerable<CommentDto>>(res.Solution.Comments)
+                Comments = res.Solution.Comments.Select(ArticleAppService.CommentToDto)
             };
         }
 

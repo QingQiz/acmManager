@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
@@ -18,6 +19,23 @@ namespace acmManager.Article
             _articleManager = articleManager;
             _commentManager = commentManager;
         }
+
+        #region noMapped
+
+        [RemoteService(false)]
+        public static CommentDto CommentToDto(Comment comment)
+        {
+            return new CommentDto
+            {
+                Id = comment.Id,
+                CreationTime = comment.CreationTime,
+                CreatorUserId = comment.CreatorUserId ?? 0,
+                ReplyToCommentId = comment.ReplyToCommentId,
+                Content = comment.Content
+            };
+        }
+
+        #endregion
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Article)]

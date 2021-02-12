@@ -1,0 +1,21 @@
+﻿@using acmManager.File
+@using acmManager.Web.Controllers
+@model acmManager.Web.Models.Shared.CommentViewModel;
+@inject FileAppService FileAppService
+
+@{
+    var getUserPhoto = new Func<long, Task<string>>(async userId
+        => (await FileAppService.GetUserPhotoAsync(userId))?.FilePath ?? UserController.DefaultUserPhoto);
+    var commentGroups = Model.Comments.GroupBy(c => c.ReplyToCommentId);
+}
+
+
+@foreach (var commentGroup in commentGroups)
+{
+    foreach (var comment in commentGroup.AsEnumerable())
+    {
+        <p>
+            @comment.Content
+        </p>
+    }
+}

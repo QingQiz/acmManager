@@ -18,6 +18,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/solution.comment.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Problem/Comment.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/solution.index.min.js",
     "inputFiles": [
       "wwwroot/view-resources/Views/Problem/Index.js"

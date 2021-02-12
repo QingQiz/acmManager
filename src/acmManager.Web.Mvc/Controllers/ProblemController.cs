@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
 using Abp.Runtime.Session;
+using acmManager.Article;
+using acmManager.Article.Dto;
 using acmManager.Authorization;
 using acmManager.Controllers;
 using acmManager.Problem;
@@ -17,15 +19,29 @@ namespace acmManager.Web.Controllers
     public class ProblemController : acmManagerControllerBase
     {
         private readonly ProblemAppService _problemAppService;
+        private readonly ArticleAppService _articleAppService;
 
-        public ProblemController(ProblemAppService problemAppService)
+        public ProblemController(ProblemAppService problemAppService, ArticleAppService articleAppService)
         {
             _problemAppService = problemAppService;
+            _articleAppService = articleAppService;
         }
 
         public const int PageSize = 30;
 
         #region Pages
+
+        [AbpMvcAuthorize]
+        [HttpGet, Route("/Problem/Solution/CommentTo/{solutionId}")]
+        public async Task<ActionResult> CommentTo(long solutionId, long replyToCommentId)
+        {
+            var solution = await _problemAppService.GetSolution(solutionId);
+            return View("CommentTo", new CommentToSolutionViewModel
+            {
+                Solution = solution,
+                ReplyToCommentId = replyToCommentId
+            });
+        }
 
         [HttpGet, Route("/Problem/Solution")]
         public async Task<ActionResult> Index(string keyword)
@@ -137,6 +153,21 @@ namespace acmManager.Web.Controllers
         {
             await _problemAppService.DeleteSolution(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost, Route("/Problem/Solution/Comment")]
+        [AbpMvcAuthorize]
+        public async Task<RedirectToActionResult> CommentToSolution(long solutionId, long replyToCommentId, string content)
+        {
+            var solution = await _problemAppService.GetSolution(solutionId);
+            await _articleAppService.CommentToArticle(new CommentToArticleInput
+            {
+                ReplyToCommentId = replyToCommentId,
+                ArticleId = solution.SolutionId,
+                Content = content
+            });
+
+            return RedirectToAction("GetSolution", new {solutionId});
         }
         
         #endregion
