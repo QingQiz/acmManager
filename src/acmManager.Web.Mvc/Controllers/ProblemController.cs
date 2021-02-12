@@ -30,12 +30,12 @@ namespace acmManager.Web.Controllers
         [HttpGet, Route("/Problem/Solution")]
         public async Task<ActionResult> Index(int page, string keyword, string type)
         {
-            var matchTypes = _problemAppService.GetAllProblemTypes(type);
-            
             var filter = new GetAllSolutionFilter
             {
                 KeyWords = keyword ?? "",
-                TypeIds = type.IsNullOrEmpty() ? null : (await matchTypes).Select(t => t.Id),
+                TypeIds = type.IsNullOrEmpty()
+                    ? null
+                    : (await _problemAppService.GetAllProblemTypes(type)).Select(t => t.Id),
                 MaxResultCount = PageSize,
                 SkipCount = (page <= 1 ? 0 : page - 1) * PageSize 
             };

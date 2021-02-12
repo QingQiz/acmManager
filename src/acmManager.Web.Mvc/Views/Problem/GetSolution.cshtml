@@ -5,7 +5,14 @@
 @section styles
 {
     @await Html.PartialAsync("Template/_MdPreviewHeader")
-    <link href="~/view-resources/Views/Problem/Solution.css" rel="stylesheet">
+
+    <environment include="Development">
+        <link href="~/view-resources/Views/Problem/Solution.css" rel="stylesheet">
+    </environment>
+
+    <environment exclude="Development">
+        <link href="~/view-resources/Views/_Bundles/solution.min.css" rel="stylesheet">
+    </environment>
 }
 
 @section scripts
@@ -22,12 +29,16 @@
     </environment>
 }
 
+@{
+    ViewBag.Title = Model.SolutionTitle;
+}
+
 <div class="content-container" style="max-width: 1060px">
     <div style="margin: 0 10px;">
         <h3> @Model.SolutionTitle </h3>
         <hr class="mt-3"/>
 
-        @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel {CreatorId = Model.CreatorId})
+        @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(Model.CreatorId))
         
     </div>
     <hr class="mt-3"/>

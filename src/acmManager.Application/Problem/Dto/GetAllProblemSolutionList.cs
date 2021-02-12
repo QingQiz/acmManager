@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace acmManager.Problem.Dto
@@ -11,6 +12,7 @@ namespace acmManager.Problem.Dto
         
         public string ArticleTitle { get; set; }
         public long CreatorUserId { get; set; }
+        public DateTime CreationTime { get; set; }
         public IEnumerable<ProblemTypeDto> ProblemTypes { get; set; }
     }
 }

@@ -18,6 +18,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/solution.min.css",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Problem/Solution.css"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/login.min.css",
     "inputFiles": [
       "wwwroot/view-resources/Views/Account/*.css"

@@ -1,4 +1,5 @@
-﻿.page-container {
+﻿/* container */
+.page-container {
     position: relative;
     min-height: 83vh;
 }
@@ -14,6 +15,32 @@
     padding: 20px 10px;
     margin: auto auto 20px;
 }
+
+@media only screen and (min-width: 800px) {
+    .content-wrapper {
+        max-width: 80%;
+        padding: 20px 50px;
+    }
+}
+
+/* common style */
+.text-overflow {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.sub-text {
+    color: gray;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.vertical-center {
+    vertical-align: middle !important;
+}
+
 .noSelect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -23,36 +50,54 @@
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
-@media only screen and (min-width: 800px) {
-    .content-wrapper {
-        max-width: 80%;
-        padding: 20px 50px;
-    }
-}
-
+/* scrollbar style (webkit) */
 ::-webkit-scrollbar {
     width: 9px;
     height: 9px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
     background: #efefef;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: #c1c1c1;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #b3b3b3;
 }
 
-.text-overflow {
+/* underline animation */
+.underlineHover:after {
     display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 2px;
+    background-color: #56baed;
+    content: "";
+    transition: width 0.2s;
+}
+
+.underlineHover:hover {
+    color: #0d0d0d;
+}
+
+.underlineHover:hover:after{
+    width: 100%;
+}
+
+a.underlineHover {
+    display: inline-block;
+    color: unset;
+}
+
+a.underlineHover:hover {
+    text-decoration: none;
+}
+
+.type-tag {
+    font-size: 15px;
+    font-style: italic;
 }

@@ -1,12 +1,46 @@
-﻿@model acmManager.Web.Models.Problem.IndexViewModel
+﻿@using acmManager.Web.Models.Shared
+@model acmManager.Web.Models.Problem.IndexViewModel
 
+@section styles
+{
+    <environment include="Development">
+        <link href="~/view-resources/Views/Problem/Solution.css" rel="stylesheet">
+    </environment>
+
+    <environment exclude="Development">
+        <link href="~/view-resources/Views/_Bundles/solution.min.css" rel="stylesheet">
+    </environment>
+}
+
+@{
+    ViewBag.Title = "Solution";
+}
 
 <div class="content-container">
     @Html.ActionLink("Create", "Edit")
     
-    @foreach (var x in Model.Solutions.Solutions)
-    {
-        <br>
-        <a href="@Url.Action("GetSolution", "Problem", new {SolutionId=x.Id})"> @x.Id --- @x.ArticleTitle</a>
-    }
+    <table class="table table-hover">
+        <tbody>
+        @foreach (var x in Model.Solutions.Solutions)
+        {
+            <tr>
+                <td style="width: 176px;">
+                    @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(x.CreatorUserId, x.CreationTime))
+                </td>
+                <td class="vertical-center">
+                    <a class="underlineHover font-weight-bold" style="font-size: 20px"
+                       href="@Url.Action("GetSolution", "Problem", new {SolutionId = x.Id})"> @x.ArticleTitle </a>
+                    <div>
+                        @foreach (var t in x.ProblemTypes)
+                        {
+                            <span class="type-tag badge badge-info" data-toggle="tooltip" data-placement="bottom" title="@L(t.Description)">
+                                @L(t.Name)
+                            </span>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>

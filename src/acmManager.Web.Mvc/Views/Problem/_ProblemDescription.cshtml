@@ -15,7 +15,9 @@
             
             @foreach (var t in Model.ProblemTypes)
             {
-                <span class="sub-text" data-toggle="tooltip" data-placement="bottom" title="@t.Description">&nbsp;@t.Name</span>
+                <span class="badge badge-info type-tag" data-toggle="tooltip" data-placement="bottom" title="@L(t.Description)">
+                    @L(t.Name)
+                </span>
             }
             
             <hr/>

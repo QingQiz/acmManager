@@ -49,6 +49,7 @@ namespace acmManager.Problem
                 ProblemUrl = solution.Problem.Url,
                 ArticleTitle = solution.Solution.Title,
                 CreatorUserId = solution.CreatorUserId ?? 0,
+                CreationTime = solution.CreationTime,
                 ProblemTypes = solution.Problem.Types.Select(t =>
                     ObjectMapper.Map<ProblemTypeDto>(
                         _problemTypeManager.Get(t.ProblemTypeId).Result))
@@ -126,19 +127,19 @@ namespace acmManager.Problem
                     containsKw(s.Solution.Title) ||
                     containsKw(s.Solution.Content))
                 .WhereIf(filter.TypeIds != null, s =>
-                    s.Problem.Types.Any(t => filter.TypeIds.Contains(t.ProblemTypeId)));
+                    s.Problem.Types.Any(t => filter.TypeIds.Contains(t.ProblemTypeId)))
+                .ToList();
             
             return await Task.Run(() =>
             {
-                var problemSolutions = query as ProblemSolution[] ?? query.ToArray();
                 return new GetAllSolutionOutput
                 {
-                    Solutions = problemSolutions
+                    Solutions = query 
                         .Skip(filter.SkipCount)
                         .Take(filter.MaxResultCount)
                         .OrderByDescending(s => s.CreationTime)
                         .Select(SolutionToDto),
-                    AllResultCount = problemSolutions.Count(),
+                    AllResultCount = query.Count(),
                 };
             });
         }
