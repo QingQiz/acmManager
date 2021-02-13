@@ -1,0 +1,14 @@
+﻿@model acmManager.Web.Models.Users.MainPageViewModel
+
+@{
+    var solutions = Model.ProblemSolutions.SelectMany(s => s.ProblemTypes).GroupBy(t => t.Name);
+    var getCount = new Func<string, int>(tName
+        => solutions.FirstOrDefault(g => g.Key == tName)?.Count() ?? 0);
+    var problemTypes = Model.ProblemTypes.Select(t => L(t.Name) + ':' + getCount(t.Name));
+    var problemTypeString = string.Join(',', problemTypes);
+}
+
+<div>
+    <input type="hidden" name="problem-types" value="@problemTypeString:">
+    <canvas id="radar-chart" width="550" style="margin: auto;"> </canvas>
+</div>

@@ -69,7 +69,7 @@ namespace acmManager.Problem
         }
         
         [UnitOfWork]
-        public virtual async Task<IEnumerable<ProblemTypeDto>> GetAllProblemTypes(string keyword)
+        public virtual async Task<IEnumerable<ProblemTypeDto>> GetAllProblemTypes(string keyword = null)
         {
             keyword ??= "";
             keyword = keyword.ToLower();

@@ -106,3 +106,18 @@ a.underlineHover:hover {
     font-size: 15px;
     letter-spacing: 2px;
 }
+
+/*fontawesome vertical center*/ 
+.fa-vc {
+    line-height: inherit!important;
+}
+
+/*font-size*/
+.fs-15 {
+    font-size: 15px!important;
+}
+
+/*disable hover*/
+a.no-hover-line:hover {
+    text-decoration: none;
+}

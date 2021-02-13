@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
@@ -8,6 +9,8 @@ using acmManager.Authorization;
 using acmManager.Authorization.Users;
 using acmManager.Controllers;
 using acmManager.File;
+using acmManager.Problem;
+using acmManager.Problem.Dto;
 using acmManager.Users;
 using acmManager.Users.Dto;
 using acmManager.Users.Type;
@@ -24,14 +27,16 @@ namespace acmManager.Web.Controllers
         private readonly UserAppService _userAppService;
         private readonly UserManager _userManager;
         private readonly UserTypeAppService _userTypeAppService;
+        private readonly ProblemAppService _problemAppService;
 
         public UserController(UserAppService userAppService, FileAppService fileAppService, UserManager userManager,
-            UserTypeAppService userTypeAppService)
+            UserTypeAppService userTypeAppService, ProblemAppService problemAppService)
         {
             _userAppService = userAppService;
             _fileAppService = fileAppService;
             _userManager = userManager;
             _userTypeAppService = userTypeAppService;
+            _problemAppService = problemAppService;
         }
 
         #region Pages
@@ -43,7 +48,15 @@ namespace acmManager.Web.Controllers
             var userInfo = await _userAppService.GetUserInfoAsync(userId);
             return View(new MainPageViewModel
             {
-                UserInfo = userInfo
+                UserId = userId,
+                UserInfo = userInfo,
+                ProblemTypes = await _problemAppService.GetAllProblemTypes(),
+                ProblemSolutions = (await _problemAppService.GetAllSolutionWithFilter(new GetAllSolutionFilter
+                {
+                    UserId = userId,
+                    MaxResultCount = Int32.MaxValue,
+                    SkipCount = 0
+                })).Solutions
             });
         }
 

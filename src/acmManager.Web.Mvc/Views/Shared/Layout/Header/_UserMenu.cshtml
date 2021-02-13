@@ -13,26 +13,26 @@
     </button>
     <div class="dropdown-menu dropdown-menu-right noSelect" role="menu" aria-labelledby="menu1">
         <button class="dropdown-item" onclick="window.location.href = '@Url.Action("UserProfile", "User")'">
-            <i class="fa fa-user"> </i> 我的资料
+            <i class="fa fa-user fa-fw"> </i> 我的资料
         </button>
         <button class="dropdown-item" onclick="window.location.href = '@Url.Action("MainPage", "User")'">
-            <i class="fa fa-home"> </i> 我的主页
+            <i class="fa fa-home fa-fw"> </i> 我的主页
         </button>
         <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Problem", new {user=AbpSession.GetUserId()})'">
-            <img src="~/img/blog.svg" alt=""> 我的题解
+            <i class="fa fa-blog fa-fw"> </i> 我的题解
         </button>
-        <button class="dropdown-item disabled">
-            <img src="~/img/contest.svg" alt=""> 我的比赛
-        </button>
+        @* <button class="dropdown-item disabled"> *@
+        @*     <img src="~/img/contest.svg" alt=""> 我的比赛 *@
+        @* </button> *@
         @if (IsGranted(PermissionNames.PagesUsers_Certificate))
         {
             <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Certificate")'">
-                <img src="~/img/certificate.svg" alt=""> 我的证书
+                <i class="fa fa-award fa-fw"> </i> 我的证书
             </button>
         }
         <hr/>
         <button class="dropdown-item" onclick="window.location.replace('@Url.Action("Logout", "Account")')">
-            <img src="~/img/logout.svg" alt=""> 登出
+            <i class="fa fa-sign-out-alt fa-fw"> </i> 登出
         </button>
     </div>
 </div>
