@@ -18,6 +18,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/user.main.page.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Users/MainPage.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/comment.min.js",
     "inputFiles": [
       "wwwroot/view-resources/Views/Shared/Comment.js"

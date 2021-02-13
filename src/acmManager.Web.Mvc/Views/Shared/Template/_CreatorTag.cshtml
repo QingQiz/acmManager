@@ -10,10 +10,12 @@
     var userInfo = await UserAppService.GetUserInfoAsync(Model.CreatorId);
 
     const string contentCenter = "display: flex; justify-content: center; align-items: center";
+
+    var mainPage = Url.Action("MainPage", "User", new {UserId = Model.CreatorId});
 }
 
 <span class="noSelect">
-    <div class="row" style="margin: inherit;">
+    <div class="row" style="margin: inherit;" onclick="location.href = '@mainPage'">
         <div class="pt-2">
             <img class="userPhoto" src="@userPhoto" alt="">
         </div>

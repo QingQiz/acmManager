@@ -34,7 +34,18 @@ namespace acmManager.Web.Controllers
             _userTypeAppService = userTypeAppService;
         }
 
-        #region GET
+        #region Pages
+
+        public async Task<ActionResult> MainPage(long userId)
+        {
+            userId = userId == 0 ? AbpSession.GetUserId() : userId;
+            
+            var userInfo = await _userAppService.GetUserInfoAsync(userId);
+            return View(new MainPageViewModel
+            {
+                UserInfo = userInfo
+            });
+        }
 
         public async Task<ActionResult> UserProfile()
         {
@@ -51,7 +62,7 @@ namespace acmManager.Web.Controllers
 
         #endregion
 
-        #region Update
+        #region Update User Info
 
         [HttpPost]
         [UnitOfWork]

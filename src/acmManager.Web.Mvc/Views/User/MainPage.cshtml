@@ -1,0 +1,26 @@
+﻿@model acmManager.Web.Models.Users.MainPageViewModel
+
+@section styles
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+}
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+    <environment include="Development">
+        <script src="~/view-resources/Views/Users/MainPage.js"></script>
+    </environment>
+    
+    <environment exclude="Development">
+        <script src="~/view-resources/Views/_Bundles/user.main.page.min.js"></script>
+    </environment>
+}
+
+@{
+    ViewBag.Title = "Main Page: " + Model.UserInfo.StudentNumber;
+}
+
+<div>
+    
+</div>
