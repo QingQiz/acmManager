@@ -1,32 +1,51 @@
-﻿@using acmManager.File
-@using acmManager.Web.Controllers
-@using acmManager.Web.Models.Shared
+﻿@using acmManager.Web.Models.Shared
+@using acmManager.Article.Dto
 @model acmManager.Web.Models.Shared.CommentViewModel;
-@inject FileAppService FileAppService
 
 @{
-    var getUserPhoto = new Func<long, Task<string>>(async userId
-        => (await FileAppService.GetUserPhotoAsync(userId))?.FilePath ?? UserController.DefaultUserPhoto);
     var commentGroups = Model.Comments.GroupBy(c => c.ReplyToCommentId).ToList();
     var rootComments = commentGroups.First(g => g.Key == 0);
 }
 
 
-@foreach (var comment in rootComments)
+@foreach (var rtComment in rootComments)
 {
-    @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(comment.CreatorUserId, comment.CreationTime))
+    @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(rtComment.CreatorUserId, rtComment.CreationTime))
     <div style="margin-left: 24px">
         @* comment content *@
-        <div class="comments" id="comment-@comment.Id" style="max-width: 99%;">
-            <textarea hidden>@comment.Content</textarea>
+        <div class="comments" id="comment-@rtComment.Id" style="max-width: 99%;">
+            <textarea hidden>@rtComment.Content</textarea>
         </div>
 
         @* reply button *@
         <div class="noSelect" style="margin-left: 20px">
-            <div class="badge badge-secondary" style="font-size: 16px; letter-spacing: 2px"
-                 onclick="location.href = '@Model.ReplyToCommentLinkGenerator(comment.Id)'">
+            <div class="badge badge-secondary reply-tag"
+                 onclick="location.href = '@Model.ReplyToCommentLinkGenerator(rtComment.Id)'">
                 <i class="fa fa-reply"> </i> @L("Comment.Reply")
             </div>
+            @{
+                var subCommentsGroup = commentGroups.FirstOrDefault(c => c.Key == rtComment.Id);
+                var subComments = subCommentsGroup?.ToList() ?? new List<CommentDto>();
+            }
+            @foreach (var subComment in subComments)
+            {
+                <hr/>
+                @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(subComment.CreatorUserId, subComment.CreationTime))
+                <div style="margin-left: 24px">
+                    @* comment content *@
+                    <div class="comments" id="comment-@subComment.Id" style="max-width: 99%;">
+                        <textarea hidden>@subComment.Content</textarea>
+                    </div>
+
+                    @* reply button *@
+                    <div class="noSelect" style="margin-left: 20px">
+                        <div class="badge badge-secondary reply-tag"
+                             onclick="location.href = '@Model.ReplyToCommentLinkGenerator(subComment.Id)'">
+                            <i class="fa fa-reply"> </i> @L("Comment.Reply")
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
     <hr/>

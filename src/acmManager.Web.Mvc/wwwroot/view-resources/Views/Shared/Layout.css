@@ -101,3 +101,8 @@ a.underlineHover:hover {
     font-size: 15px;
     font-style: italic;
 }
+
+.replay-tag {
+    font-size: 15px;
+    letter-spacing: 2px;
+}

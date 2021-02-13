@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
+using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using acmManager.Article;
 using acmManager.Authorization;
@@ -33,6 +34,7 @@ namespace acmManager.Web.Controllers
 
         #region Pages
 
+        [UnitOfWork]
         [AbpMvcAuthorize]
         [HttpGet, Route("/Problem/Solution/CommentTo/{solutionId}")]
         public async Task<ActionResult> CommentTo(long solutionId, long replyToCommentId)
@@ -46,6 +48,22 @@ namespace acmManager.Web.Controllers
                 var comment = await _commentManager.Get(replyToCommentId);
                 var content = comment.Content.Split('\n').Select(s => "> " + s);
                 contentInit = string.Join('\n', content) + "\n\n";
+
+                if (comment.ReplyToCommentId != 0)
+                {
+                    // union-find forest
+                    while (true)
+                    {
+                        var commentFather = await _commentManager.Get(comment.ReplyToCommentId);
+                        if (commentFather.ReplyToCommentId == 0)
+                        {
+                            replyToCommentId = comment.ReplyToCommentId;
+                            break;
+                        }
+                        comment.ReplyToCommentId = commentFather.ReplyToCommentId;
+                        comment = commentFather;
+                    }
+                }
             }
             
             return View("Template/Comment/CommentTo", new CommentToViewModel
