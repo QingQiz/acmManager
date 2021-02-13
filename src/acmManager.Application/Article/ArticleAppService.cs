@@ -48,7 +48,6 @@ namespace acmManager.Article
         public virtual async Task<GetArticleOutput> GetArticleAsync(long articleId)
         {
             var article = await _articleManager.Get(articleId);
-            article.ViewTimes += 1;
             return ObjectMapper.Map<GetArticleOutput>(article);
         }
 

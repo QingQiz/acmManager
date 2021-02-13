@@ -1,4 +1,4 @@
-﻿@model acmManager.Web.Models.Problem.CommentToSolutionViewModel
+﻿@model acmManager.Web.Models.Shared.CommentToViewModel
 
 @section styles
 {
@@ -12,27 +12,33 @@
     
     <environment include="Development">
         <script src="~/js/editor.js"></script>
-        <script src="~/view-resources/Views/Problem/Comment.js"></script>
+        <script src="~/view-resources/Views/Shared/Comment.js"></script>
     </environment>
     
     <environment exclude="Development">
         <script src="~/view-resources/Views/_Bundles/editor.min.js"></script>
-        <script src="~/view-resources/Views/_Bundles/solution.comment.min.js"></script>
+        <script src="~/view-resources/Views/_Bundles/comment.min.js"></script>
     </environment>
 }
 
+@{
+    ViewBag.Title = "CommentTo: " + Model.CommentTitle;
+}
+
 <div class="content-container">
-    <h4> COMMENT TO: 
-        <a class="underlineHover" href="@Url.Action("GetSolution", new {solutionId = Model.Solution.Id})">
-            @Model.Solution.SolutionTitle
+    <h4> COMMENT TO:
+        <a class="underlineHover" href="@Model.CommentToLink">
+            @Model.CommentTitle
         </a>
     </h4>
     <hr/>
-    <form asp-action="CommentToSolution">
-        <input type="hidden" name="SolutionId" value="@Model.Solution.Id">
+    <form action="@Url.ActionLink("CommentToArticle", "Article")" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="ArticleId" value="@Model.ArticleId">
         <input type="hidden" name="ReplyToCommentId" value="@Model.ReplyToCommentId">
+        <input type="hidden" name="ReturnUrl", value="@Model.ReturnUrl">
         <div id="comment-content">
-            <textarea hidden name="Content">@("Comment here...\n\n\n\n\n")</textarea>
+            <textarea hidden name="Content">@Model.ContentInit</textarea>
         </div>
 
         <div class="text-right mt-3 noSelect" style="margin: inherit">

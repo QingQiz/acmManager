@@ -5,12 +5,12 @@ using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
 using Abp.Runtime.Session;
 using acmManager.Article;
-using acmManager.Article.Dto;
 using acmManager.Authorization;
 using acmManager.Controllers;
 using acmManager.Problem;
 using acmManager.Problem.Dto;
 using acmManager.Web.Models.Problem;
+using acmManager.Web.Models.Shared;
 using Castle.Core.Internal;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,11 +20,13 @@ namespace acmManager.Web.Controllers
     {
         private readonly ProblemAppService _problemAppService;
         private readonly ArticleAppService _articleAppService;
+        private readonly CommentManager _commentManager;
 
-        public ProblemController(ProblemAppService problemAppService, ArticleAppService articleAppService)
+        public ProblemController(ProblemAppService problemAppService, ArticleAppService articleAppService, CommentManager commentManager)
         {
             _problemAppService = problemAppService;
             _articleAppService = articleAppService;
+            _commentManager = commentManager;
         }
 
         public const int PageSize = 30;
@@ -36,10 +38,24 @@ namespace acmManager.Web.Controllers
         public async Task<ActionResult> CommentTo(long solutionId, long replyToCommentId)
         {
             var solution = await _problemAppService.GetSolution(solutionId);
-            return View("CommentTo", new CommentToSolutionViewModel
+
+            var contentInit = "Comment here...\n\n\n\n\n";
+            
+            if (replyToCommentId != 0)
             {
-                Solution = solution,
-                ReplyToCommentId = replyToCommentId
+                var comment = await _commentManager.Get(replyToCommentId);
+                var content = comment.Content.Split('\n').Select(s => "> " + s);
+                contentInit = string.Join('\n', content) + "\n\n";
+            }
+            
+            return View("Template/Comment/CommentTo", new CommentToViewModel
+            {
+                ArticleId = solution.SolutionId,
+                CommentTitle = solution.SolutionTitle,
+                CommentToLink = Url.Action("GetSolution", new {solutionId}),
+                ReplyToCommentId = replyToCommentId,
+                ReturnUrl = Url.Action("GetSolution", new {solutionId}),
+                ContentInit = contentInit
             });
         }
 
@@ -153,21 +169,6 @@ namespace acmManager.Web.Controllers
         {
             await _problemAppService.DeleteSolution(id);
             return RedirectToAction("Index");
-        }
-
-        [HttpPost, Route("/Problem/Solution/Comment")]
-        [AbpMvcAuthorize]
-        public async Task<RedirectToActionResult> CommentToSolution(long solutionId, long replyToCommentId, string content)
-        {
-            var solution = await _problemAppService.GetSolution(solutionId);
-            await _articleAppService.CommentToArticle(new CommentToArticleInput
-            {
-                ReplyToCommentId = replyToCommentId,
-                ArticleId = solution.SolutionId,
-                Content = content
-            });
-
-            return RedirectToAction("GetSolution", new {solutionId});
         }
         
         #endregion

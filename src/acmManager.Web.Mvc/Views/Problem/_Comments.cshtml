@@ -11,11 +11,16 @@
             </h5>
         </div>
         
-        <div class="collapse show" id="comment-card">
+        <div class="collapse" id="comment-card">
             <div class="card-body">
-                @await Html.PartialAsync("Template/_CommentList", new CommentViewModel
+                @await Html.PartialAsync("Template/Comment/_CommentList", new CommentViewModel
                 {
-                    Comments = Model.Comments
+                    Comments = Model.Comments,
+                    ReplyToCommentLinkGenerator = (commentId) => Url.Action("CommentTo", new
+                    {
+                        solutionId = Model.Id,
+                        replyToCommentId = commentId
+                    })
                 })
             </div>
         </div>

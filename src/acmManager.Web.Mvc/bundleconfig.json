@@ -8,7 +8,7 @@
   {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/layout.min.js",
     "inputFiles": [
-      "wwwroot/view-resources/Views/Shared/*.js"
+      "wwwroot/view-resources/Views/Shared/Layout.js"
     ]
   },
   {
@@ -18,9 +18,9 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/view-resources/Views/_Bundles/solution.comment.min.js",
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/comment.min.js",
     "inputFiles": [
-      "wwwroot/view-resources/Views/Problem/Comment.js"
+      "wwwroot/view-resources/Views/Shared/Comment.js"
     ]
   },
   {

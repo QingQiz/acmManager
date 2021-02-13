@@ -15,8 +15,19 @@
 @foreach (var comment in rootComments)
 {
     @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(comment.CreatorUserId, comment.CreationTime))
-    <div class="comments" id="comment-@comment.Id" style="margin-left: 24px; max-width: 99%;">
-        <textarea hidden>@comment.Content</textarea>
+    <div style="margin-left: 24px">
+        @* comment content *@
+        <div class="comments" id="comment-@comment.Id" style="max-width: 99%;">
+            <textarea hidden>@comment.Content</textarea>
+        </div>
+
+        @* reply button *@
+        <div class="noSelect" style="margin-left: 20px">
+            <div class="badge badge-secondary" style="font-size: 16px; letter-spacing: 2px"
+                 onclick="location.href = '@Model.ReplyToCommentLinkGenerator(comment.Id)'">
+                <i class="fa fa-reply"> </i> @L("Comment.Reply")
+            </div>
+        </div>
     </div>
     <hr/>
 }

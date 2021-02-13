@@ -47,7 +47,7 @@
     @await Html.PartialAsync("_SolutionContent")
     
     <div class="text-right mt-3 noSelect" style="margin: inherit">
-        <button class="btn btn-success" style="letter-spacing: 2px"
+        <button class="btn btn-secondary" style="letter-spacing: 2px"
                 onclick="location.href = '@Url.Action("CommentTo", new {solutionId = Model.Id, replayToCommentId = 0})'">
             @L("Comment")
         </button>
