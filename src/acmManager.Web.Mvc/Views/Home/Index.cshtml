@@ -1,20 +1,45 @@
-﻿<div class="row">
-    <div class="col">
-        <div class="content-container">
-            当前能用的大概有 @Html.ActionLink("证书统计", "Index", "Certificate")，@(Html.ActionLink("用户信息", "UserProfile", "User"))
-            和管理员面板
-        </div>
-    </div>
-    <div class="col">
-        <div class="content-container">
-            <a href="/swagger"> Api List</a>
-            <p> kasjlkajsdlk</p>
-        </div>
-    </div>
-</div>
+﻿@using acmManager.Web.Models.Shared
+@using acmManager.Problem
+@using acmManager.Certificate
+@using acmManager.Problem.Dto
+@inject ProblemAppService ProblemAppService
+@inject CertificateAppService CertificateAppService
+
+
+@section scripts
+{
+    @await Html.PartialAsync("Template/Chart/_ChartScripts")
+}
+
+@section styles
+{
+    @await Html.PartialAsync("Template/Chart/_ChartStyles")
+}
+
+@{
+    var chartData = new ChartViewModel
+    {
+        ProblemTypes = await ProblemAppService.GetAllProblemTypes(),
+        ProblemSolutions = (await ProblemAppService.GetAllSolutionWithFilter(new GetAllSolutionFilter
+        {
+            MaxResultCount = int.MaxValue,
+            SkipCount = 0
+        })).Solutions,
+        Certificates = await CertificateAppService.GetAllCertificateSummary()
+    };
+}
 
 <div class="row">
-    <div class="col">
-        <div class="content-container"> jaslkdj </div>
+    <div class="col-lg-6">
+        <div class="content-container">
+            <a href="/swagger"> Api List</a>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="content-container">
+            <h3 class="noSelect"> 全站数据统计 </h3><hr/>
+            @await Html.PartialAsync("Template/Chart/_Chart", chartData)
+        </div>
     </div>
 </div>

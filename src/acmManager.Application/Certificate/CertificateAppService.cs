@@ -49,7 +49,7 @@ namespace acmManager.Certificate
         /// <param name="userId"></param>
         /// <returns></returns>
         [UnitOfWork]
-        public virtual async Task<IEnumerable<GetAllCertificateSummary>> GetAllCertificateSummary(long userId)
+        public virtual async Task<IEnumerable<GetAllCertificateSummary>> GetAllCertificateSummary(long userId=0)
         {
             return (await _certificateManager.GetAll())
                 .WhereIf(userId != 0, c => c.CreatorUserId == userId)
