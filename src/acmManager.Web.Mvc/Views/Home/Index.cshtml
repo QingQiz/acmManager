@@ -17,22 +17,40 @@
 }
 
 @{
+    var allSolutions = await ProblemAppService.GetAllSolutionWithFilter(new GetAllSolutionFilter
+    {
+        MaxResultCount = int.MaxValue,
+        SkipCount = 0
+    });
+    
     var chartData = new ChartViewModel
     {
         ProblemTypes = await ProblemAppService.GetAllProblemTypes(),
-        ProblemSolutions = (await ProblemAppService.GetAllSolutionWithFilter(new GetAllSolutionFilter
-        {
-            MaxResultCount = int.MaxValue,
-            SkipCount = 0
-        })).Solutions,
+        ProblemSolutions = allSolutions.Solutions,
         Certificates = await CertificateAppService.GetAllCertificateSummary()
     };
+
+    const int nTake = 20;
+
+    var newestSolution = allSolutions.Solutions
+        .OrderByDescending(s => s.CreationTime)
+        .Take(nTake);
 }
 
 <div class="row">
     <div class="col-lg-6">
         <div class="content-container">
-            <a href="/swagger"> Api List</a>
+            <h3 class="noSelect"> 最新提交的题解 </h3><hr/>
+            @await Html.PartialAsync("Template/_SolutionTable", new SolutionTableViewModel
+            {
+                Solutions = new GetAllSolutionOutput
+                {
+                    Solutions = newestSolution,
+                    AllResultCount = nTake 
+                },
+                Filter = null,
+                Search = false
+            })
         </div>
     </div>
 

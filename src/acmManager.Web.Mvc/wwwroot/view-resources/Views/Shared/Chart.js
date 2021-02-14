@@ -158,5 +158,5 @@ $(function () {
     
     let labelCertificate = selectValByName('certificate-count', '~')
     
-    doughnutChart($('#certificate-count-chart')[0], '证书数量统计', '数量', labelCertificate);
+    doughnutChart($('#certificate-count-chart')[0], '证书统计', '数量', labelCertificate);
 });

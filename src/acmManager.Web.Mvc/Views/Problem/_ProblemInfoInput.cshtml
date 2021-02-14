@@ -30,11 +30,11 @@
         {
             @if (Model != null && Model.ProblemTypes.Any(pt => pt.Name == t.Name))
             {
-                <option value="@t.Id" data-subtext="@t.Description" selected> @L(t.Name) </option>
+                <option value="@t.Id" data-subtext="@L(t.Description)" selected> @L(t.Name) </option>
             }
             else
             {
-                <option value="@t.Id" data-subtext="@t.Description"> @L(t.Name) </option>
+                <option value="@t.Id" data-subtext="@L(t.Description)"> @L(t.Name) </option>
             }
         }
     </select>

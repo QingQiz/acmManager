@@ -1,0 +1,64 @@
+﻿@using acmManager.Web.Models.Shared
+@model SolutionTableViewModel
+
+<table class="table table-hover">
+    @if (Model.Search)
+    {
+        <thead>
+        <tr>
+            <th>
+                <button class="btn btn-success" onclick="location.href = '@Url.Action("Edit", "Problem")'">
+                    提交题解
+                </button> </th>
+            <th>
+                <div class="input-group">
+                    <input type="hidden" value="@Model.Filter.UserId" id="search-solution-user">
+                    <input type="text" class="form-control" placeholder="Search..." id="search-solution-content" value="@Model.Filter.KeyWords">
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="button" id="search-solution-btn">
+                            <i class="fa fa-search"> </i>
+                        </button>
+                    </div>
+                </div>
+            </th>
+        </tr></thead>
+    }
+    <tbody>
+    @foreach (var x in Model.Solutions.Solutions)
+    {
+        <tr>
+            <td class="vertical-center" style="width: 176px;">
+                @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(x.CreatorUserId, x.CreationTime))
+            </td>
+            <td class="vertical-center" onclick="location.href = '@Url.Action("GetSolution", "Problem", new {solutionId = x.Id})'">
+                <span class="font-weight-bold" style="font-size: 20px"
+                      href="@Url.Action("GetSolution", "Problem", new {SolutionId = x.Id})"> @x.ArticleTitle </span>
+                <div class="mt-1">
+                    @foreach (var t in x.ProblemTypes)
+                    {
+                        <span class="type-tag badge badge-info" data-toggle="tooltip" data-placement="bottom" title="@L(t.Description)">
+                            @L(t.Name)
+                        </span>
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+@if (Model.Search)
+{
+    <hr/>
+    @await Html.PartialAsync("Template/_Pagination", new PaginationViewModel
+    {
+        MaxResultCount = Model.Filter?.MaxResultCount ?? 30,
+        SkipCount = Model.Filter?.SkipCount ?? 0,
+        AllResultCount = Model.Solutions.AllResultCount,
+        LinkGenerator = p => Url.Action("Index", "Problem", new
+        {
+            page = p,
+            keyword = Model.Filter.KeyWords,
+            user = Model.Filter.UserId
+        })
+    })
+}

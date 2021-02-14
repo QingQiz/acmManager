@@ -1,4 +1,5 @@
-﻿@model acmManager.Web.Models.Problem.IndexViewModel
+﻿@using acmManager.Web.Models.Shared
+@model acmManager.Web.Models.Problem.IndexViewModel
 
 @section styles
 {
@@ -27,5 +28,10 @@
 }
 
 <div class="content-container">
-    @await Html.PartialAsync("_SolutionTable")
+    @await Html.PartialAsync("Template/_SolutionTable", new SolutionTableViewModel
+    {
+        Solutions = Model.Solutions,
+        Filter = Model.Filter,
+        Search = true
+    })
 </div>
