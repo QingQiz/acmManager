@@ -1,14 +1,25 @@
 ﻿@model acmManager.Web.Models.Users.MainPageViewModel
 
 @{
-    var solutions = Model.ProblemSolutions.SelectMany(s => s.ProblemTypes).GroupBy(t => t.Name);
+    var solutionsGroupByType = Model.ProblemSolutions.SelectMany(s => s.ProblemTypes).GroupBy(t => t.Name);
     var getCount = new Func<string, int>(tName
-        => solutions.FirstOrDefault(g => g.Key == tName)?.Count() ?? 0);
+        => solutionsGroupByType.FirstOrDefault(g => g.Key == tName)?.Count() ?? 0);
     var problemTypes = Model.ProblemTypes.Select(t => L(t.Name) + ':' + getCount(t.Name));
+    // problemTypeString ::= problemType:solutionCount[,problemType:solutionCount]*
     var problemTypeString = string.Join(',', problemTypes);
+
+    var sum = 0;
+    var solutionsCount = Model.ProblemSolutions
+        .OrderBy(s => s.CreationTime)
+        .Select(s => s.CreationTime.ToString("yyyy-MM-dd HH:mm:ss") + '~' + (sum += 1));
+    // solutionCountString ::= date~count[,date~count]*
+    var solutionCountString = string.Join(',', solutionsCount);
 }
 
 <div>
     <input type="hidden" name="problem-types" value="@problemTypeString:">
-    <canvas id="radar-chart" width="550" style="margin: auto;"> </canvas>
+    <canvas id="radar-chart" style="margin: auto; max-width: 550px;"> </canvas>
+    
+    <input type="hidden" name="problem-count" value="@solutionCountString">
+    <canvas id="solution-count-chart" style="margin: auto; max-width: 700px"> </canvas>
 </div>
