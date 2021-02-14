@@ -121,3 +121,9 @@ a.underlineHover:hover {
 a.no-hover-line:hover {
     text-decoration: none;
 }
+
+/*canvas */
+canvas {
+    height: 100%;
+    width: 100%;
+}

@@ -97,10 +97,10 @@ let lineChart = function (ctx, title, labelTitle, labelToData) {
 
 $(function () {
     let labelsProblemTypes = $('input[name="problem-types"]').val().split(',').map(s => s.split(':'));
-    
+
     radarChart($('#radar-chart')[0], '题解——题目类型统计', "题目数量", labelsProblemTypes);
-    
+
     let labelSolutionCount = $('input[name="problem-count"]').val().split(',').map(s => s.split('~'));
-    
+
     lineChart($('#solution-count-chart')[0], '题解——数量统计', "题解总数", labelSolutionCount);
 });

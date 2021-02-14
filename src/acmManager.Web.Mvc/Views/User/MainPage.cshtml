@@ -1,14 +1,12 @@
 ﻿@using acmManager.File
 @using acmManager.Web.Controllers
+@using acmManager.Web.Models.Shared
 @inject FileAppService FileAppService;
 @model acmManager.Web.Models.Users.MainPageViewModel
 
 @section styles
 {
-    @* chart js *@
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
-    
-    <link href="~/view-resources/Views/Users/MainPage.css" rel="stylesheet"/>
+    @await Html.PartialAsync("Template/Chart/_ChartStyles")
     <environment include="Development">
         <link href="~/view-resources/Views/Users/Profile.css" rel="stylesheet"/>
     </environment>
@@ -20,16 +18,7 @@
 
 @section scripts
 {
-    @* chart js *@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js" integrity="sha512-SuxO9djzjML6b9w9/I07IWnLnQhgyYVSpHZx0JV97kGBfTIsUYlWflyuW4ypnvhBrslz1yJ3R+S14fdCWmSmSA==" crossorigin="anonymous"></script>@using System.Globalization
-    
-    <environment include="Development">
-        <script src="~/view-resources/Views/Users/MainPage.js"></script>
-    </environment>
-    
-    <environment exclude="Development">
-        <script src="~/view-resources/Views/_Bundles/user.main.page.min.js"></script>
-    </environment>
+    @await Html.PartialAsync("Template/Chart/_ChartScripts")
 }
 
 @{
@@ -59,10 +48,10 @@
                 <div class="wizard">
                     <nav class="list-group list-group-flush">
                         <a class="list-group-item active fs-15 no-hover-line" href="#menu-charts" data-toggle="pill">
-                            <i class="fa fa-chart-pie fa-vc fa-fw"> </i> 题解统计
+                            <i class="fa fa-chart-pie fa-vc fa-fw"> </i> 统计
                         </a>
-                        <a class="list-group-item fs-15 no-hover-line disabled" href="#menu-certificate" data-toggle="pill">
-                            <i class="fa fa-certificate fa-vc fa-fw"> </i> 证书统计
+                        <a class="list-group-item fs-15 no-hover-line disabled" href="#menu-blog" data-toggle="pill">
+                            <i class="fa fa-blog fa-vc fa-fw"> </i> 博客
                         </a>
                     </nav>
                 </div>
@@ -71,11 +60,15 @@
             <div class="col-lg-9 pb-5 tab-content">
                 <!-- charts -->
                 <div class="tab-pane fade show active" id="menu-charts">
-                    @await Html.PartialAsync("_Charts")
+                    @await Html.PartialAsync("Template/Chart/_Chart", new ChartViewModel
+                    {
+                        ProblemSolutions = Model.ProblemSolutions,
+                        ProblemTypes = Model.ProblemTypes
+                    })
                 </div>
 
                 <!-- certificates -->
-                <div class="tab-pane fade" id="menu-certificate">
+                <div class="tab-pane fade" id="menu-blog">
                 </div>
             </div>
         </div>

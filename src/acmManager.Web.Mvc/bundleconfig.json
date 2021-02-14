@@ -18,9 +18,9 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/view-resources/Views/_Bundles/user.main.page.min.js",
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/chart.min.js",
     "inputFiles": [
-      "wwwroot/view-resources/Views/Users/MainPage.js"
+      "wwwroot/view-resources/Views/Shared/Chart.js"
     ]
   },
   {
