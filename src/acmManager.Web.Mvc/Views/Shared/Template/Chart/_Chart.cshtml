@@ -1,6 +1,7 @@
 ﻿@model acmManager.Web.Models.Shared.ChartViewModel
 
 @{
+    // problem types
     var solutionsGroupByType = Model.ProblemSolutions.SelectMany(s => s.ProblemTypes).GroupBy(t => t.Name);
     var getCount = new Func<string, int>(tName
         => solutionsGroupByType.FirstOrDefault(g => g.Key == tName)?.Count() ?? 0);
@@ -8,20 +9,32 @@
     // problemTypeString ::= problemType:solutionCount[,problemType:solutionCount]*
     var problemTypeString = string.Join(',', problemTypes);
 
+    // solution count
     var sum = 0;
     var solutionsCount = Model.ProblemSolutions
         .OrderBy(s => s.CreationTime)
         .Select(s => s.CreationTime.ToString("yyyy-MM-dd HH:mm:ss") + '~' + (sum += 1));
     // solutionCountString ::= date~count[,date~count]*
     var solutionCountString = string.Join(',', solutionsCount);
+    
+    // certificate
+    var certificateGroupByLevel = Model.Certificates
+        .GroupBy(c => L(c.Level.ToString()))
+        .Select(g => g.Key + '~' + g.Count());
+    var certificateString = string.Join(',', certificateGroupByLevel);
 }
 
-<div>
+<div class="mb-5">
     <input type="hidden" name="problem-types" value="@problemTypeString:">
     <canvas id="radar-chart" style="margin: auto; max-width: 550px;"> </canvas>
 </div>
     
-<div>
+<div class="mt-5 mb-5">
     <input type="hidden" name="problem-count" value="@solutionCountString">
     <canvas id="solution-count-chart" style="margin: auto; max-width: 700px"> </canvas>
+</div>
+
+<div class="mt-5">
+    <input type="hidden" name="certificate-count" value="@certificateString">
+    <canvas id="certificate-count-chart" style="margin: auto; max-width: 550px"> </canvas>
 </div>

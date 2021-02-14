@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
@@ -7,6 +6,7 @@ using Abp.UI;
 using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Authorization.Users;
+using acmManager.Certificate;
 using acmManager.Controllers;
 using acmManager.File;
 using acmManager.Problem;
@@ -28,15 +28,17 @@ namespace acmManager.Web.Controllers
         private readonly UserManager _userManager;
         private readonly UserTypeAppService _userTypeAppService;
         private readonly ProblemAppService _problemAppService;
+        private readonly CertificateAppService _certificateAppService;
 
         public UserController(UserAppService userAppService, FileAppService fileAppService, UserManager userManager,
-            UserTypeAppService userTypeAppService, ProblemAppService problemAppService)
+            UserTypeAppService userTypeAppService, ProblemAppService problemAppService, CertificateAppService certificateAppService)
         {
             _userAppService = userAppService;
             _fileAppService = fileAppService;
             _userManager = userManager;
             _userTypeAppService = userTypeAppService;
             _problemAppService = problemAppService;
+            _certificateAppService = certificateAppService;
         }
 
         #region Pages
@@ -54,9 +56,10 @@ namespace acmManager.Web.Controllers
                 ProblemSolutions = (await _problemAppService.GetAllSolutionWithFilter(new GetAllSolutionFilter
                 {
                     UserId = userId,
-                    MaxResultCount = Int32.MaxValue,
+                    MaxResultCount = int.MaxValue,
                     SkipCount = 0
-                })).Solutions
+                })).Solutions,
+                CertificateSummaries = await _certificateAppService.GetAllCertificateSummary(userId)
             });
         }
 

@@ -10,6 +10,11 @@
 
 let color = Chart.helpers.color;
 
+function random_rgba() {
+    let o = Math.round, r = Math.random, s = 255;
+    return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
+}
+
 let radarChart = function (ctx, title, labelTitle, labelToData) {
     return new Chart(ctx, {
         type: 'radar',
@@ -57,9 +62,9 @@ let lineChart = function (ctx, title, labelTitle, labelToData) {
                     return {
                         t: new Date(l[0]), y: parseInt(l[1])
                     };
-                })
-                // backgroundColor: color(chartColors.red).alpha(0.2).rgbString(),
-                // borderColor: color(chartColors.red).alpha(0.7).rgbString()
+                }),
+                backgroundColor: color(chartColors.blue).alpha(0.2).rgbString(),
+                borderColor: color(chartColors.blue).alpha(0.7).rgbString()
             }]
         },
         options: {
@@ -94,13 +99,64 @@ let lineChart = function (ctx, title, labelTitle, labelToData) {
     });
 };
 
+let doughnutChart = function (ctx, title, labelTitle, labelToData) {
+    let labelColor = labelToData.map(_ => color(random_rgba()));
+    return new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labelToData.map(l => l[0]),
+            datasets: [{
+                label: labelTitle,
+                data: labelToData.map(l => parseInt(l[1])),
+                backgroundColor: labelColor.map(c => c.alpha(0.8).rgbaString()),
+                hoverBackgroundColor: labelColor.map(c => c.alpha(1).rgbaString())
+            }],
+            
+            
+        },
+        options: {
+            responsive: true,
+            aspectRatio: 1,
+            title: {
+                display: true,
+                text: title,
+                fontSize: 15
+            },
+            // see: https://stackoverflow.com/a/59919300/13442887
+            onHover: function (evt, elements) {
+                if (elements && elements.length) {
+                    segment = elements[0];
+                    this.chart.update();
+                    selectedIndex = segment["_index"];
+                    segment._model.outerRadius += 10;
+                } else {
+                    if (segment) {
+                        segment._model.outerRadius -= 10;
+                    }
+                    segment = null;
+                }
+            },
+            layout: {
+                padding: 30
+            }
+        }
+    });
+}
+
+let selectValByName = function (name, separator) {
+    return $(`input[name="${name}"]`).val().split(',').map(s => s.split(separator))
+};
 
 $(function () {
-    let labelsProblemTypes = $('input[name="problem-types"]').val().split(',').map(s => s.split(':'));
+    let labelsProblemTypes = selectValByName("problem-types", ':');
 
     radarChart($('#radar-chart')[0], '题解——题目类型统计', "题目数量", labelsProblemTypes);
 
-    let labelSolutionCount = $('input[name="problem-count"]').val().split(',').map(s => s.split('~'));
+    let labelSolutionCount = selectValByName('problem-count', '~')
 
     lineChart($('#solution-count-chart')[0], '题解——数量统计', "题解总数", labelSolutionCount);
+    
+    let labelCertificate = selectValByName('certificate-count', '~')
+    
+    doughnutChart($('#certificate-count-chart')[0], '证书数量统计', '数量', labelCertificate);
 });

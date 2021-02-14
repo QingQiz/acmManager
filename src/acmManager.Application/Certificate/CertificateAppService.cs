@@ -43,6 +43,19 @@ namespace acmManager.Certificate
 
         #region NormalApis
 
+        /// <summary>
+        /// 获取所有证书的简略信息，不需要验证
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [UnitOfWork]
+        public virtual async Task<IEnumerable<GetAllCertificateSummary>> GetAllCertificateSummary(long userId)
+        {
+            return (await _certificateManager.GetAll())
+                .WhereIf(userId != 0, c => c.CreatorUserId == userId)
+                .Select(ObjectMapper.Map<GetAllCertificateSummary>);
+        }
+
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Certificate_Upload)]
         public virtual async Task UploadCertificateAsync(UploadCertificateInput input)

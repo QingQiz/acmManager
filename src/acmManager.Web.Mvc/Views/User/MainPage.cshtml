@@ -63,11 +63,12 @@
                     @await Html.PartialAsync("Template/Chart/_Chart", new ChartViewModel
                     {
                         ProblemSolutions = Model.ProblemSolutions,
-                        ProblemTypes = Model.ProblemTypes
+                        ProblemTypes = Model.ProblemTypes,
+                        Certificates = Model.CertificateSummaries
                     })
                 </div>
 
-                <!-- certificates -->
+                <!-- blog -->
                 <div class="tab-pane fade" id="menu-blog">
                 </div>
             </div>
