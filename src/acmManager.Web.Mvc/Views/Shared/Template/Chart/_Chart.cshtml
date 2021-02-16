@@ -13,7 +13,7 @@
     var sum = 0;
     var solutionsCount = Model.ProblemSolutions
         .OrderBy(s => s.CreationTime)
-        .Select(s => s.CreationTime.ToString("yyyy-MM-dd HH:mm:ss") + '~' + (sum += 1));
+        .Select(s => s.CreationTime.ToString("yyyy/MM/dd/HH/mm/ss") + '~' + (sum += 1));
     // solutionCountString ::= date~count[,date~count]*
     var solutionCountString = string.Join(',', solutionsCount);
     
