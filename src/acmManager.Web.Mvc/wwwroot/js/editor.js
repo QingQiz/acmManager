@@ -1,4 +1,6 @@
 ﻿let createEditor = function(id, readonly=false) {
+    window.onbeforeunload = e => 'Sure?'
+
     return editormd(id, {
         autoHeight: true,
         readOnly: readonly,
