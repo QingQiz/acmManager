@@ -55,7 +55,7 @@ let radarChart = function (ctx, title, labelTitle, labelToData) {
 let lineChart = function (ctx, title, labelTitle, labelToData) {
     let getDate = function (s) {
         let date = s.split('/').map(n => parseInt(n));
-        return new Date(date[0], date[1], date[2], date[3], date[4], date[5]);
+        return new Date(date[0], date[1] - 1, date[2], date[3], date[4], date[5]);
     }
     return new Chart(ctx, {
         type: 'line',
