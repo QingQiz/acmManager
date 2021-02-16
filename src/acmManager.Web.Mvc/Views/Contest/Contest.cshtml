@@ -37,12 +37,12 @@
     @if (AbpSession.UserId != null && IsGranted(PermissionNames.PagesUsers_Contest))
     {
         <div class="row mt-3 justify-content-between noSelect ">
-            <div class="col-3">
+            <div class="col-lg-3">
                 <button class="btn btn-primary mr-2" style="letter-spacing: 2px"
                         onclick="location.href = '/Contest/@Model.Id/SignUp/List'"> 报名情况 </button>
             </div>
 
-            <div class="text-right col-9">
+            <div class="text-right col-lg-9">
                 @await Html.PartialAsync("_DeleteContest")
                 <button class="btn btn-primary mr-2" style="letter-spacing: 2px"
                         onclick="location.href = '/Contest/Edit?contestId=@Model.Id'"> 编辑比赛 </button>

@@ -15,6 +15,9 @@ function random_rgba() {
     return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
 }
 
+// see https://stackoverflow.com/a/9851769/13442887
+let isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+
 let radarChart = function (ctx, title, labelTitle, labelToData) {
     return new Chart(ctx, {
         type: 'radar',
@@ -60,7 +63,8 @@ let lineChart = function (ctx, title, labelTitle, labelToData) {
                 label: labelTitle,
                 data: labelToData.map(l => {
                     return {
-                        t: new Date(l[0]), y: parseInt(l[1])
+                        // see https://stackoverflow.com/a/5646753/13442887
+                        t: new Date(isSafari ? l[0].replace(/-/g, "/") : l[0]), y: parseInt(l[1])
                     };
                 }),
                 backgroundColor: color(chartColors.blue).alpha(0.2).rgbString(),
