@@ -78,12 +78,6 @@ namespace acmManager.Web.Controllers
         }
 
         [HttpGet, Route("/Problem/Solution")]
-        public async Task<ActionResult> Index(string keyword)
-        {
-            return await Index(1, 0, keyword);
-        }
-        
-        [HttpGet, Route("/Problem/Solution/P{page}")]
         public async Task<ActionResult> Index(int page, int user, string keyword)
         {
             var filter = new GetAllSolutionFilter
