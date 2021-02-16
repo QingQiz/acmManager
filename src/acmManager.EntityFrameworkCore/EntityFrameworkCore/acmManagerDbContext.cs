@@ -19,6 +19,7 @@ namespace acmManager.EntityFrameworkCore
         // Article
         public DbSet<Article.Article> Articles { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
         
         // File
         public DbSet<File.File> Files { get; set; }

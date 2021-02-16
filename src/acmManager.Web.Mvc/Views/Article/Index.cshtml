@@ -1,0 +1,16 @@
+﻿@using acmManager.Web.Models.Shared
+@model acmManager.Web.Models.Article.IndexViewModel
+
+@{
+    ViewBag.Title = "Article";
+}
+
+
+<div class="content-container">
+    @await Html.PartialAsync("Template/_ArticleTable", new ArticleViewModel
+    {
+        Articles = Model.Articles,
+        Filter = Model.Filter,
+        Search = true
+    })
+</div>

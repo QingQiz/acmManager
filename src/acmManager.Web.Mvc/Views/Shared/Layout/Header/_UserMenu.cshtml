@@ -19,11 +19,11 @@
             <i class="fa fa-home fa-fw"> </i> 我的主页
         </button>
         <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Problem", new {user=AbpSession.GetUserId()})'">
-            <i class="fa fa-blog fa-fw"> </i> 我的题解
+            <i class="fa fa-code fa-fw"> </i> 我的题解
         </button>
-        @* <button class="dropdown-item disabled"> *@
-        @*     <img src="~/img/contest.svg" alt=""> 我的比赛 *@
-        @* </button> *@
+        <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Article", new {user=AbpSession.GetUserId()})'">
+            <i class="fa fa-blog fa-fw"> </i> 我的文章
+        </button>
         @if (IsGranted(PermissionNames.PagesUsers_Certificate))
         {
             <button class="dropdown-item" onclick="window.location.href = '@Url.Action("Index", "Certificate")'">

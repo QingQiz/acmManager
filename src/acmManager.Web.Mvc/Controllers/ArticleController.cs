@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Abp.AspNetCore.Mvc.Authorization;
 using acmManager.Article;
 using acmManager.Article.Dto;
+using acmManager.Authorization;
 using acmManager.Controllers;
+using acmManager.Web.Models.Article;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acmManager.Web.Controllers
@@ -10,10 +13,41 @@ namespace acmManager.Web.Controllers
     {
         private readonly ArticleAppService _articleAppService;
 
+        public const int PageSize = 20;
+        
         public ArticleController(ArticleAppService articleAppService)
         {
             _articleAppService = articleAppService;
         }
+
+
+        #region Pages
+        
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Article)]
+        public IActionResult Edit()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<ActionResult> Index(int page, long user, string keyword)
+        {
+            var filter = new GetArticleListFilter
+            {
+                MaxResultCount = PageSize,
+                SkipCount = (page <= 1 ? 0 : page - 1) * PageSize,
+                UserId = user,
+                Keyword = keyword
+            };
+            var result = await _articleAppService.GetArticleWithFilter(filter);
+            
+            return View(new IndexViewModel
+            {
+                Articles = result,
+                Filter = filter
+            });
+        }
+
+        #endregion
         
         #region APIs
         

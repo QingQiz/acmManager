@@ -48,7 +48,7 @@ namespace acmManager.Problem
                 ProblemName = solution.Problem.Name,
                 ProblemUrl = solution.Problem.Url,
                 ArticleTitle = solution.Solution.Title,
-                CreatorUserId = solution.CreatorUserId ?? 0,
+                CreatorUserId = solution.CreatorUserId ?? AppConsts.FallBackUserId,
                 CreationTime = solution.CreationTime,
                 ProblemTypes = solution.Problem.Types.Select(t =>
                     ObjectMapper.Map<ProblemTypeDto>(
@@ -115,10 +115,10 @@ namespace acmManager.Problem
         [UnitOfWork]
         public virtual async Task<GetAllSolutionOutput> GetAllSolutionWithFilter(GetAllSolutionFilter filter)
         {
-            filter.KeyWords ??= "";
+            filter.Keyword ??= "";
 
             var containsKw = new Func<string, bool>(a
-                => a.Contains(filter.KeyWords));
+                => a.Contains(filter.Keyword));
 
             var contentCt = new Func<Problem, Article.Article, bool>((p, a) =>
                 containsKw(p.Url) ||
@@ -129,7 +129,7 @@ namespace acmManager.Problem
             
             var query = _problemSolutionManager.MakeQuery().AsEnumerable()
                 .WhereIf(filter.UserId != 0, s => s.CreatorUserId == filter.UserId)
-                .WhereIf(filter.KeyWords != "", s =>
+                .WhereIf(filter.Keyword != "", s =>
                     contentCt(s.Problem, s.Solution) ||
                     (filter.TypeIds != null && s.Problem.Types.Any(t => filter.TypeIds.Contains(t.ProblemTypeId))))
                 .ToList();

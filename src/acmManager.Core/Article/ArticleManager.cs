@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.UI;
@@ -28,6 +29,11 @@ namespace acmManager.Article
             }
 
             return await query.Where(a => a.Id == articleId).FirstAsync();
+        }
+
+        public new IEnumerable<Article> GetAll()
+        {
+            return Repository.GetAll();
         }
     }
 }

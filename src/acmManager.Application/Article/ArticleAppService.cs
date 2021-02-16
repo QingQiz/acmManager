@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Authorization;
+using Abp.Collections.Extensions;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Article.Dto;
@@ -13,11 +17,15 @@ namespace acmManager.Article
     {
         private readonly ArticleManager _articleManager;
         private readonly CommentManager _commentManager;
+        private readonly BlogManager _blogManager;
 
-        public ArticleAppService(ArticleManager articleManager, CommentManager commentManager)
+        public const int ListContentLength = 200;
+
+        public ArticleAppService(ArticleManager articleManager, CommentManager commentManager, BlogManager blogManager)
         {
             _articleManager = articleManager;
             _commentManager = commentManager;
+            _blogManager = blogManager;
         }
 
         #region noMapped
@@ -29,13 +37,41 @@ namespace acmManager.Article
             {
                 Id = comment.Id,
                 CreationTime = comment.CreationTime,
-                CreatorUserId = comment.CreatorUserId ?? 0,
+                CreatorUserId = comment.CreatorUserId ?? AppConsts.FallBackUserId,
                 ReplyToCommentId = comment.ReplyToCommentId,
                 Content = comment.Content
             };
         }
 
         #endregion
+
+        [UnitOfWork]
+        public virtual async Task<GetArticleListOutput> GetArticleWithFilter(GetArticleListFilter filter)
+        {
+            var query = _blogManager.GetAll().AsEnumerable()
+                .WhereIf(filter.UserId != 0, a => a.CreatorUserId == filter.UserId)
+                .WhereIf(!filter.Keyword.IsNullOrWhiteSpace(), a =>
+                    a.Article.Content.Contains(filter.Keyword) || a.Article.Title.ToLower().Contains(filter.Keyword.ToLower()))
+                .ToList();
+
+            return await Task.Run(() => new GetArticleListOutput
+            {
+                AllResultCount = query.Count,
+                Articles = query
+                    .Skip(filter.SkipCount)
+                    .Take(filter.MaxResultCount)
+                    .Select(a => new GetArticleListDto
+                    {
+                        Title = a.Article.Title,
+                        Content = a.Article.Content[..ListContentLength],
+                        Id = a.Id,
+                        Image = new Regex(@"!\[.*?\]\((.*?)\)").Match(a.Article.Content).Groups[1].Value,
+                        
+                        CreationTime = a.CreationTime,
+                        CreatorUserId = a.CreatorUserId ?? AppConsts.FallBackUserId
+                    })
+            });
+        }
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Article)]

@@ -83,7 +83,7 @@ namespace acmManager.Web.Controllers
             var filter = new GetAllSolutionFilter
             {
                 UserId = user,
-                KeyWords = keyword ?? "",
+                Keyword = keyword ?? "",
                 TypeIds = keyword.IsNullOrEmpty()
                     ? null
                     : (await _problemAppService.GetAllProblemTypes(keyword)).Select(t => t.Id),

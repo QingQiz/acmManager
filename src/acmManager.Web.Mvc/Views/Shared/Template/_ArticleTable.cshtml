@@ -1,6 +1,7 @@
 ﻿@using acmManager.Web.Models.Shared
 @using acmManager.Web.Controllers
-@model SolutionTableViewModel
+@model acmManager.Web.Models.Shared.ArticleViewModel
+
 
 <table class="table table-hover">
     @if (Model.Search)
@@ -8,8 +9,8 @@
         <thead>
         <tr>
             <th>
-                <button class="btn btn-success" onclick="location.href = '@Url.Action("Edit", "Problem")'">
-                    提交题解
+                <button class="btn btn-success" onclick="location.href = '@Url.Action("Edit", "Article")'">
+                    写文章
                 </button> </th>
             <th>
                 <div class="input-group">
@@ -25,7 +26,7 @@
         </tr></thead>
     }
     <tbody>
-    @foreach (var x in Model.Solutions.Solutions)
+    @foreach (var x in Model.Articles.Articles)
     {
         <tr>
             <td class="vertical-center" style="width: 176px;">
@@ -33,15 +34,7 @@
             </td>
             <td class="vertical-center" onclick="location.href = '@Url.Action("GetSolution", "Problem", new {solutionId = x.Id})'">
                 <span class="font-weight-bold" style="font-size: 20px"
-                      href="@Url.Action("GetSolution", "Problem", new {SolutionId = x.Id})"> @x.ArticleTitle </span>
-                <div class="mt-1">
-                    @foreach (var t in x.ProblemTypes)
-                    {
-                        <span class="type-tag badge badge-info" data-toggle="tooltip" data-placement="bottom" title="@L(t.Description)">
-                            @L(t.Name)
-                        </span>
-                    }
-                </div>
+                      href="@Url.Action("GetSolution", "Problem", new {SolutionId = x.Id})"> @x.Title </span>
             </td>
         </tr>
     }
@@ -52,10 +45,10 @@
     <hr/>
     @await Html.PartialAsync("Template/_Pagination", new PaginationViewModel
     {
-        MaxResultCount = Model.Filter?.MaxResultCount ?? ProblemController.PageSize,
+        MaxResultCount = Model.Filter?.MaxResultCount ?? ArticleController.PageSize,
         SkipCount = Model.Filter?.SkipCount ?? 0,
-        AllResultCount = Model.Solutions.AllResultCount,
-        LinkGenerator = p => Url.Action("Index", "Problem", new
+        AllResultCount = Model.Articles.AllResultCount,
+        LinkGenerator = p => Url.Action("Index", "Article", new
         {
             page = p,
             keyword = Model.Filter.Keyword,
