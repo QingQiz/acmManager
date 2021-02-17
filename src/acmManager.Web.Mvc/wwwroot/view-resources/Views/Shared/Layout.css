@@ -118,6 +118,9 @@ a.underlineHover:hover {
 }
 
 /*disable hover*/
+nav>a:hover {
+    text-decoration: none;
+}
 a.no-hover-line:hover {
     text-decoration: none;
 }
