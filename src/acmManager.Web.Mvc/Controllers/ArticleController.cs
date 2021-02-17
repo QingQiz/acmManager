@@ -21,7 +21,7 @@ namespace acmManager.Web.Controllers
         private readonly ArticleAppService _articleAppService;
         private readonly CommentManager _commentManager;
 
-        public const int PageSize = 20;
+        public const int PageSize = 10;
         
         public ArticleController(ArticleAppService articleAppService, CommentManager commentManager)
         {

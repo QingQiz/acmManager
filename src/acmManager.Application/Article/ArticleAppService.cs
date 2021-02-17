@@ -19,7 +19,7 @@ namespace acmManager.Article
         private readonly CommentManager _commentManager;
         private readonly BlogManager _blogManager;
 
-        public const int ListContentLength = 200;
+        public const int ListContentLength = 500;
 
         public ArticleAppService(ArticleManager articleManager, CommentManager commentManager, BlogManager blogManager)
         {

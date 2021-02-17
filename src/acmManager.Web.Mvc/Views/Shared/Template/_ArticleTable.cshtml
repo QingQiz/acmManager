@@ -1,6 +1,17 @@
 ﻿@using acmManager.Web.Models.Shared
 @using acmManager.Web.Controllers
+@using System.Text.RegularExpressions
 @model acmManager.Web.Models.Shared.ArticleViewModel
+
+@{
+    var contentFilter = new Func<string, string>(s =>
+    {
+        s = string.Join(' ', s.Split("\r\n"));
+        s = s.Replace("#", "");
+        s = new Regex(@"!\[.*?\]\(.*?\)").Replace(s, "");
+        return s;
+    });
+}
 
 
 <table class="table table-hover">
@@ -29,11 +40,20 @@
     @foreach (var x in Model.Articles.Articles)
     {
         <tr>
-            <td class="vertical-center" style="width: 176px;">
+            <td colspan="2" class="vertical-center" style="width: 176px;" onclick="location.href = '@Url.Action("GetArticle", "Article", new {ArticleId = x.Id})'">
+                <h4>@x.Title</h4>
                 @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(x.CreatorUserId, x.CreationTime))
-            </td>
-            <td class="vertical-center" onclick="location.href = '@Url.Action("GetArticle", "Article", new {ArticleId = x.Id})'">
-                <span class="font-weight-bold" style="font-size: 20px"> @x.Title </span>
+                <div class="row mt-3">
+                    @if (!string.IsNullOrWhiteSpace(x.Image))
+                    {
+                        <div class="col-lg" style="max-width: 400px">
+                            <img class="crop-center" src="@x.Image" alt="@x.Image" style="width: inherit; border-radius: 4px; max-height: 200px; object-fit: cover"/>
+                        </div>
+                    }
+                    <div class="col-lg">
+                        <div class="text-preview" id="article-@x.Id"> <textarea hidden> @contentFilter(x.Content) </textarea> </div>
+                    </div>
+                </div>
             </td>
         </tr>
     }

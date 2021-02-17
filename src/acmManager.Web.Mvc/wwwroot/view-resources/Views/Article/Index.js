@@ -9,4 +9,9 @@
             location.href = location.pathname + "?keyword=" + keyword + "&user=" + userId;
         }
     });
+    
+    $('.text-preview').each(function () {
+        let id = $(this).attr('id');
+        previewMd(id, $(this).find('textarea').text());
+    })
 })
