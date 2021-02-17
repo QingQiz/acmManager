@@ -4,6 +4,8 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Web.Models;
+using acmManager.Article;
+using acmManager.Article.Dto;
 using acmManager.Authorization;
 using acmManager.Authorization.Users;
 using acmManager.Certificate;
@@ -29,9 +31,10 @@ namespace acmManager.Web.Controllers
         private readonly UserTypeAppService _userTypeAppService;
         private readonly ProblemAppService _problemAppService;
         private readonly CertificateAppService _certificateAppService;
+        private readonly ArticleAppService _articleAppService;
 
         public UserController(UserAppService userAppService, FileAppService fileAppService, UserManager userManager,
-            UserTypeAppService userTypeAppService, ProblemAppService problemAppService, CertificateAppService certificateAppService)
+            UserTypeAppService userTypeAppService, ProblemAppService problemAppService, CertificateAppService certificateAppService, ArticleAppService articleAppService)
         {
             _userAppService = userAppService;
             _fileAppService = fileAppService;
@@ -39,6 +42,7 @@ namespace acmManager.Web.Controllers
             _userTypeAppService = userTypeAppService;
             _problemAppService = problemAppService;
             _certificateAppService = certificateAppService;
+            _articleAppService = articleAppService;
         }
 
         #region Pages
@@ -59,7 +63,13 @@ namespace acmManager.Web.Controllers
                     MaxResultCount = int.MaxValue,
                     SkipCount = 0
                 })).Solutions,
-                CertificateSummaries = await _certificateAppService.GetAllCertificateSummary(userId)
+                Certificates= await _certificateAppService.GetAllCertificateSummary(userId),
+                Articles = (await _articleAppService.GetArticleWithFilter(new GetArticleListFilter
+                {
+                    UserId = userId,
+                    MaxResultCount = int.MaxValue,
+                    SkipCount = 0
+                })).Articles
             });
         }
 

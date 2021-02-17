@@ -2,17 +2,30 @@
 @using acmManager.Problem
 @using acmManager.Certificate
 @using acmManager.Problem.Dto
+@using acmManager.Article
+@using acmManager.Article.Dto
+@inject ArticleAppService ArticleAppService
 @inject ProblemAppService ProblemAppService
 @inject CertificateAppService CertificateAppService
 
-
 @section scripts
 {
+    @await Html.PartialAsync("Template/_MdPreviewHeader")
     @await Html.PartialAsync("Template/Chart/_ChartScripts")
 }
 
 @section styles
 {
+    @await Html.PartialAsync("Template/_MdPreviewFooter")
+    <environment include="Development">
+        <script src="~/view-resources/Views/Home/Index.js"></script>
+        <script src="~/js/editor.js"></script>
+    </environment>
+
+    <environment exclude="Development">
+        <script src="~/view-resources/Views/_Bundles/home.index.min.js"></script>
+        <script src="~/view-resources/Views/_Bundles/editor.min.js"></script>
+    </environment>
     @await Html.PartialAsync("Template/Chart/_ChartStyles")
 }
 
@@ -22,19 +35,32 @@
         MaxResultCount = int.MaxValue,
         SkipCount = 0
     });
+
+    var allArticles = await ArticleAppService.GetArticleWithFilter(new GetArticleListFilter
+    {
+        MaxResultCount = int.MaxValue,
+        SkipCount = 0
+    });
     
     var chartData = new ChartViewModel
     {
         ProblemTypes = await ProblemAppService.GetAllProblemTypes(),
         ProblemSolutions = allSolutions.Solutions,
-        Certificates = await CertificateAppService.GetAllCertificateSummary()
+        Certificates = await CertificateAppService.GetAllCertificateSummary(),
+        Articles = allArticles.Articles
     };
 
-    const int nTake = 20;
+    const int solutionTake = 10;
 
     var newestSolution = allSolutions.Solutions
         .OrderByDescending(s => s.CreationTime)
-        .Take(nTake);
+        .Take(solutionTake);
+
+    const int articleTake = 5;
+
+    var newestArticle = allArticles.Articles
+        .OrderByDescending(a => a.CreationTime)
+        .Take(articleTake);
 }
 
 <div class="row">
@@ -46,10 +72,24 @@
                 Solutions = new GetAllSolutionOutput
                 {
                     Solutions = newestSolution,
-                    AllResultCount = nTake 
+                    AllResultCount = solutionTake 
                 },
                 Filter = null,
                 Search = false
+            })
+        </div>
+        <div class="content-container">
+            <h3 class="noSelect"> 最新的文章 </h3><hr/>
+            @await Html.PartialAsync("Template/_ArticleTable", new ArticleViewModel
+            {
+                Articles = new GetArticleListOutput
+                {
+                    Articles = newestArticle,
+                    AllResultCount = articleTake
+                },
+                Filter = null,
+                Search = false,
+                ShowImage = false
             })
         </div>
     </div>

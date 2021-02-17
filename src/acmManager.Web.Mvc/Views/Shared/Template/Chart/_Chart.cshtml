@@ -17,6 +17,14 @@
     // solutionCountString ::= date~count[,date~count]*
     var solutionCountString = string.Join(',', solutionsCount);
     
+    // article count
+    sum = 0;
+    var articleCount = Model.Articles
+        .OrderBy(s => s.CreationTime)
+        .Select(s => s.CreationTime.ToString("yyyy/MM/dd/HH/mm/ss") + '~' + (sum += 1));
+    // articleCountString ::= date~count[,date~count]*
+    var articleCountString = string.Join(',', articleCount);
+    
     // certificate
     var certificateGroupByLevel = Model.Certificates
         .GroupBy(c => L(c.Level.ToString()))
@@ -32,6 +40,11 @@
 <div class="mt-5 mb-5">
     <input type="hidden" name="problem-count" value="@solutionCountString">
     <canvas id="solution-count-chart" style="margin: auto; max-width: 700px"> </canvas>
+</div>
+
+<div class="mt-5 mb-5">
+    <input type="hidden" name="article-count" value="@articleCountString">
+    <canvas id="article-count-chart" style="margin: auto; max-width: 700px"> </canvas>
 </div>
 
 <div class="mt-5">

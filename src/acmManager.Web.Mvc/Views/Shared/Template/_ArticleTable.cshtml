@@ -44,7 +44,7 @@
                 <h4>@x.Title</h4>
                 @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(x.CreatorUserId, x.CreationTime))
                 <div class="row mt-3">
-                    @if (!string.IsNullOrWhiteSpace(x.Image))
+                    @if (!string.IsNullOrWhiteSpace(x.Image) && Model.ShowImage)
                     {
                         <div class="col-lg" style="max-width: 400px">
                             <img class="crop-center" src="@x.Image" alt="@x.Image" style="width: inherit; border-radius: 4px; max-height: 200px; object-fit: cover"/>

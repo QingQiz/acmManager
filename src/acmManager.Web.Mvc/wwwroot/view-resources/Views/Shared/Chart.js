@@ -104,6 +104,7 @@ let lineChart = function (ctx, title, labelTitle, labelToData) {
 };
 
 let doughnutChart = function (ctx, title, labelTitle, labelToData) {
+    let segment;
     let labelColor = labelToData.map(_ => color(random_rgba()));
     return new Chart(ctx, {
         type: 'doughnut',
@@ -159,6 +160,10 @@ $(function () {
     let labelSolutionCount = selectValByName('problem-count', '~')
 
     lineChart($('#solution-count-chart')[0], '题解——数量统计', "题解总数", labelSolutionCount);
+    
+    let labelArticleCount = selectValByName('article-count', '~');
+    
+    lineChart($('#article-count-chart')[0], '文章——数量统计', "文章总数", labelArticleCount);
     
     let labelCertificate = selectValByName('certificate-count', '~')
     
