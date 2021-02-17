@@ -1,0 +1,10 @@
+﻿@model acmManager.Article.Dto.GetArticleOutput
+
+<div class="input-group mb-3">
+    <input type="text" id="article-title" class="form-control" name="Title"
+           value="@(Model?.Title ?? "")" placeholder="@L("Article.Title")">
+</div>
+
+<div id="article-content">
+    <textarea hidden name="Content">@(Model?.Content ?? "正文\n\n\n\n\n")</textarea>
+</div>

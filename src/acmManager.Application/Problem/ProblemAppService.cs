@@ -9,7 +9,6 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Abp.UI;
 using acmManager.Article;
-using acmManager.Article.Dto;
 using acmManager.Authorization;
 using acmManager.Problem.Dto;
 
@@ -23,16 +22,16 @@ namespace acmManager.Problem
         private readonly ProblemSolutionManager _problemSolutionManager;
         private readonly ProblemTypeManager _problemTypeManager;
         private readonly ProblemToTypeManager _problemToTypeManager;
-        private readonly ArticleAppService _articleAppService;
+        private readonly ArticleManager _articleManager;
         
 
-        public ProblemAppService(ProblemManager problemManager, ProblemSolutionManager problemSolutionManager, ProblemTypeManager problemTypeManager, ArticleAppService articleAppService, ProblemToTypeManager problemToTypeManager)
+        public ProblemAppService(ProblemManager problemManager, ProblemSolutionManager problemSolutionManager, ProblemTypeManager problemTypeManager, ProblemToTypeManager problemToTypeManager, ArticleManager articleManager)
         {
             _problemManager = problemManager;
             _problemSolutionManager = problemSolutionManager;
             _problemTypeManager = problemTypeManager;
-            _articleAppService = articleAppService;
             _problemToTypeManager = problemToTypeManager;
+            _articleManager = articleManager;
         }
 
         #endregion
@@ -215,7 +214,7 @@ namespace acmManager.Problem
         {
             var res = await _problemSolutionManager.Get(id);
 
-            if (AbpSession.GetUserId() != res.CreatorUserId ||
+            if (AbpSession.GetUserId() != res.CreatorUserId &&
                 !await IsGrantedAsync(PermissionNames.PagesUsers_Problem_Delete))
             {
                 throw new UserFriendlyException("Permission Denied");
@@ -228,7 +227,7 @@ namespace acmManager.Problem
             }
 
             await _problemManager.Delete(res.Problem.Id);
-            await _articleAppService.DeleteArticleAsync(res.Solution.Id);
+            await _articleManager.Delete(res.Solution.Id);
             await _problemSolutionManager.Delete(res.Id);
         }
         

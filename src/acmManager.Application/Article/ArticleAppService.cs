@@ -45,6 +45,9 @@ namespace acmManager.Article
 
         #endregion
 
+        // in this region, all ARTICLE is the alias of BLOG
+        #region blog
+        
         [UnitOfWork]
         public virtual async Task<GetArticleListOutput> GetArticleWithFilter(GetArticleListFilter filter)
         {
@@ -62,9 +65,10 @@ namespace acmManager.Article
                     .Take(filter.MaxResultCount)
                     .Select(a => new GetArticleListDto
                     {
+                        Id = a.Id,
+                        
                         Title = a.Article.Title,
                         Content = a.Article.Content[..ListContentLength],
-                        Id = a.Id,
                         Image = new Regex(@"!\[.*?\]\((.*?)\)").Match(a.Article.Content).Groups[1].Value,
                         
                         CreationTime = a.CreationTime,
@@ -75,49 +79,72 @@ namespace acmManager.Article
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Article)]
-        public virtual async Task CreateArticleAsync(CreateArticleInput input)
+        public virtual async Task<long> CreateArticleAsync(CreateArticleInput input)
         {
-            await _articleManager.Create(ObjectMapper.Map<Article>(input));
+            var blog = new Blog
+            {
+                Article = ObjectMapper.Map<Article>(input)
+            };
+
+            return await _blogManager.Create(blog);
         }
 
         [UnitOfWork]
-        public virtual async Task<GetArticleOutput> GetArticleAsync(long articleId)
+        public virtual async Task<GetArticleOutput> GetArticleAsync(long blogId)
         {
-            var article = await _articleManager.Get(articleId);
-            return ObjectMapper.Map<GetArticleOutput>(article);
+            var blog = await _blogManager.Get(blogId);
+
+            return new GetArticleOutput
+            {
+                Id = blogId,
+                ArticleId = blog.Article.Id,
+                Comments = blog.Article.Comments.Select(CommentToDto),
+                CreationTime = blog.CreationTime,
+                CreatorUserId = blog.CreatorUserId ?? AppConsts.FallBackUserId,
+                Title = blog.Article.Title,
+                Content = blog.Article.Content
+            };
         }
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Article)]
         public virtual async Task UpdateArticleAsync(UpdateArticleInput input)
         {
-            var article = await _articleManager.Get(input.Id);
-            if (article.CreatorUserId != AbpSession.GetUserId())
+            var blog = await _blogManager.Get(input.Id);
+            
+            if (blog.CreatorUserId != AbpSession.GetUserId())
             {
                 throw new UserFriendlyException("Permission Denied");
             }
 
-            ObjectMapper.Map(input, article);
+            blog.Article.Content = input.Content;
+            blog.Article.Title = input.Title;
         }
 
         [UnitOfWork]
         [AbpAuthorize(PermissionNames.PagesUsers_Article)]
-        public virtual async Task DeleteArticleAsync(long articleId)
+        public virtual async Task DeleteArticleAsync(long blogId)
         {
-            var article = await _articleManager.Get(articleId);
+            var blog = await _blogManager.Get(blogId);
+            var article = blog.Article;
+            
             if (article.CreatorUserId != AbpSession.GetUserId())
             {
                 throw new UserFriendlyException("Permission Denied");
             }
 
+            await _blogManager.Delete(blogId);
+            
             // delete all comment
             foreach (var comment in article.Comments)
             {
                 await _commentManager.Delete(comment.Id);
             }
-
-            await _articleManager.Delete(articleId);
+            await _articleManager.Delete(article.Id);
         }
+
+        #endregion
+        
 
         #region comment
 

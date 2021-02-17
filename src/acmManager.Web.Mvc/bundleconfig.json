@@ -12,6 +12,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/article.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Article/Article.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/solution.min.js",
     "inputFiles": [
       "wwwroot/view-resources/Views/Problem/Solution.js"
@@ -96,6 +102,12 @@
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/contest.create.min.js",
     "inputFiles": [
       "wwwroot/view-resources/Views/Contest/CreateContest.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/view-resources/Views/_Bundles/article.edit.min.js",
+    "inputFiles": [
+      "wwwroot/view-resources/Views/Article/Edit.js"
     ]
   },
   {

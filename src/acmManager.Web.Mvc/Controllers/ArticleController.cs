@@ -1,10 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Abp.Application.Services;
 using Abp.AspNetCore.Mvc.Authorization;
+using Abp.Authorization;
+using Abp.Domain.Uow;
+using Abp.Runtime.Session;
 using acmManager.Article;
 using acmManager.Article.Dto;
 using acmManager.Authorization;
 using acmManager.Controllers;
 using acmManager.Web.Models.Article;
+using acmManager.Web.Models.Shared;
+using Castle.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acmManager.Web.Controllers
@@ -12,21 +19,78 @@ namespace acmManager.Web.Controllers
     public class ArticleController : acmManagerControllerBase
     {
         private readonly ArticleAppService _articleAppService;
+        private readonly CommentManager _commentManager;
 
         public const int PageSize = 20;
         
-        public ArticleController(ArticleAppService articleAppService)
+        public ArticleController(ArticleAppService articleAppService, CommentManager commentManager)
         {
             _articleAppService = articleAppService;
+            _commentManager = commentManager;
         }
+
+        #region remoteServiceFalse
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="replyToCommentId"></param>
+        /// <returns>回复的评论的内容和更新后的id</returns>
+        [UnitOfWork]
+        [RemoteService(false)]
+        public virtual async Task<Pair<string, long>> ReplyToComment(long replyToCommentId)
+        {
+            var contentInit = "Comment here...\n\n\n\n\n";
+            
+            if (replyToCommentId == 0) return new Pair<string, long>(contentInit, 0);
+            
+            var comment = await _commentManager.Get(replyToCommentId);
+            var content = comment.Content.Split('\n').Select(s => "> " + s);
+            contentInit = string.Join('\n', content) + "\n\n";
+
+            if (comment.ReplyToCommentId != 0)
+            {
+                // union-find forest
+                while (true)
+                {
+                    var commentFather = await _commentManager.Get(comment.ReplyToCommentId);
+                    if (commentFather.ReplyToCommentId == 0)
+                    {
+                        replyToCommentId = comment.ReplyToCommentId;
+                        break;
+                    }
+                    comment.ReplyToCommentId = commentFather.ReplyToCommentId;
+                    comment = commentFather;
+                }
+            }
+            return new Pair<string, long>(contentInit, replyToCommentId);
+        }
+        
+        #endregion
 
 
         #region Pages
         
+        [HttpGet, Route("/Article/Edit")]
         [AbpMvcAuthorize(PermissionNames.PagesUsers_Article)]
         public IActionResult Edit()
         {
-            throw new System.NotImplementedException();
+            return View(null);
+        }
+        
+        
+        [HttpGet, Route("/Article/Edit/{id}")]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Article)]
+        public async Task<IActionResult> Edit(long id)
+        {
+            var article = await _articleAppService.GetArticleAsync(id);
+            
+            if (article.CreatorUserId != AbpSession.GetUserId())
+            {
+                throw new AbpAuthorizationException("Permission Denied");
+            }
+            
+            return View(article);
         }
 
         public async Task<ActionResult> Index(int page, long user, string keyword)
@@ -47,10 +111,69 @@ namespace acmManager.Web.Controllers
             });
         }
 
+        [HttpGet, Route("/Article/{articleId}")]
+        public async Task<ActionResult> GetArticle(long articleId)
+        {
+            var article = await _articleAppService.GetArticleAsync(articleId);
+
+            return View(article);
+        }
+
+        /// <summary>
+        /// create comment page
+        /// </summary>
+        /// <param name="articleId"> alias of `blogId`</param>
+        /// <param name="replyToCommentId"></param>
+        /// <returns></returns>
+        [AbpMvcAuthorize]
+        [HttpGet, Route("/Article/CommentTo/{articleId}")]
+        public async Task<IActionResult> CommentTo(long articleId, int replyToCommentId)
+        {
+            var article = await _articleAppService.GetArticleAsync(articleId);
+            var reply = await ReplyToComment(replyToCommentId);
+
+            return View("Template/Comment/CommentTo", new CommentToViewModel
+            {
+                ArticleId = article.ArticleId,
+                CommentTitle = article.Title,
+                CommentToLink = Url.Action("GetArticle", new {ArticleId = articleId}),
+                ReplyToCommentId = reply.Second,
+                ReturnUrl = Url.Action("GetArticle", new {ArticleId = articleId}),
+                ContentInit = reply.First
+            });
+        }
+
         #endregion
         
         #region APIs
-        
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Article)]
+        public async Task<JsonResult> Create(string title, string content)
+        {
+            var id = await _articleAppService.CreateArticleAsync(new CreateArticleInput
+            {
+                Title = title,
+                Content = content
+            });
+            
+            return Json(new {RedirectUrl = Url.Action("GetArticle", new {ArticleId = id})});
+        }
+
+        [HttpPost]
+        [AbpMvcAuthorize(PermissionNames.PagesUsers_Article)]
+        public async Task<JsonResult> Update(long id, string title, string content)
+        {
+            await _articleAppService.UpdateArticleAsync(new UpdateArticleInput
+            {
+                Id = id,
+                Title = title,
+                Content = content
+            });
+            
+            return Json(new {RedirectUrl = Url.Action("GetArticle", new {ArticleId = id})});
+        }
+
         [HttpPost]
         public async Task<RedirectResult> CommentToArticle(long articleId, long replyToCommentId, string content, string returnUrl)
         {
@@ -61,6 +184,13 @@ namespace acmManager.Web.Controllers
                 Content = content
             });
             return Redirect(returnUrl);
+        }
+        
+        public async Task<RedirectToActionResult> DeleteArticle(long id)
+        {
+            await _articleAppService.DeleteArticleAsync(id);
+
+            return RedirectToAction("Index");
         }
 
         #endregion

@@ -1,0 +1,73 @@
+﻿@model acmManager.Article.Dto.GetArticleOutput
+
+@section styles
+{
+    <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
+    <link rel="stylesheet" href="~/css/editor.css">
+}
+
+@section scripts
+{
+    <script src="~/editor.md/editormd.min.js"></script>
+    
+    <environment include="Development">
+        <script src="~/js/editor.js"></script>
+        <script src="~/view-resources/Views/Article/Edit.js"></script>
+    </environment>
+    
+    <environment exclude="Development">
+        <script src="~/view-resources/Views/_Bundles/editor.min.js"></script>
+        <script src="~/view-resources/Views/_Bundles/article.edit.min.js"></script>
+    </environment>
+}
+
+@{
+    ViewBag.Title = "Edit Article";
+}
+
+
+<div class="content-container">
+    <form asp-action=@(Model == null ? "Create" : "Update") method="post" id="edit-article-form">
+        @await Html.PartialAsync("_ArticleInput")
+        <div class="row mt-3">
+            <div class="text-right col">
+                @if (Model != null)
+                {
+                    <button class="btn btn-danger mr-2"
+                            type="button"
+                            style="letter-spacing: 2px"
+                            data-toggle="modal"
+                            data-target="#delete-article"> 删除 </button>
+                    <input type="hidden" name="Id" value="@Model.Id"/>
+                }
+                <input type="button" class="btn btn-primary" id="edit-article-submit-btn" value="@L("Submit")">
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model != null)
+{
+    <!-- Delete Article Modal -->
+    <div class="modal fade" id="delete-article">
+        <div class="modal-dialog">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <strong style="letter-spacing: 2px">
+                            你确定吗
+                        </strong>
+                    </h5>
+                </div>
+                <div class="modal-body"> 此操作不可逆 ！！ </div>
+                <form asp-action="DeleteArticle" method="post">
+                    <input type="hidden" name="Id" value="@Model.Id">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="letter-spacing: 2px">取消</button>
+                        <button type="submit" class="btn btn-danger btn-ok" style="letter-spacing: 2px">确认</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

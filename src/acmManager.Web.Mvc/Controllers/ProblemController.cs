@@ -5,7 +5,6 @@ using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
 using Abp.Domain.Uow;
 using Abp.Runtime.Session;
-using acmManager.Article;
 using acmManager.Authorization;
 using acmManager.Controllers;
 using acmManager.Problem;
@@ -20,14 +19,12 @@ namespace acmManager.Web.Controllers
     public class ProblemController : acmManagerControllerBase
     {
         private readonly ProblemAppService _problemAppService;
-        private readonly ArticleAppService _articleAppService;
-        private readonly CommentManager _commentManager;
+        private readonly ArticleController _articleController;
 
-        public ProblemController(ProblemAppService problemAppService, ArticleAppService articleAppService, CommentManager commentManager)
+        public ProblemController(ProblemAppService problemAppService, ArticleController articleController)
         {
             _problemAppService = problemAppService;
-            _articleAppService = articleAppService;
-            _commentManager = commentManager;
+            _articleController = articleController;
         }
 
         public const int PageSize = 30;
@@ -41,39 +38,16 @@ namespace acmManager.Web.Controllers
         {
             var solution = await _problemAppService.GetSolution(solutionId);
 
-            var contentInit = "Comment here...\n\n\n\n\n";
-            
-            if (replyToCommentId != 0)
-            {
-                var comment = await _commentManager.Get(replyToCommentId);
-                var content = comment.Content.Split('\n').Select(s => "> " + s);
-                contentInit = string.Join('\n', content) + "\n\n";
+            var reply = await _articleController.ReplyToComment(replyToCommentId);
 
-                if (comment.ReplyToCommentId != 0)
-                {
-                    // union-find forest
-                    while (true)
-                    {
-                        var commentFather = await _commentManager.Get(comment.ReplyToCommentId);
-                        if (commentFather.ReplyToCommentId == 0)
-                        {
-                            replyToCommentId = comment.ReplyToCommentId;
-                            break;
-                        }
-                        comment.ReplyToCommentId = commentFather.ReplyToCommentId;
-                        comment = commentFather;
-                    }
-                }
-            }
-            
             return View("Template/Comment/CommentTo", new CommentToViewModel
             {
                 ArticleId = solution.SolutionId,
                 CommentTitle = solution.SolutionTitle,
                 CommentToLink = Url.Action("GetSolution", new {solutionId}),
-                ReplyToCommentId = replyToCommentId,
+                ReplyToCommentId = reply.Second,
                 ReturnUrl = Url.Action("GetSolution", new {solutionId}),
-                ContentInit = contentInit
+                ContentInit =reply.First 
             });
         }
 

@@ -14,7 +14,10 @@ namespace acmManager.Article
         
         public new IQueryable<Blog> GetAll()
         {
-            return Repository.GetAllIncluding(b => b.Article);
+            return Repository
+                .GetAll()
+                .Include(b => b.Article)
+                .ThenInclude(a => a.Comments);
         }
 
         public new async Task<Blog> Get(long id)
