@@ -1,5 +1,11 @@
 ﻿let createEditor = function(id, readonly=false) {
-    window.onbeforeunload = e => 'Sure?'
+    let confirm = true;
+    $('form').submit(_ => {
+        confirm = false;
+        $(this).submit();
+    });
+    
+    window.onbeforeunload = _ => confirm ? 'Sure?' : undefined;
 
     return editormd(id, {
         autoHeight: true,

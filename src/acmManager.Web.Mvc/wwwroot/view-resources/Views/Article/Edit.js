@@ -14,6 +14,7 @@ let formSubmitEvent = function () {
         method: 'post',
         data: form.serialize(),
         success: function (json) {
+            window.onbeforeunload = undefined;
             location.replace(json.result['redirectUrl']);
         },
         error: function (xhr, a, b) {

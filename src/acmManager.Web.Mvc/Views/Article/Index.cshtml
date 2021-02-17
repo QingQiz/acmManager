@@ -1,6 +1,17 @@
 ﻿@using acmManager.Web.Models.Shared
 @model acmManager.Web.Models.Article.IndexViewModel
 
+@section scripts
+{
+    <environment include="Development">
+        <script src="~/view-resources/Views/Article/Index.js"></script>
+    </environment>
+
+    <environment exclude="Development">
+        <script src="~/view-resources/Views/_Bundles/article.index.min.js"></script>
+    </environment>
+}
+
 @{
     ViewBag.Title = "Article";
 }

@@ -14,10 +14,10 @@
                 </button> </th>
             <th>
                 <div class="input-group">
-                    <input type="hidden" value="@Model.Filter.UserId" id="search-solution-user">
-                    <input type="text" class="form-control" placeholder="Search..." id="search-solution-content" value="@Model.Filter.Keyword">
+                    <input type="hidden" value="@Model.Filter.UserId" id="search-article-user">
+                    <input type="text" class="form-control" placeholder="Search..." id="search-article-content" value="@Model.Filter.Keyword">
                     <div class="input-group-append">
-                        <button class="btn btn-secondary" type="button" id="search-solution-btn">
+                        <button class="btn btn-secondary" type="button" id="search-article-btn">
                             <i class="fa fa-search"> </i>
                         </button>
                     </div>
@@ -32,9 +32,8 @@
             <td class="vertical-center" style="width: 176px;">
                 @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(x.CreatorUserId, x.CreationTime))
             </td>
-            <td class="vertical-center" onclick="location.href = '@Url.Action("GetSolution", "Problem", new {solutionId = x.Id})'">
-                <span class="font-weight-bold" style="font-size: 20px"
-                      href="@Url.Action("GetSolution", "Problem", new {SolutionId = x.Id})"> @x.Title </span>
+            <td class="vertical-center" onclick="location.href = '@Url.Action("GetArticle", "Article", new {ArticleId = x.Id})'">
+                <span class="font-weight-bold" style="font-size: 20px"> @x.Title </span>
             </td>
         </tr>
     }

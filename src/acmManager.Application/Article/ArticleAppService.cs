@@ -68,7 +68,7 @@ namespace acmManager.Article
                         Id = a.Id,
                         
                         Title = a.Article.Title,
-                        Content = a.Article.Content[..ListContentLength],
+                        Content = string.Join("", a.Article.Content.Take(ListContentLength)),
                         Image = new Regex(@"!\[.*?\]\((.*?)\)").Match(a.Article.Content).Groups[1].Value,
                         
                         CreationTime = a.CreationTime,

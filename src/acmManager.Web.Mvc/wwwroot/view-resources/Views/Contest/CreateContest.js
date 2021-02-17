@@ -28,7 +28,10 @@ $('#create-contest-submit-btn').click(function () {
         url: form.attr('action'),
         method: 'post',
         data: form.serialize(),
-        success: () => location.href = '/Contest/' + $('input[name=Id]').val(),
+        success: () => {
+            window.onbeforeunload = undefined;
+            location.href = '/Contest/' + $('input[name=Id]').val()
+        },
         error: () => alert('error')
     })
 });
