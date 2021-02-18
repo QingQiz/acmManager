@@ -1,9 +1,11 @@
-﻿@model List<Abp.Notifications.UserNotification>
+﻿@model List<Castle.Core.Pair<long, Abp.Notifications.UserNotification>>
 
 
 <div class="content-container">
     @foreach (var n in Model)
     {
-        <p>@n.Notification.Data</p>
+        <a href="@Url.Action("GetNotification", new  {NotificationId = n.Second.Id, ReturnUrl = n.Second.Notification.Data["Message"]})">
+            @n.First -- @n.Second.Notification.Data["Message"] -- @n.Second.State
+        </a><br/>
     }
 </div>
