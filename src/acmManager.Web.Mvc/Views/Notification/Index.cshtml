@@ -1,0 +1,9 @@
+﻿@model List<Abp.Notifications.UserNotification>
+
+
+<div class="content-container">
+    @foreach (var n in Model)
+    {
+        <p>@n.Notification.Data</p>
+    }
+</div>

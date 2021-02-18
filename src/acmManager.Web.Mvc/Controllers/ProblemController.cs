@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Uow;
+using Abp.Notifications;
 using Abp.Runtime.Session;
 using acmManager.Authorization;
 using acmManager.Controllers;
@@ -20,11 +23,15 @@ namespace acmManager.Web.Controllers
     {
         private readonly ProblemAppService _problemAppService;
         private readonly ArticleController _articleController;
+        private readonly NotificationPublisher _notificationPublisher;
+        private readonly NotificationSubscriptionManager _notificationSubscriptionManager;
 
-        public ProblemController(ProblemAppService problemAppService, ArticleController articleController)
+        public ProblemController(ProblemAppService problemAppService, ArticleController articleController, NotificationSubscriptionManager notificationSubscriptionManager, NotificationPublisher notificationPublisher)
         {
             _problemAppService = problemAppService;
             _articleController = articleController;
+            _notificationSubscriptionManager = notificationSubscriptionManager;
+            _notificationPublisher = notificationPublisher;
         }
 
         public const int PageSize = 30;
@@ -40,6 +47,16 @@ namespace acmManager.Web.Controllers
 
             var reply = await _articleController.ReplyToComment(replyToCommentId);
 
+            // publish notification to all subscriber
+            await _notificationPublisher.PublishAsync("Comment.Solution",
+                new MessageNotificationData(Url.Action("GetSolution", new {SolutionId = solutionId})),
+                new EntityIdentifier(typeof(ProblemSolution), solutionId));
+
+            // subscribe comment notification
+            await _notificationSubscriptionManager.SubscribeAsync(
+                new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
+                "Comment.Solution", new EntityIdentifier(typeof(ProblemSolution), solutionId));
+            
             return View("Template/Comment/CommentTo", new CommentToViewModel
             {
                 ArticleId = solution.SolutionId,
@@ -120,6 +137,11 @@ namespace acmManager.Web.Controllers
                 Title = title,
                 Content = content
             });
+            
+            // subscribe all comment event
+            await _notificationSubscriptionManager.SubscribeAsync(
+                new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
+                "Comment.Solution", new EntityIdentifier(typeof(ProblemSolution), id));
 
             return Json(new {RedirectUrl = Url.Action("GetSolution", new {solutionId = id})});
         }

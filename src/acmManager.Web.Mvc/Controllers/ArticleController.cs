@@ -1,9 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Application.Services;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
+using Abp.Domain.Entities;
 using Abp.Domain.Uow;
+using Abp.Notifications;
 using Abp.Runtime.Session;
 using acmManager.Article;
 using acmManager.Article.Dto;
@@ -20,13 +23,17 @@ namespace acmManager.Web.Controllers
     {
         private readonly ArticleAppService _articleAppService;
         private readonly CommentManager _commentManager;
+        private readonly NotificationPublisher _notificationPublisher;
+        private readonly NotificationSubscriptionManager _notificationSubscriptionManager;
 
         public const int PageSize = 10;
         
-        public ArticleController(ArticleAppService articleAppService, CommentManager commentManager)
+        public ArticleController(ArticleAppService articleAppService, CommentManager commentManager, NotificationPublisher notificationPublisher, NotificationSubscriptionManager notificationSubscriptionManager)
         {
             _articleAppService = articleAppService;
             _commentManager = commentManager;
+            _notificationPublisher = notificationPublisher;
+            _notificationSubscriptionManager = notificationSubscriptionManager;
         }
 
         #region remoteServiceFalse
@@ -132,6 +139,16 @@ namespace acmManager.Web.Controllers
             var article = await _articleAppService.GetArticleAsync(articleId);
             var reply = await ReplyToComment(replyToCommentId);
 
+            // publish notification to all subscriber
+            await _notificationPublisher.PublishAsync("Comment.Article",
+                new MessageNotificationData(Url.Action("GetArticle", "Article", new {ArticleId = articleId})),
+                new EntityIdentifier(typeof(Blog), articleId));
+
+            // subscribe comment notification
+            await _notificationSubscriptionManager.SubscribeAsync(
+                new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
+                "Comment.Article", new EntityIdentifier(typeof(Blog), articleId));
+
             return View("Template/Comment/CommentTo", new CommentToViewModel
             {
                 ArticleId = article.ArticleId,
@@ -156,6 +173,11 @@ namespace acmManager.Web.Controllers
                 Title = title,
                 Content = content
             });
+
+            // subscribe all comment event
+            await _notificationSubscriptionManager.SubscribeAsync(
+                new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
+                "Comment.Article", new EntityIdentifier(typeof(Blog), id));
             
             return Json(new {RedirectUrl = Url.Action("GetArticle", new {ArticleId = id})});
         }
