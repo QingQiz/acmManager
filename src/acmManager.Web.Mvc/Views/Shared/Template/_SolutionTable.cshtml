@@ -28,7 +28,7 @@
     @foreach (var x in Model.Solutions.Solutions)
     {
         <tr>
-            <td class="vertical-center" style="width: 176px;">
+            <td class="vertical-center" style="width: 183px;">
                 @await Html.PartialAsync("Template/_CreatorTag", new CreatorViewModel(x.CreatorUserId, x.CreationTime))
             </td>
             <td class="vertical-center" onclick="location.href = '@Url.Action("GetSolution", "Problem", new {solutionId = x.Id})'">
