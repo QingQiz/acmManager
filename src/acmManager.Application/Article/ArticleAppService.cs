@@ -74,6 +74,7 @@ namespace acmManager.Article
                         CreationTime = a.CreationTime,
                         CreatorUserId = a.CreatorUserId ?? AppConsts.FallBackUserId
                     })
+                    .OrderByDescending(a => a.CreationTime)
             });
         }
 
