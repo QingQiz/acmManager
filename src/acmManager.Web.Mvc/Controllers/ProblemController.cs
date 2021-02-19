@@ -12,6 +12,7 @@ using acmManager.Authorization;
 using acmManager.Controllers;
 using acmManager.Problem;
 using acmManager.Problem.Dto;
+using acmManager.Utils;
 using acmManager.Web.Models.Problem;
 using acmManager.Web.Models.Shared;
 using Castle.Core.Internal;
@@ -47,15 +48,16 @@ namespace acmManager.Web.Controllers
 
             var reply = await _articleController.ReplyToComment(replyToCommentId);
 
-            // publish notification to all subscriber
-            await _notificationPublisher.PublishAsync("Comment.Solution",
+            // publish notification to all subscriber, exclude self
+            await _notificationPublisher.PublishAsync(NotificationName.CommentSolution,
                 new MessageNotificationData(Url.Action("GetSolution", new {SolutionId = solutionId})),
-                new EntityIdentifier(typeof(ProblemSolution), solutionId));
+                new EntityIdentifier(typeof(ProblemSolution), solutionId),
+                excludedUserIds: new [] {new UserIdentifier(AppConsts.DefaultTenant, AbpSession.GetUserId())});
 
             // subscribe comment notification
             await _notificationSubscriptionManager.SubscribeAsync(
                 new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
-                "Comment.Solution", new EntityIdentifier(typeof(ProblemSolution), solutionId));
+                NotificationName.CommentSolution, new EntityIdentifier(typeof(ProblemSolution), solutionId));
             
             return View("Template/Comment/CommentTo", new CommentToViewModel
             {
@@ -141,7 +143,7 @@ namespace acmManager.Web.Controllers
             // subscribe all comment event
             await _notificationSubscriptionManager.SubscribeAsync(
                 new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
-                "Comment.Solution", new EntityIdentifier(typeof(ProblemSolution), id));
+                NotificationName.CommentSolution, new EntityIdentifier(typeof(ProblemSolution), id));
 
             return Json(new {RedirectUrl = Url.Action("GetSolution", new {solutionId = id})});
         }

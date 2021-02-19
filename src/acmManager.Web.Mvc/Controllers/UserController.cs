@@ -18,6 +18,7 @@ using acmManager.Problem.Dto;
 using acmManager.Users;
 using acmManager.Users.Dto;
 using acmManager.Users.Type;
+using acmManager.Utils;
 using acmManager.Web.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 
@@ -136,7 +137,7 @@ namespace acmManager.Web.Controllers
                 Password = input.Password
             });
 
-            await _notificationPublisher.PublishAsync("CheckProfile",
+            await _notificationPublisher.PublishAsync(NotificationName.CheckProfile,
                 new MessageNotificationData(Url.Action("UserProfile")),
                 userIds: new[] {new UserIdentifier(AppConsts.DefaultTenant, AbpSession.GetUserId())});
 

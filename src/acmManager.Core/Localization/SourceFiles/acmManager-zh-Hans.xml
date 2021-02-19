@@ -57,7 +57,8 @@
         <text name="Problem.Description" value="题面"/>
         <text name="Problem.Url" value="题目链接"/>
         <text name="Problem.Info" value="题目信息"/>
-        
+
+        <text name="Article" value="文章"/>
         <text name="Article.Title" value="文章标题"/>
 
         <text name="Solution" value="题解"/>

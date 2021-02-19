@@ -1,8 +1,27 @@
 ﻿@using acmManager.Web.Controllers
 @using acmManager.Authorization
+@using Abp.Notifications
+@using Abp
+@using Abp.Runtime.Session
+@using acmManager
 @inject UserController UserController
+@inject UserNotificationManager UserNotificationManager
+
+@{
+}
 
 <nav class="my-2 my-md-0 mr-md-3 noSelect">
+    @if (AbpSession.UserId != null)
+    {
+        var nCnt = (await UserNotificationManager.GetUserNotificationsAsync(new UserIdentifier(AppConsts.DefaultTenant, AbpSession.GetUserId()), UserNotificationState.Unread)).Count();
+        @if (nCnt != 0)
+        {
+            <a class="p-2 text-dark underlineHover noSelect" href="@Url.Action("Index", "Notification")">
+                通知 <span class="badge rounded-pill badge-danger" style="margin-bottom: 2px;"> @nCnt </span>
+            </a>
+            <span>|</span>
+        }
+    }
     <a class="p-2 text-dark underlineHover noSelect" href="@Url.Action("Index", "Article")">文章</a> <span>|</span>
     <a class="p-2 text-dark underlineHover noSelect" href="@Url.Action("Index", "Problem")">题解</a> <span>|</span>
     <a class="p-2 text-dark underlineHover noSelect" href="@Url.Action("Index", "Contest")">比赛列表</a> <span>|</span>

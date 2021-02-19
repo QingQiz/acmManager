@@ -1,15 +1,54 @@
-﻿@model List<Castle.Core.Pair<long, Abp.Notifications.UserNotification>>
+﻿@using Abp.Notifications
+@using acmManager.Utils
+@model List<Castle.Core.Pair<long, Abp.Notifications.UserNotification>>
 
 @{
     ViewBag.Title = "Notifications";
+    
+    var read = new Func<UserNotification, bool>(n => n.State == UserNotificationState.Read);
+    var href = new Func<UserNotification, string > (n => Url.Action("GetNotification", new
+    {
+        NotificationId = n.Id,
+        ReturnUrl = n.Notification.Data["Message"]
+    }));
 }
 
 
 <div class="content-container" style="max-width: 960px;">
     @foreach (var n in Model)
     {
-        <a href="@Url.Action("GetNotification", new  {NotificationId = n.Second.Id, ReturnUrl = n.Second.Notification.Data["Message"]})">
-            @n.First -- @n.Second.Notification.Data["Message"] -- @n.Second.State
-        </a><br/>
+        switch (n.Second.Notification.NotificationName)
+        {
+            case NotificationName.CheckProfile:
+                <div class="alert @(read(n.Second) ? "alert-secondary" : "alert-danger")" role="alert">
+                    <i class="fa fa-exclamation-triangle fa-fw fa-vc"> </i>
+                    <a href="@href(n.Second)" class="alert-link"> 请完善你的信息 </a>
+                </div>
+                break;
+            case NotificationName.CommentArticle:
+                <div class="alert @(read(n.Second) ? "alert-secondary" : "alert-info")" role="alert">
+                    <i class="fa fa-info fa-fw fa-vc"> </i>
+                    有人评论了你关注的 <a href="@href(n.Second)" class="alert-link"> @L("Article") </a>
+                    @if (!read(n.Second))
+                    {
+                        <span class="badge badge-danger rounded-pill text-light fs-14">
+                            @n.First
+                        </span>
+                    }
+                </div>
+                break;
+            case NotificationName.CommentSolution:
+                <div class="alert @(read(n.Second) ? "alert-secondary" : "alert-info")" role="alert">
+                    <i class="fa fa-info fa-fw fa-vc"> </i>
+                    有人评论了你关注的 <a href="@href(n.Second)" class="alert-link"> @L("Solution") </a>
+                    @if (!read(n.Second))
+                    {
+                        <span class="badge badge-danger rounded-pill text-light fs-14">
+                            @n.First
+                        </span>
+                    }
+                </div>
+                break;
+        }
     }
 </div>

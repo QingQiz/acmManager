@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Abp;
-using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.MultiTenancy;
 using Abp.Notifications;
-using Abp.Timing;
 using Abp.Web.Models;
 using acmManager.Authorization;
 using acmManager.Authorization.Accounts;
@@ -19,6 +16,7 @@ using acmManager.Authorization.Users;
 using acmManager.Controllers;
 using acmManager.Identity;
 using acmManager.MultiTenancy;
+using acmManager.Utils;
 using acmManager.Web.Models.Account;
 
 namespace acmManager.Web.Controllers
@@ -94,7 +92,7 @@ namespace acmManager.Web.Controllers
             var res = await _accountAppService.Register(new RegisterInput()
                 {Username = model.AoxiangUsername, Password = model.AoxiangPassword});
 
-            await _notificationPublisher.PublishAsync("CheckProfile",
+            await _notificationPublisher.PublishAsync(NotificationName.CheckProfile, 
                 new MessageNotificationData(Url.Action("UserProfile", "User")),
                 userIds: new[] {new UserIdentifier(AppConsts.DefaultTenant, res.First)});
             

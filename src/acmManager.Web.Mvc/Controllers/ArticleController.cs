@@ -12,6 +12,7 @@ using acmManager.Article;
 using acmManager.Article.Dto;
 using acmManager.Authorization;
 using acmManager.Controllers;
+using acmManager.Utils;
 using acmManager.Web.Models.Article;
 using acmManager.Web.Models.Shared;
 using Castle.Core;
@@ -139,15 +140,16 @@ namespace acmManager.Web.Controllers
             var article = await _articleAppService.GetArticleAsync(articleId);
             var reply = await ReplyToComment(replyToCommentId);
 
-            // publish notification to all subscriber
-            await _notificationPublisher.PublishAsync("Comment.Article",
+            // publish notification to all subscriber, exclude self
+            await _notificationPublisher.PublishAsync(NotificationName.CommentArticle,
                 new MessageNotificationData(Url.Action("GetArticle", "Article", new {ArticleId = articleId})),
-                new EntityIdentifier(typeof(Blog), articleId));
+                new EntityIdentifier(typeof(Blog), articleId),
+                excludedUserIds: new[] {new UserIdentifier(AppConsts.DefaultTenant, AbpSession.GetUserId())});
 
             // subscribe comment notification
             await _notificationSubscriptionManager.SubscribeAsync(
                 new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
-                "Comment.Article", new EntityIdentifier(typeof(Blog), articleId));
+                NotificationName.CommentArticle, new EntityIdentifier(typeof(Blog), articleId));
 
             return View("Template/Comment/CommentTo", new CommentToViewModel
             {
@@ -177,7 +179,7 @@ namespace acmManager.Web.Controllers
             // subscribe all comment event
             await _notificationSubscriptionManager.SubscribeAsync(
                 new UserIdentifier(AbpSession.TenantId, AbpSession.GetUserId()),
-                "Comment.Article", new EntityIdentifier(typeof(Blog), id));
+                NotificationName.CommentArticle, new EntityIdentifier(typeof(Blog), id));
             
             return Json(new {RedirectUrl = Url.Action("GetArticle", new {ArticleId = id})});
         }

@@ -36,6 +36,7 @@ namespace acmManager.Web.Controllers
                         .ToList();
                     return new Pair<long, UserNotification>(newNg.Count, newNg.FirstOrDefault() ?? ng.First());
                 })
+                .OrderByDescending(p => p.Second.Notification.CreationTime)
                 .ToList();
             
             return View(notifications);
@@ -53,19 +54,16 @@ namespace acmManager.Web.Controllers
             }
 
             // get all same notifications
-            // TODO FIXME empty list????
             var notifications =
                 (await _notificationManager.GetUserNotificationsAsync(userId))
                 .Where(n => n.State == UserNotificationState.Unread)
-                .Where(n => n.Notification.Data["Message"] == notification.Notification.Data["Message"]);
+                .Where(n => n.Notification.Data["Message"].ToString() ==
+                            notification.Notification.Data["Message"].ToString());
 
-
-            Console.WriteLine(notification.Notification.Data["Message"]);
             foreach (var n in notifications)
             {
-                Console.WriteLine(notification.Notification.Data);
-                // await _notificationManager.UpdateUserNotificationStateAsync(AbpSession.TenantId, n.Id,
-                //     UserNotificationState.Read);
+                await _notificationManager.UpdateUserNotificationStateAsync(AbpSession.TenantId, n.Id,
+                    UserNotificationState.Read);
             }
             
             return new RedirectResult(returnUrl);
