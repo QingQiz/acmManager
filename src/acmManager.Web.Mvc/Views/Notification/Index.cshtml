@@ -1,7 +1,11 @@
 ﻿@model List<Castle.Core.Pair<long, Abp.Notifications.UserNotification>>
 
+@{
+    ViewBag.Title = "Notifications";
+}
 
-<div class="content-container">
+
+<div class="content-container" style="max-width: 960px;">
     @foreach (var n in Model)
     {
         <a href="@Url.Action("GetNotification", new  {NotificationId = n.Second.Id, ReturnUrl = n.Second.Notification.Data["Message"]})">

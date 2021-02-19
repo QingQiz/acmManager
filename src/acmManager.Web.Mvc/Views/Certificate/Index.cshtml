@@ -7,6 +7,7 @@
         <link href="~/view-resources/Views/_Bundles/certificate.min.css" rel="stylesheet"/>
     </environment>
 }
+
 @section scripts
 {
     <environment include="Development">
@@ -15,6 +16,10 @@
     <environment exclude="Development">
         <script src="~/view-resources/Views/Certificate/Certificate.js"></script>
     </environment>
+}
+
+@{
+    ViewBag.Title = "Certificate";
 }
 
 <div class="content-container">

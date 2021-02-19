@@ -9,6 +9,7 @@
         <link href="~/view-resources/Views/_Bundles/admin.profile.min.css" rel="stylesheet"/>
     </environment>
 }
+
 @section scripts
 {
     <environment include="Development">
@@ -18,6 +19,10 @@
     <environment exclude="Development">
         <script src="~/view-resources/Views/_Bundles/admin.index.min.js"></script>
     </environment>
+}
+
+@{
+    ViewBag.Title = "Administrator";
 }
 
 <div class="content-container">

@@ -5,6 +5,7 @@
 {
     @await Html.PartialAsync("Template/_MdPreviewHeader")
 }
+
 @section scripts
 {
     @await Html.PartialAsync("Template/_MdPreviewFooter")
@@ -18,6 +19,10 @@
     </environment>
     
     <script src="~/view-resources/Views/Contest/Contest.js"></script>
+}
+
+@{
+    ViewBag.Title = "Contest: " + Model.Name;
 }
 
 <div class="content-container" style="max-width: 1060px">

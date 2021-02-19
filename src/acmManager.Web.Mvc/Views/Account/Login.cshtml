@@ -9,7 +9,6 @@
     </environment>
 }
 
-
 @section scripts
 {
     <script type="application/javascript">
@@ -17,6 +16,11 @@
         RegisterEvent('@Url.Action("Register")');
     </script>
 }
+
+@{
+    ViewBag.Title = "Login";
+}
+
 <div class="wrapper fadeInDown">
     @await Html.PartialAsync("_Login")
     @await Html.PartialAsync("_Register")

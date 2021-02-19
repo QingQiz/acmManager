@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="~/editor.md/css/editormd.min.css">
     <link rel="stylesheet" href="~/css/editor.css">
 }
+
 @section scripts
 {
     <script src="~/editor.md/editormd.min.js"></script>
@@ -19,6 +20,10 @@
     </environment>
     
     <script src="~/view-resources/Views/Contest/EditContestResult.js"></script>
+}
+
+@{
+    ViewBag.Title = "Edit Content Result";
 }
 
 <form asp-action="EditContestResultPost" method="post" id="create-contest-form">
