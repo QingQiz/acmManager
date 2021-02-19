@@ -45,56 +45,6 @@ namespace acmManager.Users
 
         #region NotRemoteToService
 
-        // [RemoteService(false)]
-        // public async Task<UserInfoDto> GetUserInfoFromAoxiangAsync(string username, string password)
-        // {
-        //     // use crawler to get user information
-        //     // var crawlerPath = await _settingManager.GetSettingValueAsync(AppSettingNames.CrawlerPath);
-        //     var pythonPath = await _settingManager.GetSettingValueAsync(AppSettingNames.PythonPath);
-        //
-        //     var process = new System.Diagnostics.Process
-        //     {
-        //         StartInfo =
-        //         {
-        //             FileName = "cmd.exe",
-        //             Arguments = $"/c \"\"{pythonPath}\" \"{crawlerPath}\" -u {username} -p {password}\"",
-        //             UseShellExecute = false,
-        //             RedirectStandardOutput = true,
-        //             RedirectStandardError = true
-        //         }
-        //     };
-        //     process.Start();
-        //     process.WaitForExit();
-        //
-        //     // 爬虫执行失败
-        //     if (process.ExitCode != 0)
-        //     {
-        //         var stderr = (await process.StandardError.ReadToEndAsync()).Trim();
-        //         
-        //         Logger.Warn($"use {username} to login to uis.nwpu.edu.cn error");
-        //         Logger.Warn(stderr);
-        //
-        //         throw new UserFriendlyException(stderr.Split(Environment.NewLine)[^1]);
-        //     }
-        //
-        //     //  0     1       2     3    4      5      6          7       8     9
-        //     // org, mobile, email, id, gender, name, class, location, major, type
-        //     var result = (await process.StandardOutput.ReadToEndAsync()).Split(Environment.NewLine);
-        //
-        //     return new UserInfoDto()
-        //     {
-        //         StudentNumber = result[3],
-        //         Org = result[0],
-        //         Mobile = result[1],
-        //         Gender = result[4] == "男" ? UserGender.Male : UserGender.Female,
-        //         Major = result[8],
-        //         ClassId = result[6],
-        //         Location = result[7],
-        //         StudentType = result[9],
-        //         Email = result[2],
-        //         Name = result[5]
-        //     };
-        // }
 
         /// <summary>
         /// 将 User 转化为 UserDto
@@ -282,10 +232,10 @@ namespace acmManager.Users
         /// 从翱翔门户更新用户资料
         /// </summary>
         /// <param name="input">see `UpdateUserInfoInput`</param>
-        /// <returns>see `UserInfoDto`</returns>
+        /// <returns></returns>
         /// <exception cref="UserFriendlyException"></exception>
         [AbpAuthorize]
-        public async Task<UserInfoDto> UpdateInfoFromAoxiangAsync(UpdateUserInfoFromAoxiangInput input)
+        public async Task UpdateInfoFromAoxiangAsync(UpdateUserInfoFromAoxiangInput input)
         {
             // current user
             var user = await GetCurrentUserAsync();
@@ -303,8 +253,6 @@ namespace acmManager.Users
             // map new info to old info
             ObjectMapper.Map(userInfoDto, user.UserInfo);
             user.UserInfo.Type = userType;
-            
-            return userInfoDto;
         }
 
         /// <summary>

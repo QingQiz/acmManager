@@ -6,10 +6,11 @@ using acmManager.Authorization.Users;
 using acmManager.Users;
 using acmManager.Users.Dto;
 using acmManager.Utils;
+using Castle.Core;
 
 namespace acmManager.Authorization.Accounts
 {
-    public class AccountAppService : acmManagerAppServiceBase, IAccountAppService
+    public class AccountAppService : acmManagerAppServiceBase
     {
         // from: http://regexlib.com/REDetails.aspx?regexp_id=1923
         //public const string PasswordRegex = "(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)[0-9a-zA-Z!@#$%^&*()]*$";
@@ -52,7 +53,7 @@ namespace acmManager.Authorization.Accounts
         /// <param name="input">见 `CreateUserInput` </param>
         /// <returns>返回用户信息，见 `UserInfoDto`</returns>
         /// <exception cref="UserFriendlyException"></exception>
-        public async Task<UserInfoDto> Register(RegisterInput input)
+        public async Task<Pair<long, UserInfoDto>> Register(RegisterInput input)
         {
             if (_userManager.Query().Any(u => u.UserInfo != null && u.UserInfo.StudentNumber == input.Username))
             {
@@ -84,7 +85,7 @@ namespace acmManager.Authorization.Accounts
             await CurrentUnitOfWork.SaveChangesAsync();
 
             // return DTO
-            return userInfoDto;
+            return new Pair<long, UserInfoDto>(user.Id, userInfoDto);
         }
     }
 }

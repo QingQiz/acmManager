@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Abp;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.Domain.Uow;
+using Abp.Notifications;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Web.Models;
@@ -32,9 +34,10 @@ namespace acmManager.Web.Controllers
         private readonly ProblemAppService _problemAppService;
         private readonly CertificateAppService _certificateAppService;
         private readonly ArticleAppService _articleAppService;
+        private readonly NotificationPublisher _notificationPublisher;
 
         public UserController(UserAppService userAppService, FileAppService fileAppService, UserManager userManager,
-            UserTypeAppService userTypeAppService, ProblemAppService problemAppService, CertificateAppService certificateAppService, ArticleAppService articleAppService)
+            UserTypeAppService userTypeAppService, ProblemAppService problemAppService, CertificateAppService certificateAppService, ArticleAppService articleAppService, NotificationPublisher notificationPublisher)
         {
             _userAppService = userAppService;
             _fileAppService = fileAppService;
@@ -43,6 +46,7 @@ namespace acmManager.Web.Controllers
             _problemAppService = problemAppService;
             _certificateAppService = certificateAppService;
             _articleAppService = articleAppService;
+            _notificationPublisher = notificationPublisher;
         }
 
         #region Pages
@@ -131,6 +135,10 @@ namespace acmManager.Web.Controllers
             {
                 Password = input.Password
             });
+
+            await _notificationPublisher.PublishAsync("CheckProfile",
+                new MessageNotificationData(Url.Action("UserProfile")),
+                userIds: new[] {new UserIdentifier(AppConsts.DefaultTenant, AbpSession.GetUserId())});
 
             return Json(new AjaxResponse());
         }

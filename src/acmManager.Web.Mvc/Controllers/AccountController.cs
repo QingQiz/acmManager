@@ -31,9 +31,9 @@ namespace acmManager.Web.Controllers
         private readonly SignInManager _signInManager;
         private readonly ITenantCache _tenantCache;
         private readonly INotificationPublisher _notificationPublisher;
-        private readonly IAccountAppService _accountAppService;
+        private readonly AccountAppService _accountAppService;
 
-        public AccountController(AbpLoginResultTypeHelper abpLoginResultTypeHelper, LogInManager logInManager, SignInManager signInManager, ITenantCache tenantCache, INotificationPublisher notificationPublisher, IAccountAppService accountAppService, UserManager userManager)
+        public AccountController(AbpLoginResultTypeHelper abpLoginResultTypeHelper, LogInManager logInManager, SignInManager signInManager, ITenantCache tenantCache, INotificationPublisher notificationPublisher, AccountAppService accountAppService, UserManager userManager)
         {
             _abpLoginResultTypeHelper = abpLoginResultTypeHelper;
             _logInManager = logInManager;
@@ -91,10 +91,14 @@ namespace acmManager.Web.Controllers
         [UnitOfWork]
         public async Task<JsonResult> Register(RegisterViewModel model)
         {
-            Logger.Info($"{model.AoxiangUsername} is registering");
             var res = await _accountAppService.Register(new RegisterInput()
                 {Username = model.AoxiangUsername, Password = model.AoxiangPassword});
-            return Json(new AjaxResponse(res));
+
+            await _notificationPublisher.PublishAsync("CheckProfile",
+                new MessageNotificationData(Url.Action("UserProfile", "User")),
+                userIds: new[] {new UserIdentifier(AppConsts.DefaultTenant, res.First)});
+            
+            return Json(new AjaxResponse(res.Second));
         }
 
         #endregion
@@ -140,37 +144,6 @@ namespace acmManager.Web.Controllers
             }
 
             return defaultValueBuilder();
-        }
-
-        #endregion
-
-        #region Etc
-
-        /// <summary>
-        /// This is a demo code to demonstrate sending notification to default tenant admin and host admin uers.
-        /// Don't use this code in production !!!
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        [AbpMvcAuthorize]
-        public async Task<ActionResult> TestNotification(string message = "")
-        {
-            if (message.IsNullOrEmpty())
-            {
-                message = "This is a test notification, created at " + Clock.Now;
-            }
-
-            var defaultTenantAdmin = new UserIdentifier(1, 2);
-            var hostAdmin = new UserIdentifier(null, 1);
-
-            await _notificationPublisher.PublishAsync(
-                    "App.SimpleMessage",
-                    new MessageNotificationData(message),
-                    severity: NotificationSeverity.Info,
-                    userIds: new[] { defaultTenantAdmin, hostAdmin }
-                 );
-
-            return Content("Sent notification: " + message);
         }
 
         #endregion
