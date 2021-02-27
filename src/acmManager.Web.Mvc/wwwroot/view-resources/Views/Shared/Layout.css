@@ -133,3 +133,18 @@ canvas {
     height: 100%;
     width: 100%;
 }
+
+/* back to top button */
+.back-to-top {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    padding-left: 12px;
+    padding-bottom: 15px;
+    position: fixed;
+    bottom: 65px;
+    right: 25px;
+    display: none;
+    
+    box-shadow: 0 0 20px -6px rgba(0,0,0,0.3);
+}
