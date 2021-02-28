@@ -20,9 +20,6 @@
 
     @await Html.PartialAsync("_Styles.cshtml")
     @await RenderSectionAsync("styles", required: false)
-    
-    @* font awesome *@
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 </head>
 <body>
 @await Html.PartialAsync("Layout/Header/_Header")
@@ -36,5 +33,8 @@
 @await Html.PartialAsync("_Scripts.cshtml")
 @await RenderSectionAsync("scripts", required: false)
 @WebResourceManager.RenderScripts()
+    
+@* font awesome *@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 </body>
 </html>
