@@ -14,13 +14,10 @@
         placeholder: "",
         tex: true,
         tocm: true,
+        emoji: true,
         //flowChart: true,
         taskList: true,
         sequenceDiagram: true,
-        katexURL: {
-            js: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js',
-            css: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css'
-        },
         watch: false,
         toolbarIcons: function () {
             return [
@@ -202,8 +199,8 @@ let previewMd = function (id, md) {
     editormd.markdownToHTML(id, {
         markdown: md,
         tex: true,
+        emoji: true,
         tocm: true,
-//        flowChart: true,
         taskList: true,
         sequenceDiagram: true,
     });
